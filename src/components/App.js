@@ -10,13 +10,15 @@ import {
 function App() {
   return (
     <Router>
-      <Title />
-      <div className='row'>
+      <div>
         <NavigationPane />
+        <div style={{"marginLeft":"15%",'width':"85%"}}>
+        <Title />
         <Layout />
+        </div>
       </div>
     </Router>
   );
 }
 
-export default App;
+export default App
