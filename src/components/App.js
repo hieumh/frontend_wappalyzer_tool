@@ -2,6 +2,7 @@ import '../css/App.css'
 import Layout from './Layout'
 import Title from './Title'
 import NavigationPane from './NavigationPane'
+import '../css/Dashboard.css'
 import {
   BrowserRouter as Router
 } from "react-router-dom"
@@ -12,7 +13,7 @@ function App() {
     <Router>
       <div>
         <NavigationPane />
-        <div style={{"marginLeft":"15%",'width':"85%"}}>
+        <div id="dashboard">
         <Title />
         <Layout />
         </div>

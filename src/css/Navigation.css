@@ -1,0 +1,21 @@
+#navigation {
+    display: block;
+    position: absolute;
+    text-align: center;
+    width:15%;
+}
+
+#navigation > a {
+    display:block;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#navigation > h3 {
+    padding-bottom: 20px;
+}
+
+#navigation > a:hover {
+    text-decoration: none;
+    background-color: #d6e0f0;
+}

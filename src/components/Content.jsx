@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import {Redirect} from 'react-router-dom'
+import {host} from '../lib_front'
 import '../css/SearchCVE.css'
 
 function Content(){
@@ -7,7 +8,6 @@ function Content(){
     const [link, setLink]= useState("");
     const [hidden,setHidden] = useState({visibility: "hidden"})
 
-    const host = 'http://localhost:3001'
     const route = '/url_analyze'
 
     function handleChange(e){
