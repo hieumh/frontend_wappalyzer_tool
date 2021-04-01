@@ -20,14 +20,13 @@ function HistoryReport(){
 
     function handleClick(e){
         const name = e.target.getAttribute('id')
-        fetch(host+'/report/'+name,{mode:'cors',headers:{'content-type':'application/json'}}).then(data => data.json()).then(data => {
             setLocation({
                 pathname:'/analyze_result',
                 state:{
-                    tech:data.technologies
+                    url:name,
+                    isAnalyze:false
                 }
             })
-        })
     }
 
     if(JSON.stringify(location) !== JSON.stringify({})){
@@ -46,7 +45,7 @@ function HistoryReport(){
                     console.log(ele)
                     return(
                         <tr key={ele._id}>
-                            <td id={ele._id} onClick={handleClick}>{ele._id}</td>
+                            <td id={ele.urls} onClick={handleClick}>{ele._id}</td>
                             <td>{ele.urls}</td>
                         </tr>
                     )

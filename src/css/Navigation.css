@@ -5,6 +5,7 @@
     width:15%;
 }
 
+
 #navigation > a {
     display:block;
     padding-top: 20px;
@@ -13,6 +14,11 @@
 
 #navigation > h3 {
     padding-bottom: 20px;
+    padding-top:20px;
+    margin-top:0;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-style: none none groove none ;
 }
 
 #navigation > a:hover {
