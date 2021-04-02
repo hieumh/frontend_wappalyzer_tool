@@ -16,7 +16,6 @@ function Layout(){
     return(
         <Switch>
             <Route path='/' exact children={<Content />} />
-            <Route path='/last_report' exact children={<LastReport />} /> 
             <Route path='/analyze_result' render={(props) => <AnalyzeResult {...props}/>}  />
             <Route path='/search_cve' exact children={<SearchCVE />} />
             <Route path='/contact' exact children={<Contact />} />

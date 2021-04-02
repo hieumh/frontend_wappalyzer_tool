@@ -6,7 +6,6 @@ function NavigationPane(){
     <div id="navigation" >
         <h3>Enumtool</h3>
         <a href='/'>Home</a>
-        <a href='/last_report'>Last Report</a>
         <a href='/search_cve'>CVE search</a>
         <a href='/history'>History Report</a>
         <a href='/contact'>Contact</a>

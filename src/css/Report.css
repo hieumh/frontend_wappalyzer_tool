@@ -54,3 +54,16 @@
   .nav-report > li:hover {
     background-color: #111;
   }
+
+  /* format list tool */
+  #tab-detail{
+    display: block;
+    width: 85%;
+    position: absolute;
+    left: 15%;
+  }
+  #list-tools{
+    display: block;
+    width: 15%;
+    position: fixed;
+  }
