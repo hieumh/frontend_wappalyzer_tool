@@ -4,26 +4,53 @@
     text-align: center;
     width:15%;
     height: 100%;
-    background-color: #f9f3f3;
+    background-image: url("../images/navbar.jpg");
+    color:white;  
+}
+#navigation > .layer { 
+    background-color: #9368E9;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.8;
 }
 
 
-#navigation > a {
+.layer > a {
     display:block;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px 10px;
+    margin: 5px 15px;
+    border-radius: 4px;
+    text-align: left;
 }
 
-#navigation > h3 {
+.layer > a > img {
+    width:28px;
+    margin:0 15px;
+}
+
+.layer > h3 {
     padding-bottom: 20px;
-    padding-top:20px;
+    padding-top:15px;
     margin-top:0;
-    margin-left: 20px;
-    margin-right: 20px;
-    border-style: none none groove none ;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-#navigation > a:hover {
+.layer > a:hover {
     text-decoration: none;
-    background-color: #d6e0f0;
+    background-color: #7350b8;
+    color:white;
 }
+
+.layer > a > p {
+    z-index: 1000;
+}
+
+/* ///////////////////////////////////////// */
+
+/*
+=====
+RESET STYLES
+=====
+*/
+

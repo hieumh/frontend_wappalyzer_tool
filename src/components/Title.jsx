@@ -3,8 +3,8 @@ import React from 'react'
 function Title(){
     return(
         <div id='title'>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a className="navbar-brand" href="/">DashBoard</a>
+            <nav className="navbar navbar-expand-lg">
+            <a className="brand" href="/"><b>DashBoard</b></a>
             </nav>
         </div>
     )

@@ -6,7 +6,9 @@ import '../css/Report.css'
 
 
 function AnalyzeResult(props){
-    const [tech, setTech] = useState("")
+    const [wapp, setWapp] = useState([])
+    const [netcraft, setNetcraft] = useState([])
+    const [largeio, setLargeio] = useState([])
     const [domain, setDomain] = useState("")
     const [dic, setDic] = useState("")
     const [serverInfor, setServerInfor] = useState("")
@@ -20,6 +22,7 @@ function AnalyzeResult(props){
         await getData(url,isAnalyze)
     },[])
 
+    // send request to server to get information
     async function getData(url,isAnalyze){
         let method='post'
         let query=''
@@ -43,7 +46,7 @@ function AnalyzeResult(props){
             body:body
         }).then(res => res.json()).then(data => {
             console.log("this is technologies:" , data.technologies)
-            setTech(data.technologies)
+            setWapp(data.technologies)
         })
     
         // fetch for domain
@@ -112,6 +115,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
+            setNetcraft(data.technologies)
             console.log("this is netcraft infor:" , data)
         })
     
@@ -125,6 +129,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
+            setLargeio(data.technologies)
             console.log("this is largeio infor:" , data)
         })
     }
@@ -146,18 +151,17 @@ function AnalyzeResult(props){
       <Tab>DNS</Tab>
       <Tab>Server</Tab>
     </TabList>
-
     <TabPanel>
-        <TabTech tech={tech}/>
+        <TabTech tech={[wapp,netcraft,largeio]}/>
     </TabPanel>
     <TabPanel>
-        <h2>{domain}</h2>
+        <TabDomain domain={domain}/>
     </TabPanel>
     <TabPanel>
-        <h2>{dic}</h2>
+        <TabDic dic={dic} />
     </TabPanel>
     <TabPanel>
-        <h2>{dnsInfor}</h2>
+        <TabDNS dns={dnsInfor} />
     </TabPanel>
     <TabPanel>
         <h2>{serverInfor}</h2>

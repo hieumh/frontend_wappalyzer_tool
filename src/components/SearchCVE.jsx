@@ -57,7 +57,7 @@ function SearchCVE(){
             <input type='text' name='year' className='input' onChange={handleChange}/>
             <input type='submit' value='Submit' onClick={handleSubmit} className='w3-button w3-white w3-border w3-border-blue w3-round-large inputButton'/>
                 </form>
-                <div class="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <div className="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <ul id='cve'>{
                 cves.map((element)=>{
                     console.log("this is cve")

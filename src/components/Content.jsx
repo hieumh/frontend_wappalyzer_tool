@@ -9,6 +9,7 @@ function Content(){
 
     function handleChange(e){
        const {value} = e.target
+       console.log(value);
        setLink(value)
     }
 
@@ -31,10 +32,18 @@ function Content(){
     } else {
         return(
             <div id='content'>
-                <form method='post' action='' className='analyze'>
-                    <input type='text' name='url' className='input' onChange={handleChange}/>
-                    <input type='submit' value='Submit' onClick={handleSubmit} className='w3-button w3-white w3-border w3-border-blue w3-round-large inputButton'/>
-                </form>
+                <form method='post' action=''>
+                    <div className="page">
+                        <h4>Enter Url</h4>
+                        <label className="field field_v1">
+                            <input name="url" onChange={handleChange} className="field__input" placeholder="e.g. http://example.com" />
+                                <span className="field__label-wrap">
+                                    <span className="field__label">Url</span>
+                                </span>
+                        </label>
+                        <button type="submit" onClick={handleSubmit} className="btn btn-info">Submit</button>
+                    </div>
+                    </form>
             </div>
         )
     }
