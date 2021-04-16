@@ -1,6 +1,6 @@
 import React from 'react'
 import AnalyzeResult from "./AnalyzeResult"
-import SearchCVE from "./SearchCVE"
+import Search from "./Search"
 import Contact from "./Contact"
 import About from "./About"
 import HistoryReport from './HistoryReport'
@@ -17,7 +17,7 @@ function Layout(){
         <Switch>
             <Route path='/' exact children={<Content />} />
             <Route path='/analyze_result' render={(props) => <AnalyzeResult {...props}/>}  />
-            <Route path='/search_cve' exact children={<SearchCVE />} />
+            <Route path='/search' exact children={<Search />} />
             <Route path='/contact' exact children={<Contact />} />
             <Route path='/history' exact children={<HistoryReport /> } />
             <Route path='/about' exact children={<About />} />

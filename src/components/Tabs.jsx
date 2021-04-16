@@ -14,31 +14,18 @@ function TechDetail(props){
                 return
             }
             content = content.nextElementSibling
-
         }
     }
         
-        
     return(
-        <div style={{'marginTop':'30px','marginBottom':'30px'}}>
-            <ul>
-            <table id='history' style={{'marginLeft':'3px', 'marginRight':'3px'}}>
-                <tbody>
-                    <tr>
-                        <th><img src={props.src} alt={props.website} width="30" height="30" /></th>
-                        <th>Name</th>
-                        <th>Version</th>
-                        <th>Link</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>{props.name}</td>
-                        <td>{props.version}</td>
-                        <td>{props.website}</td>
-                    </tr>
-                </tbody>
-            </table>
-                <li>
+        <div id="tech-detail">
+                {/* <img src={props.src} alt={props.website} width="30" height="30" /> */}
+                <h4 className="name-tech">{props.name}</h4>
+                <div className="body-tech">
+                {props.version ? <div><b>Version</b>:<p>{props.version}</p></div> : <div></div> }
+                {props.link || props.website ? <div><b>Link</b>:<p>{props.link} {props.website}</p></div> : <div></div> }
+                {props.confidence ? <div><b>Confidence</b>:<p>{props.confidence}</p></div> : <div></div> }
+                {props.description ? <div><b>Description</b>:<p>{props.description}</p></div> : <div></div> }
                 <ul>
                 <button onClick={handleClick} className='collapsible'>CVE of {props.name} ({props.cve.length} cves)</button>
                 { props.cve.map(element =>{
@@ -52,8 +39,7 @@ function TechDetail(props){
                     })
                     }
                 </ul>
-                </li>
-            </ul>
+                </div>
         </div>
     )
 }
@@ -99,9 +85,9 @@ function TabTech(props){
             </div>
         )
     }   
-    return(<div >
+    return(<div id='techonologies' className="card-body">
         <div id='list-tools'>
-            <h3>Tools</h3>
+            <h4>Tools</h4>
             <button href="#" className="btn btn-light" onClick={handleTech} id="wapp">Wappalzyer</button>
             <button href="#" className="btn btn-light" onClick={handleTech} id="netcraft">Netcraft</button>
             <button href="#" className="btn btn-light" onClick={handleTech} id="largeio">Largeio</button>
@@ -118,7 +104,7 @@ function TabTech(props){
                 }
                 return (
                     <li key={data.name}>
-                        <TechDetail key={data.name} src={link} name={data.name} website={data.website} confidence={data.confidence} version={data.version} cve={listCve} />
+                        <TechDetail key={data.name} name={data.name} website={data.website} confidence={data.confidence} version={data.version} cve={listCve} link={data.link} description={data.description}/>
                     </li>
                 ) 
                 
@@ -130,55 +116,74 @@ function TabTech(props){
 
 function TabDomain(props){
 
-    return(<div id="domain">
-        <h2>Domain information</h2>
-
-        <b>Domain name</b>:{props.domain.domain_name != null ? <p>{props.domain.domain_name.reduce((result,ele)=>{
-            return result+", "+ele
-        })}</p> : <p>unknown</p>}
+    return(<div id="domain" className="card-body">
+        <b>Domain name</b>:{props.domain.domain_name != null ? props.domain.domain_name.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Creation date</b>:{props.domain.creation_date != null ? <p>{props.domain.creation_date}</p> : <p>unknown</p>}
+        <b>Creation date</b>:{props.domain.creation_date != null ? props.domain.creation_date.map((ele,index)=>{
+            return <p key={index}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Dnssec</b>{props.domain.dnssec != null ? <p>{props.domain.dnssec.reduce((result,ele)=>{
-            return result+", "+ele
-        })}</p> : <p>unknown</p>}
+        <b>Dnssec</b>:{props.domain.dnssec != null ? props.domain.dnssec.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Email</b>: {props.domain.email != null ? <p>{props.domain.email.reduce((result,ele)=>{
-            return result+", "+ele
-        })}</p> : <p>unknown</p>}
+        <b>Email</b>: {props.domain.email != null ? props.domain.email.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Expiration date</b>:{props.domain.expiration_date != null ? <p>{props.domain.expiration_date}</p> : <p>unknown</p>}
+        <b>Expiration date</b>:{props.domain.expiration_date != null ? props.domain.expiration_date.map((ele, index)=>{
+            return <p key={index}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Name server</b>: {props.domain.name_server != null ? <p>{props.domain.name_server.reduce((result,ele)=>{
-            return result+", "+ele
-        })}</p> : <p>unknown</p>}
+        <b>Name server</b>: {props.domain.name_server != null ? props.domain.name_server.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Org</b>:{props.domain.org != null ? <p>{props.domain.org}</p> : <p>unknown</p>}
+        <b>Org</b>:{props.domain.org != null ? props.domain.org.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Referral url</b>:{props.domain.referral_url != null ? <p>{props.domain.referral_url}</p> : <p>unknown</p>}
+        <b>Referral url</b>:{props.domain.referral_url != null ? props.domain.referral_url.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Registrar</b>:{props.domain.registrar != null ? <p>{props.domain.registrar}</p> : <p>unknown</p>}
+        <b>Registrar</b>:{props.domain.registrar != null ? props.domain.registrar.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>State</b>:{props.domain.state != null ? <p>{props.domain.state}</p> : <p>unknown</p>}
+        <b>State</b>:{props.domain.state != null ? props.domain.state.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-
         <b>Status</b>: {props.domain.status != null ? props.domain.status.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Updated date</b>: {props.domain.updated_date != null ? props.domain.updated_date.map((ele)=>{
-            return <p key={ele}>{ele}</p>
+        <b>Updated date</b>: {props.domain.updated_date != null ? props.domain.updated_date.map((ele,index)=>{
+            return <p key={index}>{ele}</p>
         }): <p>unknown</p>}
         <br />
-        <b>Whois server</b>:{props.domain.whois_server != null ? <p>{props.domain.whois_server}</p> : <p>unknown</p>}
+        <b>Whois server</b>:{props.domain.whois_server != null ? props.domain.whois_server.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Address</b>:{props.domain.address != null ? <p>{props.domain.address}</p> : <p>unknown</p>}
+        <b>Address</b>:{props.domain.address != null ? props.domain.address.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>City</b>:{props.domain.city != null ? <p>{props.domain.city}</p> : <p>unknown</p>}
+        <b>City</b>:{props.domain.city != null ? props.domain.city.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Country</b>:{props.domain.country != null ? <p>{props.domain.country}</p> : <p>unknown</p>}
+        <b>Country</b>:{props.domain.country != null ? props.domain.country.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
         <br />
-        <b>Zipcode</b>:{props.domain.zipcode != null ? <p>{props.domain.zipcode}</p> : <p>unknown</p>}
+        <b>Zipcode</b>:{props.domain.zipcode != null ? props.domain.zipcode.map((ele)=>{
+            return <p key={ele}>{ele}</p>
+        }) : <p>unknown</p>}
     </div>)
 }
 
@@ -200,19 +205,19 @@ function TabDic(props){
         return(<div>Nothing here</div>)
     }
 
-    return(<div id="dic">
+    return(<div id="dic" className="card-body">
             <ul>{createTree(props.dic)}</ul>
     </div>)
 }
 
 function TabDNS(props){
     if(props.dns.length ===0){
-        return(<div id="dns"></div>)
+        return(<div id="dns">Nothing here</div>)
     }
-    return(<div id="dns">
-        {props.dns.map((ele,index)=>{
-            return <p key={index}>{ele}</p>
-        })}
+    return(<div id="dns" className="card-body">
+        <div className="code">
+        {props.dns}
+        </div>
     </div>)
 }
 

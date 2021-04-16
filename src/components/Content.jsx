@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import {Redirect} from 'react-router-dom'
-import '../css/SearchCVE.css'
+import '../css/Search.css'
 
 function Content(){
     const [location, setLocation] = useState({});

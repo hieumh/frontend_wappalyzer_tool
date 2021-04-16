@@ -1,10 +1,11 @@
 import React, { useState} from 'react'
 import {host} from '../lib_front'
 import '../css/Report.css'
-import '../css/SearchCVE.css'
+import '../css/Search.css'
 import '../css/Animation.css'
+import '../css/Card.css'
 
-function SearchCVE(){
+function Search(){
     const [search, setSearch] = useState({
         target:'',
         year:''
@@ -13,6 +14,11 @@ function SearchCVE(){
     const [cves, setCVES] = useState([])
 
     function handleChange(e){
+        if(e.keyCode === 13){
+            handleSubmit(e)
+            return
+        }
+
         const {name,value} = e.target
         setSearch((prev)=>{
             return({
@@ -48,30 +54,32 @@ function SearchCVE(){
         })
     }
 
+
     return(
-        <div>
-            <form method='post' action='' className='analyze'>
-            <label htmlFor="target">Target:</label>
-            <input type='text' name='target' className='input' onChange={handleChange}/>
-            <label htmlFor="year">Year:</label>
-            <input type='text' name='year' className='input' onChange={handleChange}/>
-            <input type='submit' value='Submit' onClick={handleSubmit} className='w3-button w3-white w3-border w3-border-blue w3-round-large inputButton'/>
+        <div id="search">
+            <div id='search-card'>
+                <div className="card-header">
+                    <h3 className='card-title'>Search Database</h3>
+                    <p className='card-category'>Search information about report in database</p>
+                </div>
+                <div id="search-bar" className='card-body'>
+                    <p>All of this information are taken in database that were collected report by us</p>
+                <form method='post' action='' className='analyze'>
+                     <div id="input-box">
+                <img src="/icons/website/search-solid_2.svg" alt=""/>
+                <input type='text' name='target' className='input' placeholder="Search..." onChange={handleChange} />
+                 </div>
                 </form>
-                <div className="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <ul id='cve'>{
-                cves.map((element)=>{
-                    console.log("this is cve")
-                    return(
-                        <li key={element.cve} className='content'>
-                            <h3>CVE: {element.cve}</h3>
-                            <p>Year: {element.year}</p>
-                            <p>Description: {element.desc}</p>
-                        </li>)
-                    })
-                }
-            </ul>
+                </div>    
+
+                <div id='search-result'>
+                    <h4>Search result:</h4>
+                    {/* All information will be saved here */}
+
+                </div>
+            </div>
         </div>
     )
 }
 
-export default SearchCVE
+export default Search

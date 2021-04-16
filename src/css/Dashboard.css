@@ -3,6 +3,8 @@
     position: absolute;
     width:85%;
     left: 15%;
+    top:0;
+    bottom:0;
 }
 
 #title {

@@ -1,12 +1,8 @@
 .collapsible {
     background-color: #777;
     color: white;
-    cursor: pointer;
-    padding: 18px;
-    border: none;
-    text-align: left;
-    outline: none;
     font-size: 15px;
+    border-radius: 4px;
   }
   
   .active, .collapsible:hover {
@@ -30,8 +26,7 @@
     overflow: hidden;
     background-color: #f1f1f1;
   }
-
-  .nav-report > li{
+  /* .nav-report > li{
     display: inline-block;
     float: left;
     display: block;
@@ -47,27 +42,44 @@
     padding: 0;
     overflow: hidden;
     background-color: #333;
-  }
+  } */
   
   
   /* Change the link color to #111 (black) on hover */
-  .nav-report > li:hover {
+  /* .nav-report > li:hover {
     background-color: #111;
-  }
+  } */
+
 
   /* format list tool */
+  #techonologies {
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    border-radius: 4px;
+    background-clip: border-box;
+  }
+
   #tab-detail{
-    display: block;
     width: 85%;
-    position: absolute;
     left: 15%;
+    overflow: scroll;
+    height: 80vh;
+    padding-left:10px;
   }
   #list-tools{
     display: inline-block;
     width: 15%;
-    position: absolute;
     height: 100%;
     text-align: center;
+    border: 0.125rem solid #b5b1be;
+    border-radius:4px;
+  }
+  #list-tools > h4 {
+    border-bottom: 0.125rem solid #f2edfd;
+    margin-bottom:0;
+    padding:10px;
+
   }
 
   #list-tools > button{
@@ -75,14 +87,19 @@
     width:100%;
   }
 
+  #dic {
+    overflow:scroll;
+    height: 80vh;
+  }
+
   #dic > ul {
     display: block;
     list-style-type: none;
-    margin-top: 1em;
+    /* margin-top: 1em;
     margin-bottom: 1 em;
     margin-left: 0;
     margin-right: 0;
-    padding-left: 40px;
+    padding-left: 40px; */
   }
 
   #dic > li { 
@@ -94,20 +111,121 @@
   }
 
   #dns {
-    margin: 30px 10%;
-    padding: 10px;
-    background-color: #e4fbff;
+    overflow:scroll;
+    height: 80vh;
+  }
+
+  #dns .code {
+    background-color: #eae8f1;
   }
 
   /* #domain > p {
     display: inline-block;
   } */
 
-  #domain { 
+  /* #domain { 
     margin: 10px 5%;
     padding: 5px;
+  } */
+
+  #domain {
+    overflow: scroll;
+    height: 80vh;
   }
 
   #domain > p {
     margin:0;
   }
+
+  #report {
+    padding: 30px;
+  }
+
+  #tech-detail{
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .name-tech{
+    background-color: #dad9d9;
+    border-radius:4px;
+    margin-bottom:0;
+    padding: 10px 20px;
+  }
+
+  .body-tech{
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius:4px;
+
+  }
+
+  /* ////////////////////////////////////////// */
+/* this is for tabs */
+.wrapper {
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+}
+.tabs {
+  position: relative;
+  height: 14.75rem;
+}
+.tabs::before,
+.tabs::after {
+  content: "";
+  display: table;
+}
+.tabs::after {
+  clear: both;
+}
+.tab {
+  float: left;
+}
+.tab-switch {
+  display: none;
+}
+.tab-label {
+  position: relative;
+  display: block;
+  line-height: 2.75em;
+  height: 3em;
+  padding: 0 1.618em;
+  background: #9368e9;
+  border-right: 0.125rem solid #8851f8;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  top: 0;
+  transition: all 0.25s;
+}
+.tab-label:hover {
+  top: -0.25rem;
+  transition: top 0.25s;
+}
+.tab-content {
+  width: 100%; 
+  position: absolute;
+  z-index: 1;
+  top: 2.75em;
+  left: 0;
+  padding: 15px;
+  background: #fff;
+  color: #2c3e50;
+  border: 1px solid rgba(0,0,0,.125);
+  opacity: 0;
+  transition: all 0.35s;
+}
+.tab-switch:checked + .tab-label {
+  background: #fff;
+  color: #2c3e50;
+  border-bottom: 0;
+  border-right: 0.125rem solid #fff;
+  transition: all 0.35s;
+  z-index: 1;
+  top: -0.0625rem;
+}
+.tab-switch:checked + label + .tab-content {
+  z-index: 2;
+  opacity: 1;
+  transition: all 0.35s;
+}
