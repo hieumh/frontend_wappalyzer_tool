@@ -9,16 +9,30 @@ function AnalyzeResult(props){
     const [wapp, setWapp] = useState([])
     const [netcraft, setNetcraft] = useState([])
     const [largeio, setLargeio] = useState([])
-    const [domain, setDomain] = useState("")
+    const [whatweb, setWhatweb] = useState([])
+    const [webtech, setWebtech] = useState([])
+    const [watw00f,setWafw00f] = useState("")
+    const [wpscan, setWpscan] = useState("")
+    const [droope, setDroope] = useState("")
+    const [nikto, setNikto] = useState("")
+
+    const [whois, setWhois] = useState("")
+    const [sublist3r, setSublist3r] = useState("")
+
+    const [gobuster, setGobuster] = useState("")
     const [dic, setDic] = useState("")
-    const [serverInfor, setServerInfor] = useState("")
+
     const [dnsInfor, setDnsInfor] = useState("")
+
+    const [serverInfor, setServerInfor] = useState("")
 
 
     useEffect(async ()=>{
         let {url,isAnalyze} = props.location.state
-        console.log(url, isAnalyze)
+        
 
+        url = "http://example.com/"
+        console.log(url, isAnalyze)
         await getData(url,isAnalyze)
     },[])
 
@@ -34,7 +48,8 @@ function AnalyzeResult(props){
         }
 
         console.log(method,query,body)
-    
+        ////////////////////////////////////////
+        // fetch for technologies
         // fetch for Tech
         await fetch(host+'/url_analyze/wapp'+query,{
             method:method,
@@ -48,63 +63,7 @@ function AnalyzeResult(props){
             console.log("this is technologies:" , data.technologies)
             setWapp(data.technologies)
         })
-    
-        // fetch for domain
-        fetch(host+'/url_analyze/domain'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            console.log("this is domain :" , data)
-            setDomain(data)
-        })
-    
-        // fetch for dic
-        fetch(host+'/url_analyze/dic'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            console.log("this is dic:" , data)
-            setDic(data)
-        })
-    
-        // fetch for server
-        // fetch(host+'/url_analyze/server'+query,{
-        //     method:method,
-        //     mode: 'cors',
-        //     credentials:'include',
-        //     headers:{
-        //         'content-type': 'application/json',
-        //     },
-        //     body:body
-        // }).then(res => res.json()).then(data => {
-        //     console.log("this is Server information:" , data)
-        //     setServerInfor(data)
-        // })
-    
-        // fetch for DNS
-        fetch(host+'/url_analyze/dns'+query,{
-            method:'POST',
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            console.log("this is dns infor:" , data)
-            setDnsInfor(JSON.stringify(data)) 
-        })
-    
+
         // netcrafts
         fetch(host+'/url_analyze/netcraft'+query,{
             method:method,
@@ -132,43 +91,178 @@ function AnalyzeResult(props){
             setLargeio(data.technologies)
             console.log("this is largeio infor:" , data)
         })
-    }
 
-    // if(tech == ""){
-    //     return (
-    //         <div >
-    //             <p>We found nothing ... </p>
-    //         </div>
-    //     )
-    // }
-    // return(
-    //     <div id="report">
-    //         <Tabs>
-    // <TabList className="nav-report">
-    //   <Tab>Technologies</Tab>
-    //   <Tab>Domain</Tab>
-    //   <Tab>Dictionary tree</Tab>
-    //   <Tab>DNS</Tab>
-    //   <Tab>Server</Tab>
-    // </TabList>
-    // <TabPanel>
-    //     <TabTech tech={[wapp,netcraft,largeio]}/>
-    // </TabPanel>
-    // <TabPanel>
-    //     <TabDomain domain={domain}/>
-    // </TabPanel>
-    // <TabPanel>
-    //     <TabDic dic={dic} />
-    // </TabPanel>
-    // <TabPanel>
-    //     <TabDNS dns={dnsInfor} />
-    // </TabPanel>
-    // <TabPanel>
-    //     <h2>{serverInfor}</h2>
-    // </TabPanel>
-    // </Tabs>
-    //     </div>
-    // )
+        // Whatwebb
+        fetch(host+'/url_analyze/whatweb'+query,{
+            method: method,
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            setWhatweb(data.technologies)
+            console.log("this is Whatwebb infor:" , data)
+        })
+
+        // Webtech
+        fetch(host+'/url_analyze/webtech'+query,{
+            method: method,
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            setWebtech(data.technologies)
+            console.log("this is largeio infor:" , data)
+        })
+
+        //////////////////////////////////////////////////////////////////
+    
+        ////////////////////////////////////////////////////////////////
+        // fetch for domain
+        fetch(host+'/url_analyze/whois'+query,{
+            method:method,
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is whois :" , data)
+            setWhois(data)
+        })
+
+        fetch(host+'/url_analyze/sublist3r'+query,{
+            method:method,
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is sublist3r :" , data)
+            setSublist3r(data)
+        })
+        /////////////////////////////////////////////////////////////////
+    
+        ////////////////////////////////////////////////////////////////
+        // fetch for dic
+        fetch(host+'/url_analyze/dic'+query,{
+            method:method,
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is dic:" , data)
+            setDic(data)
+        })
+
+        fetch(host+'/url_analyze/gobuster'+query,{
+            method:method,
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is gobuster :" , data)
+            setGobuster(data)
+        })
+
+        ///////////////////////////////////////////////////////////////////
+    
+        // fetch for server
+        fetch(host+'/url_analyze/server'+query,{
+            method:method,
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is Server information:" , data)
+            setServerInfor(data)
+        })
+    
+        // fetch for DNS
+        fetch(host+'/url_analyze/dns'+query,{
+            method:'POST',
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is dns infor:" , data)
+            setDnsInfor(JSON.stringify(data)) 
+        })
+
+        // fetch for detect web firewall
+        fetch(host+'/url_analyze/wafw00f'+query,{
+            method:'POST',
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is wafw00f infor:" , data)
+            setWafw00f(JSON.stringify(data)) 
+        })
+
+        // fetch for scanning website
+        fetch(host+'/url_analyze/wpscan'+query,{
+            method:'POST',
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is wpscan infor:" , data)
+            setWpscan(JSON.stringify(data)) 
+        })
+
+        fetch(host+'/url_analyze/droopescan'+query,{
+            method:'POST',
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is droopescan infor:" , data)
+            setDroope(JSON.stringify(data)) 
+        })
+
+        fetch(host+'/url_analyze/nikto'+query,{
+            method:'POST',
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is nikto infor:" , data)
+            setNikto(JSON.stringify(data)) 
+        })
+    }
 
     return(<div id="report">
     <div className="tabs">
@@ -191,7 +285,7 @@ function AnalyzeResult(props){
                 <h3 className="card-title">Domain</h3>
                 <p className="card-category">Information about the domain of target website</p>
           </div>
-          <TabDomain domain={domain}/>
+          <TabDomain domain={whois}/>
           </div>
         </div>
         <div className="tab">
