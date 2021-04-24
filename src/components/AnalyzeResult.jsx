@@ -206,7 +206,7 @@ function AnalyzeResult(props){
             body:body
         }).then(res => res.json()).then(data => {
             console.log("this is dns infor:" , data)
-            setDnsInfor(JSON.stringify(data)) 
+            setDnsInfor(data) 
         })
 
         // fetch for detect web firewall

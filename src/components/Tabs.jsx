@@ -211,12 +211,40 @@ function TabDic(props){
 }
 
 function TabDNS(props){
-    if(props.dns.length ===0){
+
+    const [option, setOption] = useState("A")
+
+    function handleClick(e){
+        setOption(e.target.innerHTML)
+    }
+    
+
+    function showResult(){
+        console.log("hhh" ,props.dns[option])
+        return props.dns[option].map(ele=>{
+            return <p key={ele}>{ele}</p>
+        })
+    }
+
+    if(props.dns.length === 0){
         return(<div id="dns">Nothing here</div>)
     }
     return(<div id="dns" className="card-body">
+        <div className="dns-options">
+            <button onClick={handleClick}>A</button>
+            {/* <button onClick={handleClick}>AAAA</button>
+            <button onClick={handleClick}>ANY</button>
+            <button onClick={handleClick}>CAA</button>
+            <button onClick={handleClick}>CNAME</button> */}
+            <button onClick={handleClick}>MX</button>
+            <button onClick={handleClick}>NS</button>
+            {/* <button onClick={handleClick}>PTR</button> */}
+            <button onClick={handleClick}>SOA</button>
+            {/* <button onClick={handleClick}>SRV</button> */}
+            <button onClick={handleClick}>TXT</button>
+        </div>
         <div className="code">
-        {props.dns}
+        {showResult()}
         </div>
     </div>)
 }
