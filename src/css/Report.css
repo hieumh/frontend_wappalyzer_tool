@@ -110,9 +110,9 @@
     width: 15px;
   }
 
-  #dns {
-    height: 80vh;
-  }
+  /* #dns {
+    
+  } */
 
   .dns-options {
     text-align: center;
@@ -129,6 +129,7 @@
     border-radius:10px;
     padding:10px 8px;
     background-color: rgb(250,250,250);
+    outline:none;
   }
 
   .dns-options > button:c {
@@ -140,13 +141,15 @@
     background-color: rgb(250,250,250);
   }
 
-  #dns .code {
+  .code {
     background-color: #eae8f1;
     padding: 10px 20px;
   }
 
   .code > p {
     margin-bottom: 0;
+    font-family: "Consolas", Helvetica, sans-serif;
+    padding: 5px;
   }
   /* #domain > p {
     display: inline-block;

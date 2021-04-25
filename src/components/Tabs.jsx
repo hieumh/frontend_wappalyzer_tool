@@ -220,9 +220,11 @@ function TabDNS(props){
     
 
     function showResult(){
-        console.log("hhh" ,props.dns[option])
-        return props.dns[option].map(ele=>{
-            return <p key={ele}>{ele}</p>
+        let temp = props.dns[option]
+        temp = temp.split("\n")
+
+        return temp.map((ele,index)=>{
+            return <p key={index}>{ele === "" ? "\t" : ele}</p>
         })
     }
 
@@ -232,15 +234,15 @@ function TabDNS(props){
     return(<div id="dns" className="card-body">
         <div className="dns-options">
             <button onClick={handleClick}>A</button>
-            {/* <button onClick={handleClick}>AAAA</button>
+            <button onClick={handleClick}>AAAA</button>
             <button onClick={handleClick}>ANY</button>
             <button onClick={handleClick}>CAA</button>
-            <button onClick={handleClick}>CNAME</button> */}
+            <button onClick={handleClick}>CNAME</button>
             <button onClick={handleClick}>MX</button>
             <button onClick={handleClick}>NS</button>
-            {/* <button onClick={handleClick}>PTR</button> */}
+            <button onClick={handleClick}>PTR</button>
             <button onClick={handleClick}>SOA</button>
-            {/* <button onClick={handleClick}>SRV</button> */}
+            <button onClick={handleClick}>SRV</button>
             <button onClick={handleClick}>TXT</button>
         </div>
         <div className="code">
@@ -250,7 +252,16 @@ function TabDNS(props){
 }
 
 function TabServer(props){
-    return(<div>Server</div>)
+    
+    let nmap = !props.nmap ? "" : props.nmap.split("\n")
+    
+    return(<div id="server-network" className='card-body'>
+        {nmap=="" ? <div></div> : <div className='code'>
+            {nmap.map(ele=>{
+                return <p>{ele}</p>
+            })}
+        </div>}
+    </div>)
 }
 
 

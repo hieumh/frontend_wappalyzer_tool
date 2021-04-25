@@ -318,7 +318,7 @@ function AnalyzeResult(props){
                 <h3 className="card-title">Server</h3>
                 <p className="card-category">Information about the server of target website</p>
           </div>
-          <h2>{serverInfor}</h2>
+          <TabServer nmap={serverInfor}/>
           </div>
         </div>
     </div>
