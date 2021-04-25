@@ -28,19 +28,19 @@ function AnalyzeResult(props){
 
 
     useEffect(async ()=>{
-        let {url,isAnalyze} = props.location.state
+        let {url, token, isAnalyze} = props.location.state
         
 
         url = "http://example.com/"
         console.log(url, isAnalyze)
-        await getData(url,isAnalyze)
+        await getData(url, token, isAnalyze)
     },[])
 
     // send request to server to get information
-    async function getData(url,isAnalyze){
+    async function getData(url, token, isAnalyze){
         let method='post'
         let query=''
-        let body=JSON.stringify({url:url})
+        let body=JSON.stringify({url:url, token: token})
         if(!isAnalyze){
             method='get'
             query="?url="+url

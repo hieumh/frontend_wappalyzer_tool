@@ -13,13 +13,19 @@ function Content(){
        setLink(value)
     }
 
-    function handleSubmit(e){
+    async function handleSubmit(e){
         console.log("This is submit")
         e.preventDefault()
+        
+        // Get token 
+        let response = await fetch('http://localhost:3000/token/generator');
+        let token = await response.text();
+
         setLocation({
             pathname:'/analyze_result',
             state:{
                 url:link,
+                token: token,
                 isAnalyze:true
             }
         })
