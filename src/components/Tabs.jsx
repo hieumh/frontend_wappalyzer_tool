@@ -252,13 +252,12 @@ function TabDNS(props){
 }
 
 function TabServer(props){
-    
     let nmap = !props.nmap ? "" : props.nmap.split("\n")
     
     return(<div id="server-network" className='card-body'>
         {nmap=="" ? <div></div> : <div className='code'>
-            {nmap.map(ele=>{
-                return <p>{ele}</p>
+            {nmap.map((ele,index)=>{
+                return <p key={index}>{ele}</p>
             })}
         </div>}
     </div>)
