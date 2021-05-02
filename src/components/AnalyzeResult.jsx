@@ -1,6 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import {TabDic,TabServer, TabDNS, TabDomain, TabTech, TabDetectWaf, TabScan} from './Tabs'
 import {host} from '../lib_front'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import '../css/Report.css'
 import '../css/Card.css'
 
@@ -62,7 +64,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is technologies:" , data.technologies)
+            toast.info("Done wappalyzer")
             setWapp(data.technologies)
         })
 
@@ -76,8 +78,8 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
+            toast.info("Done netcraft")
             setNetcraft(data.technologies)
-            console.log("this is netcraft infor:" , data)
         })
     
         // largeio
@@ -90,8 +92,8 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
+            toast.info("Done largeio")
             setLargeio(data.technologies)
-            console.log("this is largeio infor:" , data)
         })
 
         // Whatwebb
@@ -104,8 +106,8 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
+            toast.info("Done whatwebb")
             setWhatweb(data.technologies)
-            console.log("this is Whatwebb infor:" , data)
         })
 
         // Webtech
@@ -118,8 +120,8 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
+            toast.info("Done webtech")
             setWebtech(data.technologies)
-            console.log("this is webtech infor:" , data)
         })
 
         //////////////////////////////////////////////////////////////////
@@ -135,7 +137,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is whois :" , data)
+            toast.info("Done whois")
             setWhois(data)
         })
 
@@ -148,7 +150,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is sublist3r :" , data)
+            toast.info("Done sublist3r")
             setSublist3r(data)
         })
         /////////////////////////////////////////////////////////////////
@@ -164,7 +166,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is dic:" , data)
+            toast.info("Done directories of wappalyzer")
             setDic(data)
         })
 
@@ -177,7 +179,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is gobuster :" , data)
+            toast.info("Done gobuster")
             setGobuster(data)
         })
 
@@ -193,8 +195,10 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is Server information:" , data)
-            setServerInfor(data)
+            toast.info("Done nmap")
+            console.log(data)
+            console.log(data.nmap)
+            setServerInfor(data.nmap)
         })
     
         // fetch for DNS
@@ -207,7 +211,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is dns infor:" , data)
+            toast.info("Done dns")
             setDnsInfor(data) 
         })
 
@@ -221,7 +225,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is wafw00f infor:" , data)
+            toast.info("Done wafw00f")
             setWafw00f(JSON.parse(data))
         })
 
@@ -235,7 +239,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is wpscan infor:" , data)
+            toast.info("Done wpscan")
             setWpscan(JSON.parse(data))
         })
 
@@ -248,7 +252,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is droopescan infor:" , data)
+            toast.info("Done droopescan")
             setDroope(JSON.parse(data))
         })
 
@@ -261,7 +265,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is joomscan infor:" , data)
+            toast.info("Done joomscan")
             setJoomscan(data)
         })
 
@@ -274,7 +278,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            console.log("this is nikto infor:" , data)
+            toast.info("Done nikto scan")
             setNikto(data)
         })
     }
@@ -296,7 +300,9 @@ function AnalyzeResult(props){
     }
 
     return(<div id="report">
-    <button class="create-report btn btn-info" onClick={handleSubmit}>Create report</button>
+        
+    <button className="create-report btn btn-info" onClick={handleSubmit}>Create report</button>
+    <ToastContainer />
     <div className="tabs">
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-1" defaultChecked className="tab-switch"/>
@@ -350,7 +356,7 @@ function AnalyzeResult(props){
                 <h3 className="card-title">Server</h3>
                 <p className="card-category">Information about the server of target website</p>
           </div>
-          <TabServer nmap={serverInfor}/>
+          <TabServer nmap={serverInfor ? serverInfor.nmap : ""}/>
           </div>
         </div>
         <div className="tab">
@@ -376,6 +382,7 @@ function AnalyzeResult(props){
           </div>
         </div>
     </div>
+    
     </div>)
 }
 
