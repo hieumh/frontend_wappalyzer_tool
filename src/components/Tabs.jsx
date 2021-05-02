@@ -1,4 +1,6 @@
 import React,{useEffect, useState} from 'react'
+import {json2html} from '../lib_front'
+
 
 function TechDetail(props){    
     function handleClick(e){
@@ -46,36 +48,17 @@ function TechDetail(props){
 
  
 function TabTech(props){
+    const tools = ["wapp","netcraft","largeio","webtech","whatweb"]
     const [tech, setTech] = useState([])
     const [type, setType] = useState('wapp')
 
     useEffect(()=>{
-        switch(type){
-            case "wapp":
-                setTech(props.tech[0])
-                break
-            case "netcraft":
-                setTech(props.tech[1])
-                break
-            default:
-                setTech(props.tech[2])
-        }
-    },[props.tech])
+        let index = tools.lastIndexOf(type)
+        setTech(props.tech[index])
+    },[props.tech,type,tools,])
 
     function handleTech(e){
-        switch(e.target.id){
-            case "wapp":
-                setType("wapp")
-                setTech(props.tech[0])
-                break
-            case "netcraft":
-                setType("netcraft")
-                setTech(props.tech[1])
-                break
-            default:
-                setType("largeio")
-                setTech(props.tech[2])
-        }
+        setType(e.target.id)
     }
 
     if(props.tech.length === 0) {
@@ -87,14 +70,14 @@ function TabTech(props){
     }   
     return(<div id='techonologies' className="card-body">
         <div id='list-tools'>
-            <h4>Tools</h4>
             <button href="#" className="btn btn-light" onClick={handleTech} id="wapp">Wappalzyer</button>
             <button href="#" className="btn btn-light" onClick={handleTech} id="netcraft">Netcraft</button>
             <button href="#" className="btn btn-light" onClick={handleTech} id="largeio">Largeio</button>
+            <button href="#" className="btn btn-light" onClick={handleTech} id="webtech">Webtech</button>
+            <button href="#" className="btn btn-light" onClick={handleTech} id="whatweb">Whatweb</button>
         </div>
         <ul id="tab-detail">
             {tech.map((data)=>{
-                let link = "/icons/" + data.icon
                 let listCve = []
                 if(data.cve){
                     for (const index in data.cve){
@@ -116,88 +99,97 @@ function TabTech(props){
 
 function TabDomain(props){
 
-    return(<div id="domain" className="card-body">
-        <b>Domain name</b>:{props.domain.domain_name != null ? props.domain.domain_name.map((ele)=>{
+
+    return(<div>
+    <div id="domain-whois" className="card-body">
+        <b>Domain name</b>:{props.domain[0].domain_name != null ? props.domain[0].domain_name.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Creation date</b>:{props.domain.creation_date != null ? props.domain.creation_date.map((ele,index)=>{
+        <b>Creation date</b>:{props.domain[0].creation_date != null ? props.domain[0].creation_date.map((ele,index)=>{
             return <p key={index}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Dnssec</b>:{props.domain.dnssec != null ? props.domain.dnssec.map((ele)=>{
+        <b>Dnssec</b>:{props.domain[0].dnssec != null ? props.domain[0].dnssec.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Email</b>: {props.domain.email != null ? props.domain.email.map((ele)=>{
+        <b>Email</b>: {props.domain[0].email != null ? props.domain[0].email.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Expiration date</b>:{props.domain.expiration_date != null ? props.domain.expiration_date.map((ele, index)=>{
+        <b>Expiration date</b>:{props.domain[0].expiration_date != null ? props.domain[0].expiration_date.map((ele, index)=>{
             return <p key={index}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Name server</b>: {props.domain.name_server != null ? props.domain.name_server.map((ele)=>{
+        <b>Name server</b>: {props.domain[0].name_server != null ? props.domain[0].name_server.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Org</b>:{props.domain.org != null ? props.domain.org.map((ele)=>{
+        <b>Org</b>:{props.domain[0].org != null ? props.domain[0].org.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Referral url</b>:{props.domain.referral_url != null ? props.domain.referral_url.map((ele)=>{
+        <b>Referral url</b>:{props.domain[0].referral_url != null ? props.domain[0].referral_url.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Registrar</b>:{props.domain.registrar != null ? props.domain.registrar.map((ele)=>{
+        <b>Registrar</b>:{props.domain[0].registrar != null ? props.domain[0].registrar.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>State</b>:{props.domain.state != null ? props.domain.state.map((ele)=>{
+        <b>State</b>:{props.domain[0].state != null ? props.domain[0].state.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Status</b>: {props.domain.status != null ? props.domain.status.map((ele)=>{
+        <b>Status</b>: {props.domain[0].status != null ? props.domain[0].status.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Updated date</b>: {props.domain.updated_date != null ? props.domain.updated_date.map((ele,index)=>{
+        <b>Updated date</b>: {props.domain[0].updated_date != null ? props.domain[0].updated_date.map((ele,index)=>{
             return <p key={index}>{ele}</p>
         }): <p>unknown</p>}
         <br />
-        <b>Whois server</b>:{props.domain.whois_server != null ? props.domain.whois_server.map((ele)=>{
+        <b>Whois server</b>:{props.domain[0].whois_server != null ? props.domain[0].whois_server.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Address</b>:{props.domain.address != null ? props.domain.address.map((ele)=>{
+        <b>Address</b>:{props.domain[0].address != null ? props.domain[0].address.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>City</b>:{props.domain.city != null ? props.domain.city.map((ele)=>{
+        <b>City</b>:{props.domain[0].city != null ? props.domain[0].city.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Country</b>:{props.domain.country != null ? props.domain.country.map((ele)=>{
+        <b>Country</b>:{props.domain[0].country != null ? props.domain[0].country.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
         <br />
-        <b>Zipcode</b>:{props.domain.zipcode != null ? props.domain.zipcode.map((ele)=>{
+        <b>Zipcode</b>:{props.domain[0].zipcode != null ? props.domain[0].zipcode.map((ele)=>{
             return <p key={ele}>{ele}</p>
         }) : <p>unknown</p>}
+    </div>
+    <div id="domain-sublist3r">
+        {!props.domain[1] ? <p>""</p> : props.domain[1].map((ele,index)=>{
+            return <p key={index}>{ele}</p>
+        })}
+    </div>
     </div>)
 }
 
 function TabDic(props){
 
+
     function createTree(dic){
         let keys = Object.keys(dic)
 
         return keys.map(key =>{
-                if(JSON.stringify(dic[key])=="{}"){
-                    return (<li key={key}><img src='/icons/website/sticky-note-regular.svg' />{" "+key}</li>)
+                if(JSON.stringify(dic[key])==="{}"){
+                    return (<li key={key}><img alt="file" src='/icons/website/sticky-note-regular.svg' />{" "+key}</li>)
                 }
                 else{
-                    return(<li id={key} key={key}><img src='/icons/website/folder-solid.svg'/>{" "+key}<ul>{createTree(dic[key])}</ul></li>)
+                    return(<li id={key} key={key}><img alt="folder" src='/icons/website/folder-solid.svg'/>{" "+key}<ul>{createTree(dic[key])}</ul></li>)
                 }
         })
     }
@@ -206,7 +198,20 @@ function TabDic(props){
     }
 
     return(<div id="dic" className="card-body">
-            <ul>{createTree(props.dic)}</ul>
+            <div id="wappalyzer-link">
+                <h3>Wappalyzer</h3> 
+                <ul>{createTree(props.dic[0])}</ul>
+            </div> 
+            <hr /> 
+            <div id="gobuster">
+                <h3>Gobuster</h3>
+                <ul>{!Array.isArray(props.dic[1]) ? <p></p> : props.dic[1].directories.map((ele,index)=>{
+                    return <li key={index}><img alt="folder" src='/icons/website/folder-solid.svg'/>{" "+ele}</li>
+                })}</ul>
+                <ul>{!Array.isArray(props.dic[1]) ? <p></p> : props.dic[1].files.map((ele,index)=>{
+                    return <li key={index}><img alt="file" src='/icons/website/sticky-note-regular.svg' />{" "+ele}</li>
+                })}</ul>
+            </div>
     </div>)
 }
 
@@ -255,11 +260,61 @@ function TabServer(props){
     let nmap = !props.nmap ? "" : props.nmap.split("\n")
     
     return(<div id="server-network" className='card-body'>
-        {nmap=="" ? <div></div> : <div className='code'>
+        {nmap==="" ? <div></div> : <div className='code'>
             {nmap.map((ele,index)=>{
                 return <p key={index}>{ele}</p>
             })}
         </div>}
+    </div>)
+}
+
+function TabDetectWaf(props){
+    let wafs = props.wafw00f.wafs ? props.wafw00f.wafs : []
+    return(<div id="detect-firewall" className='card-body'>
+            {
+                wafs.map((ele,index)=>{
+                    return(<div key={index}>
+                        <b>Firewall:</b>
+                        <p>{ele.firewall}</p>
+                        <b>Manufacturer:</b>
+                        <p>{ele.manufacturer}</p>
+                        <hr />
+                        </div>)
+                })
+            }
+        </div>)
+}
+
+function TabScan(props){
+    const tools = ["wpscan","droopescan","joomscan","nikto"]
+    const [tool,setTool] = useState([])
+    const [type, setType] = useState("wpscan")
+    let _type = type 
+    useEffect(()=>{
+        // set type scan-content when loading
+        _type = type
+        let index = tools.lastIndexOf(_type)
+        setTool(props.scans[index])
+    },[props.scans,type])
+
+    function handleScan(e){
+        setType(e.target.id)
+    }
+
+
+    return(<div id="scans" className='card-body'>
+        <div id='list-tools'>
+            <button href="#" className="btn btn-light" onClick={handleScan} id="wpscan">Wpscan</button>
+            <button href="#" className="btn btn-light" onClick={handleScan} id="droopescan">Droopescan</button>
+            <button href="#" className="btn btn-light" onClick={handleScan} id="joomscan">Joomscan</button>
+            <button href="#" className="btn btn-light" onClick={handleScan} id="nikto">Nikto</button>
+        </div>
+        <div id="scan-content">
+            {_type === "joomscan" ? <div>{
+                tool === "" || typeof tool !== "string" ? <div></div> : <div>{tool.split('\n').map(ele=>{
+                    return <p>{ele}</p>
+                })}</div>}</div>: <div>{json2html(tool,1)}</div>}
+        </div>
     </div>)
 }
 
@@ -269,5 +324,7 @@ export {
     TabDomain,
     TabDic,
     TabDNS,
-    TabServer
+    TabServer,
+    TabDetectWaf,
+    TabScan
 }

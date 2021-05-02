@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {TabDic,TabServer, TabDNS, TabDomain, TabTech} from './Tabs'
+import {TabDic,TabServer, TabDNS, TabDomain, TabTech, TabDetectWaf, TabScan} from './Tabs'
 import {host} from '../lib_front'
 import '../css/Report.css'
 import '../css/Card.css'
@@ -11,9 +11,10 @@ function AnalyzeResult(props){
     const [largeio, setLargeio] = useState([])
     const [whatweb, setWhatweb] = useState([])
     const [webtech, setWebtech] = useState([])
-    const [watw00f,setWafw00f] = useState("")
+    const [wafw00f,setWafw00f] = useState("")
     const [wpscan, setWpscan] = useState("")
-    const [droope, setDroope] = useState("")
+    const [droopescan, setDroope] = useState("")
+    const [joomscan,setJoomscan] = useState("")
     const [nikto, setNikto] = useState("")
 
     const [whois, setWhois] = useState("")
@@ -27,6 +28,8 @@ function AnalyzeResult(props){
     const [serverInfor, setServerInfor] = useState("")
 
 
+
+
     useEffect(async ()=>{
         let {url, token, isAnalyze} = props.location.state
         
@@ -36,7 +39,6 @@ function AnalyzeResult(props){
         await getData(url, token, isAnalyze)
     },[])
 
-    // send request to server to get information
     async function getData(url, token, isAnalyze){
         let method='post'
         let query=''
@@ -117,7 +119,7 @@ function AnalyzeResult(props){
             body:body
         }).then(res => res.json()).then(data => {
             setWebtech(data.technologies)
-            console.log("this is largeio infor:" , data)
+            console.log("this is webtech infor:" , data)
         })
 
         //////////////////////////////////////////////////////////////////
@@ -220,7 +222,7 @@ function AnalyzeResult(props){
             body:body
         }).then(res => res.json()).then(data => {
             console.log("this is wafw00f infor:" , data)
-            setWafw00f(JSON.stringify(data)) 
+            setWafw00f(JSON.parse(data))
         })
 
         // fetch for scanning website
@@ -234,7 +236,7 @@ function AnalyzeResult(props){
             body:body
         }).then(res => res.json()).then(data => {
             console.log("this is wpscan infor:" , data)
-            setWpscan(JSON.stringify(data)) 
+            setWpscan(JSON.parse(data))
         })
 
         fetch(host+'/url_analyze/droopescan'+query,{
@@ -247,7 +249,20 @@ function AnalyzeResult(props){
             body:body
         }).then(res => res.json()).then(data => {
             console.log("this is droopescan infor:" , data)
-            setDroope(JSON.stringify(data)) 
+            setDroope(JSON.parse(data))
+        })
+
+        fetch(host+'/url_analyze/joomscan'+query,{
+            method:'POST',
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        }).then(res => res.json()).then(data => {
+            console.log("this is joomscan infor:" , data)
+            setJoomscan(data)
         })
 
         fetch(host+'/url_analyze/nikto'+query,{
@@ -260,11 +275,28 @@ function AnalyzeResult(props){
             body:body
         }).then(res => res.json()).then(data => {
             console.log("this is nikto infor:" , data)
-            setNikto(JSON.stringify(data)) 
+            setNikto(data)
         })
     }
 
+    async function handleSubmit(e){
+        e.preventDefault()
+        let {url, token} = props.location.state
+        let body=JSON.stringify({url:url, token: token})
+        let result = await fetch(host+'/create_report',{
+            method:"post",
+            mode: 'cors',
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:body
+        })
+        console.log(result.body)
+    }
+
     return(<div id="report">
+    <button class="create-report btn btn-info" onClick={handleSubmit}>Create report</button>
     <div className="tabs">
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-1" defaultChecked className="tab-switch"/>
@@ -274,7 +306,7 @@ function AnalyzeResult(props){
                 <h3 className="card-title">Technologies</h3>
                 <p className="card-category">Information about the platform of target website</p>
           </div>
-          <TabTech tech={[wapp,netcraft,largeio]}/>
+          <TabTech tech={[wapp,netcraft,largeio,webtech,whatweb]}/>
           </div>
           </div>
         <div className="tab">
@@ -285,18 +317,18 @@ function AnalyzeResult(props){
                 <h3 className="card-title">Domain</h3>
                 <p className="card-category">Information about the domain of target website</p>
           </div>
-          <TabDomain domain={whois}/>
+          <TabDomain domain={[whois,sublist3r.subdomains]}/>
           </div>
         </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-3" className="tab-switch"/>
-          <label htmlFor="tab-3" className="tab-label">Dictionary tree</label>
+          <label htmlFor="tab-3" className="tab-label">Directory  tree</label>
           <div className="tab-content">
           <div className="card-header">
-                <h3 className="card-title">Dictionary</h3>
+                <h3 className="card-title">Directory</h3>
                 <p className="card-category">Information about the dictionary of target website</p>
           </div>
-          <TabDic dic={dic} />
+          <TabDic dic={[dic,gobuster]} />
           </div>
         </div>
         <div className="tab">
@@ -319,6 +351,28 @@ function AnalyzeResult(props){
                 <p className="card-category">Information about the server of target website</p>
           </div>
           <TabServer nmap={serverInfor}/>
+          </div>
+        </div>
+        <div className="tab">
+          <input type="radio" name="css-tabs" id="tab-6" className="tab-switch"/>
+          <label htmlFor="tab-6" className="tab-label">Detect web firewall</label>
+          <div className="tab-content">
+          <div className="card-header">
+                <h3 className="card-title">Detect web firewall</h3>
+                <p className="card-category">Information about the web application firewall of target website</p>
+          </div>
+          <TabDetectWaf wafw00f={wafw00f}/>
+          </div>w
+        </div>
+        <div className="tab">
+          <input type="radio" name="css-tabs" id="tab-7" className="tab-switch"/>
+          <label htmlFor="tab-7" className="tab-label">Server scanning</label>
+          <div className="tab-content">
+          <div className="card-header">
+                <h3 className="card-title">Server</h3>
+                <p className="card-category">Information about the server of target website</p>
+          </div>
+          <TabScan scans={[wpscan,droopescan,joomscan,nikto]}/>
           </div>
         </div>
     </div>

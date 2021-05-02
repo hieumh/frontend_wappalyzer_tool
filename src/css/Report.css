@@ -9,12 +9,12 @@
     background-color: #555;
   }
 
-  #id.content{
+  #id.content {
     padding: 0 18px;
     background-color: #f1f1f1;
   }
 
-  #cve .content{
+  #cve .content {
       padding: 0 18px;
       display: block;
       background-color: #f1f1f1;
@@ -26,7 +26,7 @@
     overflow: hidden;
     background-color: #f1f1f1;
   }
-  /* .nav-report > li{
+  /* .nav-report > li {
     display: inline-block;
     float: left;
     display: block;
@@ -54,37 +54,41 @@
   /* format list tool */
   #techonologies {
     display:flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap:wrap;
     border-radius: 4px;
     background-clip: border-box;
   }
 
-  #tab-detail{
-    width: 85%;
-    left: 15%;
+  #tab-detail {
     overflow: scroll;
     height: 80vh;
     padding-left:10px;
   }
-  #list-tools{
-    display: inline-block;
-    width: 15%;
+  #list-tools {  
+    display: inline;
     height: 100%;
     text-align: center;
-    border: 0.125rem solid #b5b1be;
+    border-bottom: 0.125rem solid #626163;
     border-radius:4px;
-  }
-  #list-tools > h4 {
+    margin-bottom:50px;
+    width: 100%;
+  } 
+  /* #list-tools > h4 {
     border-bottom: 0.125rem solid #f2edfd;
     margin-bottom:0;
     padding:10px;
 
-  }
+  } */
 
-  #list-tools > button{
-    display: block;
-    width:100%;
+  #list-tools > button {
+    display: inline;
+    border-radius: 5px;
+    width:20%;
+    float:left;
+    border-right: 1px solid #a9a7a7;
+    border-left: 1px solid #a9a7a7;
+    border-top: 1px solid #a9a7a7;
   }
 
   #dic {
@@ -160,35 +164,69 @@
     padding: 5px;
   } */
 
-  #domain {
+  #domain-whois {
     overflow: scroll;
     height: 80vh;
+    width:70%;
+    display: inline-block;
   }
 
-  #domain > p {
+  #domain-whois > p {
     margin:0;
+  }
+
+  #domain-sublist3r {
+    overflow:scroll;
+    height:80vh;
+    width:20%;
+    display: inline-block;
+    margin:35px 15px 10px 15px;
   }
 
   #report {
     padding: 30px;
   }
 
-  #tech-detail{
+  #tech-detail {
     margin-top: 30px;
     margin-bottom: 30px;
   }
-  .name-tech{
+  .name-tech {
     background-color: #dad9d9;
     border-radius:4px;
     margin-bottom:0;
     padding: 10px 20px;
   }
 
-  .body-tech{
+  .body-tech {
     background-color: #efefef;
     padding: 10px 20px;
     border-radius:4px;
+  }
 
+  #scans {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #scan-content {
+    overflow: scroll;
+    height: 80vh;
+    padding-left:10px;
+  }
+
+  p { 
+    margin: 0 ;
+  }
+
+  i {
+    padding-left:20px;
+  }
+
+  .create-report {
+    position:absolute;
+    right: 30px;
+    z-index: 1000;
   }
 
   /* ////////////////////////////////////////// */
