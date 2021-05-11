@@ -10,11 +10,14 @@ function HistoryReport(){
     const [location, setLocation] = useState({})
     const styleTable ={"marginTop": "5px",
         "marginLeft": "5px"}
-
+        
     useEffect(()=>{
-        fetch(host+'/report',{mode:'cors',headers:{
+        fetch(host+'/history',{
+            mode:'cors',
+            headers:{
             'content-type': 'application/json'
         }}).then(data=>data.json()).then(data =>{
+            console.log(data);
             setHistory(data)
         })
     },[])
@@ -35,27 +38,6 @@ function HistoryReport(){
     }
     return(
         <div id='history'>
-        {/* <table id="history" style={styleTable}>
-        <tbody>
-        <tr>
-            <th>_id</th>
-            <th>Website</th>
-         </tr>
-            {
-                history.map(ele=>{
-                    console.log(ele)
-                    return(
-                        <tr key={ele._id}>
-                            <td id={ele.urls} onClick={handleClick}>{ele._id}</td>
-                            <td>{ele.urls}</td>
-                        </tr>
-                    )
-                })
-            }
-            </tbody>
-        </table> */}
-
-
         <div className='history-card'>
             <div className='card-header'>
                 <h3 className='card-title'>History</h3>
@@ -68,11 +50,25 @@ function HistoryReport(){
                             <th>ID</th>
                             <th>Url</th>
                             <th>Created time</th>
-                            <th>Create PDF file</th>
+                            <th>Create HTML file</th>
                         </tr>
                     </thead>
                     <tbody>
-
+                        {
+                            history.length !== 0 ? history.map((element, index)=>{
+                                return (<tr key={index}>
+                                    <td>{index}</td>
+                                    <td>{element.url}</td>
+                                    <td>{element.time_create}</td>
+                                    <td><button className='btn btn-secondary btn-lg btn-block'>Create HTML file</button></td>
+                                </tr>)
+                            }) : <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

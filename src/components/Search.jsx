@@ -6,34 +6,24 @@ import '../css/Animation.css'
 import '../css/Card.css'
 
 function Search(){
-    const [search, setSearch] = useState({
-        target:'',
-        year:''
-    })
+    const [search, setSearch] = useState("")
     const [hidden,setHidden] = useState({visibility: "hidden"})
-    const [cves, setCVES] = useState([])
 
     function handleChange(e){
         if(e.keyCode === 13){
-            handleSubmit(e)
+            document.getElementById("submit-button").click()
             return
         }
 
-        const {name,value} = e.target
-        setSearch((prev)=>{
-            return({
-                ...prev,
-                [name]:value
-            })
-        })
+        const {value} = e.target
+        setSearch(value)
         // setSearch(value)
      }
  
     function handleSubmit(e){
-        console.log("This is submit")
         e.preventDefault()
-        console.log(search)
-        let link = host+'/search/'+search.target+'/'+search.year
+
+        let link = host+'/search_database?pattern='+search
         setHidden({})
         
         fetch(link,{
@@ -43,14 +33,12 @@ function Search(){
                 'content-type': 'application/json'
             }
         }).then(data => data.json()).then(data => {
-            console.log("this is technologies:" , data)
+
             let result = []
             for (const index in data){
                 result.push(data[index])
-            }
+            }   
             console.log("result:",result)
-            setCVES(result)
-            setHidden({visibility: "hidden"})
         })
     }
 
@@ -63,16 +51,17 @@ function Search(){
                     <p className='card-category'>Search information about report in database</p>
                 </div>
                 <div id="search-bar" className='card-body'>
-                    <p>All of this information are taken in database that were collected report by us</p>
-                <form method='post' action='' className='analyze'>
-                     <div id="input-box">
-                <img src="/icons/website/search-solid_2.svg" alt=""/>
-                <input type='text' name='target' className='input' placeholder="Search..." onChange={handleChange} />
-                 </div>
+                    <p>All of this information will be taken in database that were collected by us</p>
+                <form method='get' action='' className='analyze'>
+                    <div id="input-box">
+                        <img src="/icons/website/search-solid_2.svg" alt=""/>
+                        <input type='text' name='target' className='input' placeholder="Search..." onChange={handleChange} />
+                        <input id="submit-button" type='submit' onClick={handleSubmit} hidden/>
+                    </div>
                 </form>
                 </div>    
 
-                <div id='search-result'>
+                <div id='search-result' style={hidden}>
                     <h4>Search result:</h4>
                     {/* All information will be saved here */}
 

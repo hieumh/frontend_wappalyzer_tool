@@ -69,7 +69,7 @@ function TabTech(props){
         )
     }   
     return(<div id='techonologies' className="card-body">
-        <div id='list-tools'>
+        <div className='list-tools'>
             <button href="#" className="btn btn-light" onClick={handleTech} id="wapp">Wappalzyer</button>
             <button href="#" className="btn btn-light" onClick={handleTech} id="netcraft">Netcraft</button>
             <button href="#" className="btn btn-light" onClick={handleTech} id="largeio">Largeio</button>
@@ -98,89 +98,113 @@ function TabTech(props){
 }
 
 function TabDomain(props){
+    const tools = ["whois","sublist3r"]
+    const [domain, setDomain] = useState(props.domain[0])
+    const [type, setType] = useState('whois')
 
 
-    return(<div>
-    <div id="domain-whois" className="card-body">
-        <b>Domain name</b>:{props.domain[0].domain_name != null ? props.domain[0].domain_name.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Creation date</b>:{props.domain[0].creation_date != null ? props.domain[0].creation_date.map((ele,index)=>{
-            return <p key={index}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Dnssec</b>:{props.domain[0].dnssec != null ? props.domain[0].dnssec.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Email</b>: {props.domain[0].email != null ? props.domain[0].email.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Expiration date</b>:{props.domain[0].expiration_date != null ? props.domain[0].expiration_date.map((ele, index)=>{
-            return <p key={index}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Name server</b>: {props.domain[0].name_server != null ? props.domain[0].name_server.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Org</b>:{props.domain[0].org != null ? props.domain[0].org.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Referral url</b>:{props.domain[0].referral_url != null ? props.domain[0].referral_url.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Registrar</b>:{props.domain[0].registrar != null ? props.domain[0].registrar.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>State</b>:{props.domain[0].state != null ? props.domain[0].state.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Status</b>: {props.domain[0].status != null ? props.domain[0].status.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Updated date</b>: {props.domain[0].updated_date != null ? props.domain[0].updated_date.map((ele,index)=>{
-            return <p key={index}>{ele}</p>
-        }): <p>unknown</p>}
-        <br />
-        <b>Whois server</b>:{props.domain[0].whois_server != null ? props.domain[0].whois_server.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Address</b>:{props.domain[0].address != null ? props.domain[0].address.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>City</b>:{props.domain[0].city != null ? props.domain[0].city.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Country</b>:{props.domain[0].country != null ? props.domain[0].country.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-        <br />
-        <b>Zipcode</b>:{props.domain[0].zipcode != null ? props.domain[0].zipcode.map((ele)=>{
-            return <p key={ele}>{ele}</p>
-        }) : <p>unknown</p>}
-    </div>
-    <div id="domain-sublist3r">
-        {!props.domain[1] ? <p>""</p> : props.domain[1].map((ele,index)=>{
-            return <p key={index}>{ele}</p>
-        })}
-    </div>
+    function handleDomain(e){
+        let index = tools.lastIndexOf(e.target.id)
+        setDomain(props.domain[index])
+        setType(e.target.id)
+    }
+
+    // function showToolResult(params){
+        
+    // }
+
+    return(<div id='domain' className="card-body">
+        <div className='list-tools'>
+            <button href="#" className="btn btn-light" onClick={handleDomain} id="whois">Whois</button>
+            <button href="#" className="btn btn-light" onClick={handleDomain} id="sublist3r">Sublist3r</button>
+        </div>
+        {(()=>{
+            switch(type){
+                case "whois":
+                    return (<div id="domain-whois">   
+                <b>Domain name</b>:{domain.domain_name != null ? domain.domain_name.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Creation date</b>:{domain.creation_date != null ? domain.creation_date.map((ele,index)=>{
+                    return <p key={index}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Dnssec</b>:{domain.dnssec != null ? domain.dnssec.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Email</b>: {domain.email != null ? domain.email.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Expiration date</b>:{domain.expiration_date != null ? domain.expiration_date.map((ele, index)=>{
+                    return <p key={index}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Name server</b>: {domain.name_server != null ? domain.name_server.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Org</b>:{domain.org != null ? domain.org.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Referral url</b>:{domain.referral_url != null ? domain.referral_url.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Registrar</b>:{domain.registrar != null ? domain.registrar.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>State</b>:{domain.state != null ? domain.state.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Status</b>: {domain.status != null ? domain.status.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Updated date</b>: {domain.updated_date != null ? domain.updated_date.map((ele,index)=>{
+                    return <p key={index}>{ele}</p>
+                }): <p>unknown</p>}
+                <br />
+                <b>Whois server</b>:{domain.whois_server != null ? domain.whois_server.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Address</b>:{domain.address != null ? domain.address.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>City</b>:{domain.city != null ? domain.city.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Country</b>:{domain.country != null ? domain.country.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+                <br />
+                <b>Zipcode</b>:{domain.zipcode != null ? domain.zipcode.map((ele)=>{
+                    return <p key={ele}>{ele}</p>
+                }) : <p>unknown</p>}
+            </div>)
+            case "sublist3r":   
+                return(
+                    <div id="domain-sublist3r">
+                    { !domain ? <p></p> : domain.map((ele,index)=>{
+                        return <p key={index}>{ele}</p>
+                    })}
+                    </div>
+                )
+            }
+        })()}
     </div>)
 }
 
+
 function TabDic(props){
-
-
     function createTree(dic){
         let keys = Object.keys(dic)
 
@@ -216,21 +240,10 @@ function TabDic(props){
 }
 
 function TabDNS(props){
-
     const [option, setOption] = useState("A")
 
     function handleClick(e){
         setOption(e.target.innerHTML)
-    }
-    
-
-    function showResult(){
-        let temp = props.dns[option]
-        temp = temp.split("\n")
-
-        return temp.map((ele,index)=>{
-            return <p key={index}>{ele === "" ? "\t" : ele}</p>
-        })
     }
 
     if(props.dns.length === 0){
@@ -251,7 +264,9 @@ function TabDNS(props){
             <button onClick={handleClick}>TXT</button>
         </div>
         <div className="code">
-        {showResult()}
+        { props.dns[option].split("\n").map((ele,index)=>{
+            return <p key={index}>{ele === "" ? "\t" : ele}</p>
+        })}
         </div>
     </div>)
 }
@@ -303,13 +318,13 @@ function TabScan(props){
 
 
     return(<div id="scans" className='card-body'>
-        <div id='list-tools'>
+        <div className='list-tools'>
             <button href="#" className="btn btn-light" onClick={handleScan} id="wpscan">Wpscan</button>
             <button href="#" className="btn btn-light" onClick={handleScan} id="droopescan">Droopescan</button>
             <button href="#" className="btn btn-light" onClick={handleScan} id="joomscan">Joomscan</button>
             <button href="#" className="btn btn-light" onClick={handleScan} id="nikto">Nikto</button>
         </div>
-        <div id="scan-content">
+        <div className="scan-content">
             {_type === "joomscan" ? <div>{
                 tool === "" || typeof tool !== "string" ? <div></div> : <div>{tool.split('\n').map(ele=>{
                     return <p>{ele}</p>

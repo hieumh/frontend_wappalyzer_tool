@@ -65,7 +65,7 @@
     height: 80vh;
     padding-left:10px;
   }
-  #list-tools {  
+  .list-tools {  
     display: inline;
     height: 100%;
     text-align: center;
@@ -81,7 +81,7 @@
 
   } */
 
-  #list-tools > button {
+  .list-tools > button {
     display: inline;
     border-radius: 5px;
     width:20%;
@@ -159,15 +159,15 @@
     display: inline-block;
   } */
 
-  /* #domain { 
-    margin: 10px 5%;
-    padding: 5px;
-  } */
+  #domain {
+    display: flex;
+    flex-direction: column;
+  }
 
   #domain-whois {
     overflow: scroll;
     height: 80vh;
-    width:70%;
+    width:100%;
     display: inline-block;
   }
 
@@ -178,8 +178,8 @@
   #domain-sublist3r {
     overflow:scroll;
     height:80vh;
-    width:20%;
     display: inline-block;
+    width:100%;
     margin:35px 15px 10px 15px;
   }
 

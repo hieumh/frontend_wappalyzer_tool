@@ -64,7 +64,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done wappalyzer")
             setWapp(data.technologies)
         })
 
@@ -78,7 +77,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done netcraft")
             setNetcraft(data.technologies)
         })
     
@@ -92,7 +90,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done largeio")
             setLargeio(data.technologies)
         })
 
@@ -106,7 +103,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done whatwebb")
             setWhatweb(data.technologies)
         })
 
@@ -120,7 +116,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done webtech")
             setWebtech(data.technologies)
         })
 
@@ -137,7 +132,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done whois")
             setWhois(data)
         })
 
@@ -150,7 +144,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done sublist3r")
             setSublist3r(data)
         })
         /////////////////////////////////////////////////////////////////
@@ -166,7 +159,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done directories of wappalyzer")
             setDic(data)
         })
 
@@ -179,7 +171,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done gobuster")
             setGobuster(data)
         })
 
@@ -195,9 +186,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done nmap")
-            console.log(data)
-            console.log(data.nmap)
+            data = JSON.parse(data)
             setServerInfor(data.nmap)
         })
     
@@ -211,7 +200,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done dns")
             setDnsInfor(data) 
         })
 
@@ -225,7 +213,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done wafw00f")
             setWafw00f(JSON.parse(data))
         })
 
@@ -239,7 +226,7 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done wpscan")
+            console.log(data, typeof data)
             setWpscan(JSON.parse(data))
         })
 
@@ -252,7 +239,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done droopescan")
             setDroope(JSON.parse(data))
         })
 
@@ -265,7 +251,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done joomscan")
             setJoomscan(data)
         })
 
@@ -278,7 +263,6 @@ function AnalyzeResult(props){
             },
             body:body
         }).then(res => res.json()).then(data => {
-            toast.info("Done nikto scan")
             setNikto(data)
         })
     }
@@ -286,6 +270,7 @@ function AnalyzeResult(props){
     async function handleSubmit(e){
         e.preventDefault()
         let {url, token} = props.location.state
+        url = "http://example.com/"
         let body=JSON.stringify({url:url, token: token})
         let result = await fetch(host+'/create_report',{
             method:"post",
@@ -296,7 +281,7 @@ function AnalyzeResult(props){
             },
             body:body
         })
-        console.log(result.body)
+        toast.success("Create report success")
     }
 
     return(<div id="report">
@@ -368,7 +353,7 @@ function AnalyzeResult(props){
                 <p className="card-category">Information about the web application firewall of target website</p>
           </div>
           <TabDetectWaf wafw00f={wafw00f}/>
-          </div>w
+          </div>
         </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-7" className="tab-switch"/>
