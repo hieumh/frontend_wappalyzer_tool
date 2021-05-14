@@ -33,239 +33,240 @@ function AnalyzeResult(props){
 
 
     useEffect(async ()=>{
+        async function getData(url, token, isAnalyze){
+            let method='post'
+            let query=''
+            let body=JSON.stringify({url:url, token: token})
+            if(!isAnalyze){
+                method='get'
+                query="?url="+url
+                body=''
+            }
+    
+            console.log(method,query,body)
+            ////////////////////////////////////////
+            // fetch for technologies
+            // fetch for Tech
+            await fetch(host+'/url_analyze/wapp'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setWapp(data.technologies)
+            })
+    
+            // netcrafts
+            fetch(host+'/url_analyze/netcraft'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setNetcraft(data.technologies)
+            })
+        
+            // largeio
+            fetch(host+'/url_analyze/largeio'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setLargeio(data.technologies)
+            })
+    
+            // Whatwebb
+            fetch(host+'/url_analyze/whatweb'+query,{
+                method: method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setWhatweb(data.technologies)
+            })
+    
+            // Webtech
+            fetch(host+'/url_analyze/webtech'+query,{
+                method: method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setWebtech(data.technologies)
+            })
+    
+            //////////////////////////////////////////////////////////////////
+        
+            ////////////////////////////////////////////////////////////////
+            // fetch for domain
+            fetch(host+'/url_analyze/whois'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setWhois(data)
+            })
+    
+            fetch(host+'/url_analyze/sublist3r'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setSublist3r(data)
+            })
+            /////////////////////////////////////////////////////////////////
+        
+            ////////////////////////////////////////////////////////////////
+            // fetch for dic
+            fetch(host+'/url_analyze/dic'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setDic(data)
+            })
+    
+            fetch(host+'/url_analyze/gobuster'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setGobuster(data)
+            })
+    
+            ///////////////////////////////////////////////////////////////////
+        
+            // fetch for server
+            fetch(host+'/url_analyze/server'+query,{
+                method:method,
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                console.log(data.nmap, typeof data)
+                setServerInfor(data.nmap)
+            })
+        
+            // fetch for DNS
+            fetch(host+'/url_analyze/dns'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setDnsInfor(data) 
+            })
+    
+            // fetch for detect web firewall
+            fetch(host+'/url_analyze/wafw00f'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setWafw00f(data)
+            })
+    
+            // fetch for scanning website
+            fetch(host+'/url_analyze/wpscan'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setWpscan(data)
+            })
+    
+            fetch(host+'/url_analyze/droopescan'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setDroope(data)
+            })
+    
+            fetch(host+'/url_analyze/joomscan'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                setJoomscan(data)
+            })
+    
+            fetch(host+'/url_analyze/nikto'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                console.log(data)
+                setNikto(data)
+            })
+        }
+
         let {url, token, isAnalyze} = props.location.state
         
-
         url = "http://example.com/"
         console.log(url, isAnalyze)
         await getData(url, token, isAnalyze)
     },[])
 
-    async function getData(url, token, isAnalyze){
-        let method='post'
-        let query=''
-        let body=JSON.stringify({url:url, token: token})
-        if(!isAnalyze){
-            method='get'
-            query="?url="+url
-            body=''
-        }
-
-        console.log(method,query,body)
-        ////////////////////////////////////////
-        // fetch for technologies
-        // fetch for Tech
-        await fetch(host+'/url_analyze/wapp'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setWapp(data.technologies)
-        })
-
-        // netcrafts
-        fetch(host+'/url_analyze/netcraft'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setNetcraft(data.technologies)
-        })
     
-        // largeio
-        fetch(host+'/url_analyze/largeio'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setLargeio(data.technologies)
-        })
-
-        // Whatwebb
-        fetch(host+'/url_analyze/whatweb'+query,{
-            method: method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setWhatweb(data.technologies)
-        })
-
-        // Webtech
-        fetch(host+'/url_analyze/webtech'+query,{
-            method: method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setWebtech(data.technologies)
-        })
-
-        //////////////////////////////////////////////////////////////////
-    
-        ////////////////////////////////////////////////////////////////
-        // fetch for domain
-        fetch(host+'/url_analyze/whois'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setWhois(data)
-        })
-
-        fetch(host+'/url_analyze/sublist3r'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setSublist3r(data)
-        })
-        /////////////////////////////////////////////////////////////////
-    
-        ////////////////////////////////////////////////////////////////
-        // fetch for dic
-        fetch(host+'/url_analyze/dic'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setDic(data)
-        })
-
-        fetch(host+'/url_analyze/gobuster'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setGobuster(data)
-        })
-
-        ///////////////////////////////////////////////////////////////////
-    
-        // fetch for server
-        fetch(host+'/url_analyze/server'+query,{
-            method:method,
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            data = JSON.parse(data)
-            setServerInfor(data.nmap)
-        })
-    
-        // fetch for DNS
-        fetch(host+'/url_analyze/dns'+query,{
-            method:'POST',
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setDnsInfor(data) 
-        })
-
-        // fetch for detect web firewall
-        fetch(host+'/url_analyze/wafw00f'+query,{
-            method:'POST',
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setWafw00f(JSON.parse(data))
-        })
-
-        // fetch for scanning website
-        fetch(host+'/url_analyze/wpscan'+query,{
-            method:'POST',
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            console.log(data, typeof data)
-            setWpscan(JSON.parse(data))
-        })
-
-        fetch(host+'/url_analyze/droopescan'+query,{
-            method:'POST',
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setDroope(JSON.parse(data))
-        })
-
-        fetch(host+'/url_analyze/joomscan'+query,{
-            method:'POST',
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setJoomscan(data)
-        })
-
-        fetch(host+'/url_analyze/nikto'+query,{
-            method:'POST',
-            mode: 'cors',
-            credentials:'include',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        }).then(res => res.json()).then(data => {
-            setNikto(data)
-        })
-    }
 
     async function handleSubmit(e){
         e.preventDefault()
@@ -341,7 +342,7 @@ function AnalyzeResult(props){
                 <h3 className="card-title">Server</h3>
                 <p className="card-category">Information about the server of target website</p>
           </div>
-          <TabServer nmap={serverInfor ? serverInfor.nmap : ""}/>
+          <TabServer nmap={serverInfor ? serverInfor : ""}/>
           </div>
         </div>
         <div className="tab">

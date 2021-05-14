@@ -102,6 +102,12 @@ function TabDomain(props){
     const [domain, setDomain] = useState(props.domain[0])
     const [type, setType] = useState('whois')
 
+    useEffect(()=>{
+        // when change props.domain this will update base on current type
+        let index = tools.lastIndexOf(type)
+        setDomain(props.domain[index])
+    },[props.domain,type])
+
 
     function handleDomain(e){
         let index = tools.lastIndexOf(e.target.id)

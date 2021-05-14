@@ -8,8 +8,6 @@ import '../css/Card.css'
 function HistoryReport(){
     const [history,setHistory] = useState([])
     const [location, setLocation] = useState({})
-    const styleTable ={"marginTop": "5px",
-        "marginLeft": "5px"}
         
     useEffect(()=>{
         fetch(host+'/history',{
