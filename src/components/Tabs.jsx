@@ -51,14 +51,17 @@ function TabTech(props){
     const tools = ["wapp","netcraft","largeio","webtech","whatweb"]
     const [tech, setTech] = useState([])
     const [type, setType] = useState('wapp')
+    console.log(props.tech)
 
     useEffect(()=>{
         let index = tools.lastIndexOf(type)
         setTech(props.tech[index])
-    },[props.tech,type,tools,])
+    },[props.tech,type])
 
     function handleTech(e){
+        let index = tools.lastIndexOf(e.target.id)
         setType(e.target.id)
+        setTech(props.tech[index])
     }
 
     if(props.tech.length === 0) {

@@ -69,7 +69,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                setNetcraft(data.technologies)
+                setNetcraft(data.technologies === "a"? [] : data.technologies)
             })
         
             // largeio
@@ -82,6 +82,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                console.log("this is largeio frontend:" ,data)
                 setLargeio(data.technologies)
             })
     
@@ -261,7 +262,8 @@ function AnalyzeResult(props){
 
         let {url, token, isAnalyze} = props.location.state
         
-        url = "http://example.com/"
+        // url = "http://example.com/"
+        url = "http://192.168.149.137/"
         console.log(url, isAnalyze)
         await getData(url, token, isAnalyze)
     },[])
@@ -271,7 +273,8 @@ function AnalyzeResult(props){
     async function handleSubmit(e){
         e.preventDefault()
         let {url, token} = props.location.state
-        url = "http://example.com/"
+        // url = "http://example.com/"
+        url = "http://192.168.149.137/"
         let body=JSON.stringify({url:url, token: token})
         let result = await fetch(host+'/create_report',{
             method:"post",
