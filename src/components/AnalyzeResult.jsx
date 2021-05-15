@@ -69,7 +69,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                setNetcraft(data.technologies === "a"? [] : data.technologies)
+                setNetcraft(data.technologies === "a" ? [] : data.technologies)
             })
         
             // largeio
@@ -255,7 +255,6 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                console.log(data)
                 setNikto(data)
             })
         }
