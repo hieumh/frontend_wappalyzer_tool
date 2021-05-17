@@ -331,9 +331,9 @@
   background-color: #fa3e3e;
   border-radius: 100px;
   color: white;
-  font-size: 10px;
+  font-size: 10px;  
   position: absolute;
-  top: 0;
+  top: 3px;
   right: 3px;
   text-align: center;
   line-height: 16px;
