@@ -13,6 +13,7 @@ function AnalyzeResult(props){
     const [largeio, setLargeio] = useState([])
     const [whatweb, setWhatweb] = useState([])
     const [webtech, setWebtech] = useState([])
+
     const [wafw00f,setWafw00f] = useState("")
     const [wpscan, setWpscan] = useState("")
     const [droopescan, setDroope] = useState("")
@@ -20,7 +21,7 @@ function AnalyzeResult(props){
     const [nikto, setNikto] = useState("")
 
     const [whois, setWhois] = useState("")
-    const [sublist3r, setSublist3r] = useState("")
+    const [sublist3r, setSublist3r] = useState([])
 
     const [gobuster, setGobuster] = useState("")
     const [dic, setDic] = useState("")
@@ -29,9 +30,19 @@ function AnalyzeResult(props){
 
     const [serverInfor, setServerInfor] = useState("")
 
+    const [count, setCount] =useState({
+        countTech:0,
+        countDomain:0,
+        countDns:0,
+        countDic:0,
+        countServer:0,
+        countWaf:0,
+        countScan:0
+    })
 
 
 
+    // use Effect for fetch data
     useEffect(async ()=>{
         async function getData(url, token, isAnalyze){
             let method='post'
@@ -57,6 +68,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setWapp(data.technologies)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countTech: prevState.countTech+1
+                    }
+                })
             })
     
             // netcrafts
@@ -70,6 +87,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setNetcraft(data.technologies === "a" ? [] : data.technologies)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countTech:prevState.countTech+1
+                    }
+                })
             })
         
             // largeio
@@ -83,6 +106,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setLargeio(data.technologies)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countTech:prevState.countTech+1
+                    }
+                })
             })
     
             // Whatwebb
@@ -96,6 +125,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setWhatweb(data.technologies)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countTech:prevState.countTech+1
+                    }
+                })
             })
     
             // Webtech
@@ -109,6 +144,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setWebtech(data.technologies)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countTech:prevState.countTech+1
+                    }
+                })
             })
     
             //////////////////////////////////////////////////////////////////
@@ -125,6 +166,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setWhois(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countDomain:prevState.countDomain+1
+                    }
+                })
             })
     
             fetch(host+'/url_analyze/sublist3r'+query,{
@@ -136,7 +183,13 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                setSublist3r(data)
+                setSublist3r(data.subdomains)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countDomain:prevState.countDomain+1
+                    }
+                })
             })
             /////////////////////////////////////////////////////////////////
         
@@ -152,6 +205,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setDic(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countDic:prevState.countDic+1
+                    }
+                })
             })
     
             fetch(host+'/url_analyze/gobuster'+query,{
@@ -164,6 +223,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setGobuster(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countDic:prevState.countDic+1
+                    }
+                })
             })
     
             ///////////////////////////////////////////////////////////////////
@@ -178,8 +243,13 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                console.log(data.nmap, typeof data)
                 setServerInfor(data.nmap)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countServer:prevState.countServer+1
+                    }
+                })
             })
         
             // fetch for DNS
@@ -192,7 +262,13 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                setDnsInfor(data) 
+                setDnsInfor(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countDns:prevState.countDns+1
+                    }
+                })
             })
     
             // fetch for detect web firewall
@@ -206,6 +282,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setWafw00f(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countWaf:prevState.countWaf+1
+                    }
+                })
             })
     
             // fetch for scanning website
@@ -219,6 +301,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setWpscan(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countScan:prevState.countScan+1
+                    }
+                })
             })
     
             fetch(host+'/url_analyze/droopescan'+query,{
@@ -231,6 +319,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setDroope(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countScan:prevState.countScan+1
+                    }
+                })
             })
     
             fetch(host+'/url_analyze/joomscan'+query,{
@@ -243,6 +337,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setJoomscan(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countScan:prevState.countScan+1
+                    }
+                })
             })
     
             fetch(host+'/url_analyze/nikto'+query,{
@@ -255,6 +355,12 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 setNikto(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countScan:prevState.countScan+1
+                    }
+                })
             })
         }
 
@@ -265,7 +371,6 @@ function AnalyzeResult(props){
         await getData(url, token, isAnalyze)
     },[])
 
-    
 
     async function handleSubmit(e){
         e.preventDefault()
@@ -284,6 +389,15 @@ function AnalyzeResult(props){
         toast.success("Create report success")
     }
 
+    function handleNotify(e){
+        setCount((prevState)=>{
+            return {
+                ...prevState,
+                [e.target.id]:0
+            }
+        })
+    }
+
     return(<div id="report">
         
     <button className="create-report btn btn-info" onClick={handleSubmit}>Create report</button>
@@ -291,7 +405,10 @@ function AnalyzeResult(props){
     <div className="tabs">
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-1" defaultChecked className="tab-switch"/>
-          <label htmlFor="tab-1" className="tab-label">Technologies</label>
+          <label htmlFor="tab-1" className="tab-label" onClick={handleNotify} id="countTech">Technologies
+          {count.countTech === 0 ? null : <span className="notification-tab">{count.countTech}</span>}
+          </label>
+          
           <div className="tab-content"> 
           <div className="card-header">
                 <h3 className="card-title">Technologies</h3>
@@ -302,18 +419,22 @@ function AnalyzeResult(props){
           </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-2" className="tab-switch"/>
-          <label htmlFor="tab-2" className="tab-label">Domain</label>
+          <label htmlFor="tab-2" className="tab-label" onClick={handleNotify} id="countDomain">Domain
+          {count.countDomain === 0 ? null : <span className="notification-tab">{count.countDomain}</span>}
+          </label>
           <div className="tab-content">
           <div className="card-header">
                 <h3 className="card-title">Domain</h3>
                 <p className="card-category">Information about the domain of target website</p>
           </div>
-          <TabDomain domain={[whois,sublist3r.subdomains]}/>
+          <TabDomain domain={[whois,sublist3r]}/>
           </div>
         </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-3" className="tab-switch"/>
-          <label htmlFor="tab-3" className="tab-label">Directory  tree</label>
+          <label htmlFor="tab-3" className="tab-label" onClick={handleNotify} id="countDic">Directory  tree
+          {count.countDic === 0 ? null : <span className="notification-tab">{count.countDic}</span>}
+          </label>
           <div className="tab-content">
           <div className="card-header">
                 <h3 className="card-title">Directory</h3>
@@ -324,7 +445,9 @@ function AnalyzeResult(props){
         </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-4" className="tab-switch"/>
-          <label htmlFor="tab-4" className="tab-label">DNS</label>
+          <label htmlFor="tab-4" className="tab-label" onClick={handleNotify} id="countDns">DNS
+          {count.countDns === 0 ? null : <span className="notification-tab">{count.countDns}</span>}
+          </label>
           <div className="tab-content">
           <div className="card-header">
                 <h3 className="card-title">DNS</h3>
@@ -335,7 +458,9 @@ function AnalyzeResult(props){
         </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-5" className="tab-switch"/>
-          <label htmlFor="tab-5" className="tab-label">Server Information</label>
+          <label htmlFor="tab-5" className="tab-label" onClick={handleNotify} id="countServer">Server Information
+          {count.countServer === 0 ? null : <span className="notification-tab">{count.countServer}</span>}
+          </label>
           <div className="tab-content">
           <div className="card-header">
                 <h3 className="card-title">Server</h3>
@@ -346,7 +471,9 @@ function AnalyzeResult(props){
         </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-6" className="tab-switch"/>
-          <label htmlFor="tab-6" className="tab-label">Detect web firewall</label>
+          <label htmlFor="tab-6" className="tab-label" onClick={handleNotify} id="countWaf">Detect web firewall
+          {count.countWaf === 0 ? null : <span className="notification-tab">{count.countWaf}</span>}
+          </label>
           <div className="tab-content">
           <div className="card-header">
                 <h3 className="card-title">Detect web firewall</h3>
@@ -357,7 +484,9 @@ function AnalyzeResult(props){
         </div>
         <div className="tab">
           <input type="radio" name="css-tabs" id="tab-7" className="tab-switch"/>
-          <label htmlFor="tab-7" className="tab-label">Server scanning</label>
+          <label htmlFor="tab-7" className="tab-label" onClick={handleNotify} id="countScan">Server scanning
+          {count.countScan === 0 ? null : <span className="notification-tab">{count.countScan}</span>}
+          </label>
           <div className="tab-content">
           <div className="card-header">
                 <h3 className="card-title">Server</h3>
@@ -374,3 +503,4 @@ function AnalyzeResult(props){
 export default AnalyzeResult
 
 {/* <div className="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> */}
+    

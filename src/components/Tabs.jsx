@@ -51,17 +51,21 @@ function TabTech(props){
     const tools = ["wapp","netcraft","largeio","webtech","whatweb"]
     const [tech, setTech] = useState([])
     const [type, setType] = useState('wapp')
-    console.log(props.tech)
-
+  
     useEffect(()=>{
         let index = tools.lastIndexOf(type)
         setTech(props.tech[index])
     },[props.tech,type])
 
     function handleTech(e){
+        e.preventDefault()
         let index = tools.lastIndexOf(e.target.id)
         setType(e.target.id)
         setTech(props.tech[index])
+
+        if(e.target.childNodes[1]){
+            e.target.childNodes[1].setAttribute("style","display:none")
+        }
     }
 
     if(props.tech.length === 0) {
@@ -73,11 +77,36 @@ function TabTech(props){
     }   
     return(<div id='techonologies' className="card-body">
         <div className='list-tools'>
-            <button href="#" className="btn btn-light" onClick={handleTech} id="wapp">Wappalzyer</button>
-            <button href="#" className="btn btn-light" onClick={handleTech} id="netcraft">Netcraft</button>
-            <button href="#" className="btn btn-light" onClick={handleTech} id="largeio">Largeio</button>
-            <button href="#" className="btn btn-light" onClick={handleTech} id="webtech">Webtech</button>
-            <button href="#" className="btn btn-light" onClick={handleTech} id="whatweb">Whatweb</button>
+        <div className="btn btn-light button-tech" onClick={handleTech} id="wapp">
+            Wappalyzer
+            {
+                props.tech[0].length ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleTech} id="netcraft">
+            Netcraft
+            {
+                props.tech[1].length ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleTech} id="largeio">
+        Largeio
+            {
+                props.tech[2].length ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleTech} id="webtech">
+        Webtech
+            {
+                props.tech[3].length ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleTech} id="whatweb">
+        Whatweb
+            {
+                props.tech[4].length ? <span className="notification-button">!</span> : null 
+            }
+        </div>
         </div>
         <ul id="tab-detail">
             {tech.map((data)=>{
@@ -116,6 +145,10 @@ function TabDomain(props){
         let index = tools.lastIndexOf(e.target.id)
         setDomain(props.domain[index])
         setType(e.target.id)
+
+        if(e.target.childNodes[1]){
+            e.target.childNodes[1].setAttribute("style","display:none")
+        }
     }
 
     // function showToolResult(params){
@@ -124,8 +157,18 @@ function TabDomain(props){
 
     return(<div id='domain' className="card-body">
         <div className='list-tools'>
-            <button href="#" className="btn btn-light" onClick={handleDomain} id="whois">Whois</button>
-            <button href="#" className="btn btn-light" onClick={handleDomain} id="sublist3r">Sublist3r</button>
+        <div className="btn btn-light button-tech" onClick={handleDomain} id="whois">
+            Whois
+            {
+                props.domain[0] ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleDomain} id="sublist3r">
+            Sublist3r
+            {
+                props.domain[1].length ? <span className="notification-button">!</span> : null 
+            }
+        </div>
         </div>
         {(()=>{
             switch(type){
@@ -314,6 +357,8 @@ function TabScan(props){
     const [tool,setTool] = useState([])
     const [type, setType] = useState("wpscan")
     let _type = type 
+
+
     useEffect(()=>{
         // set type scan-content when loading
         _type = type
@@ -323,15 +368,40 @@ function TabScan(props){
 
     function handleScan(e){
         setType(e.target.id)
+
+        if(e.target.childNodes[1]){
+            e.target.childNodes[1].setAttribute("style","display:none")
+        }
+
     }
 
 
     return(<div id="scans" className='card-body'>
         <div className='list-tools'>
-            <button href="#" className="btn btn-light" onClick={handleScan} id="wpscan">Wpscan</button>
-            <button href="#" className="btn btn-light" onClick={handleScan} id="droopescan">Droopescan</button>
-            <button href="#" className="btn btn-light" onClick={handleScan} id="joomscan">Joomscan</button>
-            <button href="#" className="btn btn-light" onClick={handleScan} id="nikto">Nikto</button>
+        <div className="btn btn-light button-tech" onClick={handleScan} id="wpscan">
+        Wpscan
+            {
+                props.scans[0] ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleScan} id="droopescan">
+        Droopescan
+            {
+                props.scans[1] ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleScan} id="joomscan">
+        Joomscan
+            {
+                props.scans[2] ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleScan} id="nikto">
+        Nikto
+            {
+                props.scans[3] ? <span className="notification-button">!</span> : null 
+            }
+        </div>
         </div>
         <div className="scan-content">
             {_type === "joomscan" ? <div>{

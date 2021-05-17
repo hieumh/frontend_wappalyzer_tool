@@ -91,6 +91,17 @@
     border-top: 1px solid #a9a7a7;
   }
 
+  .button-tech {
+    display: inline;
+    border-radius: 5px;
+    position:relative;
+    width:20%;
+    float:left;
+    border-right: 1px solid #a9a7a7;
+    border-left: 1px solid #a9a7a7;
+    border-top: 1px solid #a9a7a7;
+  }
+
   #dic {
     overflow:scroll;
     height: 80vh;
@@ -299,3 +310,34 @@
   opacity: 1;
   transition: all 0.35s;
 }
+
+/* ////////////////////////////////////////// */
+/* Notification */
+.notification-button {
+  background-color: #fa3e3e;
+  border-radius: 100px;
+  color: white;
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  right: 8px;
+  text-align: center;
+  line-height: 16px;
+  width: 17px;
+  z-index: 100000;
+}
+
+.notification-tab {
+  background-color: #fa3e3e;
+  border-radius: 100px;
+  color: white;
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  right: 3px;
+  text-align: center;
+  line-height: 16px;
+  width: 17px;
+  z-index: 100000;
+}
+
