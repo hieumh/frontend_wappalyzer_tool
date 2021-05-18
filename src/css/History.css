@@ -54,3 +54,31 @@
 .table-responsive {
   overflow: visible;
 }
+
+[data-title]:hover:after {
+  opacity: 1;
+  transition: all 0.2s ease 0.6s;
+  visibility: visible;
+}
+[data-title]:after {
+  content: attr(data-title);
+  position: absolute;
+  padding: 4px 8px 4px 8px;
+  white-space: pre;
+  color: #222;
+  border-radius: 5px;  
+  box-shadow: 0px 0px 15px #222;  
+  background-image: -webkit-linear-gradient(
+                      top, #f8f8f8, #cccccc); 
+                        
+  background-image: -moz-linear-gradient(
+                      top, #f8f8f8, #cccccc);  
+                        
+  background-image: -ms-linear-gradient(
+                      top, #f8f8f8, #cccccc); 
+                        
+  background-image: -o-linear-gradient(
+                      top, #f8f8f8, #cccccc);
+                        
+  visibility: hidden;
+}

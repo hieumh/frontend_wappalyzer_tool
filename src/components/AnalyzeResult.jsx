@@ -26,7 +26,8 @@ function AnalyzeResult(props){
     const [gobuster, setGobuster] = useState("")
     const [dic, setDic] = useState("")
 
-    const [dnsInfor, setDnsInfor] = useState("")
+    const [dig, setDig] = useState("")
+    const [fierce, setFierce] = useState("")
 
     const [serverInfor, setServerInfor] = useState("")
 
@@ -54,7 +55,7 @@ function AnalyzeResult(props){
                 body=''
             }
     
-            console.log(method,query,body)
+            // console.log(method,query,body)
             ////////////////////////////////////////
             // fetch for technologies
             // fetch for Tech
@@ -67,6 +68,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this wappalyzer")
                 setWapp(data.technologies)
                 setCount((prevState)=>{
                     return {
@@ -86,6 +88,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this netcraft")
                 setNetcraft(data.technologies === "a" ? [] : data.technologies)
                 setCount((prevState)=>{
                     return {
@@ -105,6 +108,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this largeio")
                 setLargeio(data.technologies)
                 setCount((prevState)=>{
                     return {
@@ -124,6 +128,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this whatweb")
                 setWhatweb(data.technologies)
                 setCount((prevState)=>{
                     return {
@@ -143,6 +148,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this webtech")
                 setWebtech(data.technologies)
                 setCount((prevState)=>{
                     return {
@@ -165,6 +171,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this whois")
                 setWhois(data)
                 setCount((prevState)=>{
                     return {
@@ -183,6 +190,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this sublist3r")
                 setSublist3r(data.subdomains)
                 setCount((prevState)=>{
                     return {
@@ -204,6 +212,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this dic")
                 setDic(data)
                 setCount((prevState)=>{
                     return {
@@ -222,6 +231,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this gobuster")
                 setGobuster(data)
                 setCount((prevState)=>{
                     return {
@@ -243,6 +253,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this nmap")
                 setServerInfor(data.nmap)
                 setCount((prevState)=>{
                     return {
@@ -253,7 +264,7 @@ function AnalyzeResult(props){
             })
         
             // fetch for DNS
-            fetch(host+'/url_analyze/dns'+query,{
+            fetch(host+'/url_analyze/dig'+query,{
                 method:'POST',
                 mode: 'cors',
                 credentials:'include',
@@ -262,7 +273,27 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                setDnsInfor(data)
+                // console.log("this dns")
+                setDig(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countDns:prevState.countDns+1
+                    }
+                })
+            })
+
+            fetch(host+'/url_analyze/fierce'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                // console.log("this dns")
+                setFierce(data)
                 setCount((prevState)=>{
                     return {
                         ...prevState,
@@ -281,6 +312,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this wafw00f")
                 setWafw00f(data)
                 setCount((prevState)=>{
                     return {
@@ -289,8 +321,42 @@ function AnalyzeResult(props){
                     }
                 })
             })
-    
-            // fetch for scanning website
+
+            fetch(host+'/url_analyze/nikto'+query,{
+                method:'POST',
+                mode: 'cors',
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            }).then(res => res.json()).then(data => {
+                // console.log("this nikto")
+                setNikto(data)
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countScan:prevState.countScan+1
+                    }
+                })
+            })
+        
+
+            //////////////////////////////////////////////
+            let checkCms = await fetch(host+'/url_analyze/cmseek',{
+                method:'POST',
+                mode:"cors",
+                credentials:'include',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body:body
+            })
+            checkCms = checkCms.json()
+
+            if(checkCms.cms_name){
+                // fetch for scanning website
+                console.log("have cms");
             fetch(host+'/url_analyze/wpscan'+query,{
                 method:'POST',
                 mode: 'cors',
@@ -300,6 +366,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this wpscan")
                 setWpscan(data)
                 setCount((prevState)=>{
                     return {
@@ -318,6 +385,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this droope")
                 setDroope(data)
                 setCount((prevState)=>{
                     return {
@@ -336,6 +404,7 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
+                // console.log("this joomscan")
                 setJoomscan(data)
                 setCount((prevState)=>{
                     return {
@@ -344,30 +413,16 @@ function AnalyzeResult(props){
                     }
                 })
             })
-    
-            fetch(host+'/url_analyze/nikto'+query,{
-                method:'POST',
-                mode: 'cors',
-                credentials:'include',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                setNikto(data)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countScan:prevState.countScan+1
-                    }
-                })
-            })
+            } else {
+                console.log("no cms");
+            }
         }
+            
 
         let {url, token, isAnalyze} = props.location.state
         
         url = "http://example.com/"
-        console.log(url, isAnalyze)
+        // console.log(url, isAnalyze)
         await getData(url, token, isAnalyze)
     },[])
 
@@ -453,7 +508,7 @@ function AnalyzeResult(props){
                 <h3 className="card-title">DNS</h3>
                 <p className="card-category">Information about the dns of target website</p>
           </div>
-          <TabDNS dns={dnsInfor} />
+          <TabDNS dns={[dig,fierce]} />
           </div>
         </div>
         <div className="tab">

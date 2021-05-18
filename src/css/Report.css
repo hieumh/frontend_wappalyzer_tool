@@ -125,9 +125,10 @@
     width: 15px;
   }
 
-  /* #dns {
-    
-  } */
+  #dns {
+    display: flex;
+    flex-direction: column;
+  }
 
   .dns-options {
     text-align: center;
@@ -341,3 +342,119 @@
   z-index: 100000;
 }
 
+/* /////////////////////////////////////////// */
+/* display text from json */
+.level-1 {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 25px;
+  font-weight: 600;
+  margin-top:20px;
+}
+
+.level-2 {
+  padding: 5px 0;
+}
+
+.level-3 {
+  padding: 5px 0;
+}
+/*
+.level-4 {
+  padding-left:40px;
+}
+
+.level-5 {
+  padding-left:50px;
+}
+
+.level-6 {
+  padding-left:60px;
+}
+
+.level-7 {
+  padding-left:70px;
+} */
+
+/* .block-level-1 {
+  border-bottom:#a9a7a7 solid;
+} */
+
+.block-level-1 {
+  border:#e7e6e6 0.001px solid;
+  padding:15px;
+  margin: 10px 0;
+  border-radius: 3px;
+}
+
+.block-level-2 > .level-2 {
+  margin: 1em 0 0.5em 0;
+  padding-left:20px;
+  background-color: #626163;
+  color:white;
+  font-family: 'Muli', sans-serif;
+  font-weight: normal;
+  border-radius:0 10px 0 10px;
+  font-size:20px;
+  line-height: 28px;
+}
+
+.block-level-3 > .level-3 {
+  margin: 1em 0 0.5em 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  border-bottom:#a9a7a7 0.05px solid;
+  padding-left: 0;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+.block-level-4 > .level-4 {
+  margin: 1em 0 0.5em 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+.block-level-5 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.block-level-5 > .level-5 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+.block-level-5 > .level-6 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+/* .block-level-2 > .level-2::after {
+  content:":";
+} */
+
+/* .block-level-2 > .level-3::before {
+  content:"• ";
+} */
+
+.block-level-3 > .level-3::after {
+  content:":";
+}
+
+.block-level-4 > .level-4::after {
+  content:":";
+}
+
+.block-level-5 > .level-5::after {
+  content:":";
+}
+/* .block-level-3 {
+  border-bottom:#a9a7a7 solid;
+} */

@@ -5,12 +5,12 @@ function isArrayObject(input){
         return false
     }
     return input.every((ele)=>{
-        return typeof ele === "object"
+        return typeof ele === "object" && ele !== null
     })
 }
 
 function isObject(input){
-    return typeof input === "object"  && !Array.isArray(input)
+    return typeof input === "object"  && !Array.isArray(input) && input !== null
 }
 
 function json2html(input, level){
@@ -74,6 +74,42 @@ function json2html(input, level){
     })
 }
 
+function json2htmlver2(input){
+    function js2HtmlCore(input,level){
+        let keys
+        try {
+            keys = Object.keys(input)
+        } catch (err){
+            // key rỗng
+            return <></>
+        } finally {
+            return keys.map((key)=>{
+                // if value of that key is object (not null)
+                if(isObject(input[key])){
+                    return (<div key={key} className={'block-level-'+level}><p className={"level-"+level}>{handleKey(key)}</p>{js2HtmlCore(input[key],level+1)}</div>)
+                } else if (isArrayObject(input[key])){
+                    return (<div key={key} className={'block-level-'+level}><p className={"level-"+level}>{handleKey(key)}</p>
+                        {input[key].map(ele=>{
+                            return js2HtmlCore(ele, level+1)
+                        })}
+                        </div>)
+                } else if (Array.isArray(input[key])){
+                    return (<div key={key} className={'block-level-'+level}>
+                    <p className={'level-'+level}>{handleKey(key)}</p>{input[key].map((ele,index)=>{
+                        return <p key={index} className={'level-'+ (level+1)}>{ele}</p>
+                    })}
+                </div>)
+                } else if (typeof input[key] === 'string' || typeof input[key] == 'number' || typeof input[key] === "boolean"){
+                    return(
+                        <div key={key} className={'block-level-'+level}><p className={'level-'+ level}>{handleKey(key)}</p><p className={'level-'+ (level+1)}>{typeof input[key] === "boolean" ? input[key].toString() : input[key]}</p></div>
+                    )
+                }
+            })
+        }
+    }
+    return js2HtmlCore(input,1)
+}
+
 
 // vd: scan_aborted, version, ... 
 function handleKey(keyStr){
@@ -83,4 +119,4 @@ function handleKey(keyStr){
 }   
 
 
-export {host,json2html}
+export {host,json2html,json2htmlver2}

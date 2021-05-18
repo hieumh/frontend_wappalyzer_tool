@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import {json2html} from '../lib_front'
+import {json2html,json2htmlver2} from '../lib_front'
 
 
 function TechDetail(props){    
@@ -51,6 +51,7 @@ function TabTech(props){
     const tools = ["wapp","netcraft","largeio","webtech","whatweb"]
     const [tech, setTech] = useState([])
     const [type, setType] = useState('wapp')
+    console.log(props.tech)
   
     useEffect(()=>{
         let index = tools.lastIndexOf(type)
@@ -173,7 +174,18 @@ function TabDomain(props){
         {(()=>{
             switch(type){
                 case "whois":
-                    return (<div id="domain-whois">   
+                    return <TabDomainWhois domain={domain}/>
+            case "sublist3r":   
+                return <TabDomainSublist3r domain={domain}/>
+            }
+        })()}
+    </div>)
+}
+
+function TabDomainWhois(props){
+    const domain = props.domain
+    return(
+        <div id="domain-whois">   
                 <b>Domain name</b>:{domain.domain_name != null ? domain.domain_name.map((ele)=>{
                     return <p key={ele}>{ele}</p>
                 }) : <p>unknown</p>}
@@ -241,17 +253,17 @@ function TabDomain(props){
                 <b>Zipcode</b>:{domain.zipcode != null ? domain.zipcode.map((ele)=>{
                     return <p key={ele}>{ele}</p>
                 }) : <p>unknown</p>}
-            </div>)
-            case "sublist3r":   
-                return(
-                    <div id="domain-sublist3r">
-                    { !domain ? <p></p> : domain.map((ele,index)=>{
-                        return <p key={index}>{ele}</p>
-                    })}
-                    </div>
-                )
-            }
-        })()}
+            </div>
+    )
+}
+
+function TabDomainSublist3r(props){
+    const domain = props.domain
+    return(
+    <div id="domain-sublist3r">
+    { !domain ? <p></p> : domain.map((ele,index)=>{
+        return <p key={index}>{ele}</p>
+    })}
     </div>)
 }
 
@@ -292,6 +304,65 @@ function TabDic(props){
 }
 
 function TabDNS(props){
+    const tools = ['dig','fierce']
+    const [type,setType] = useState("dig")
+    const [tool,setTool] = useState([])
+
+    useEffect(()=>{
+        let index = tools.lastIndexOf(type)
+        setTool(props.dns[index])
+    },[props.dns,type])
+
+    function handleTool(e){
+        let index = tools.lastIndexOf(e.target.id)
+        setTool(props.dns[index])
+        setType(e.target.id)
+
+        if(e.target.childNodes[1]){
+            e.target.childNodes[1].setAttribute("style","display:none")
+        }
+    }
+
+    return(<div id="dns" className="card-body">
+        <div className='list-tools'>
+        <div className="btn btn-light button-tech" onClick={handleTool} id="dig">
+            Dig
+            {
+                props.dns[0] ? <span className="notification-button">!</span> : null 
+            }
+        </div>
+        <div className="btn btn-light button-tech" onClick={handleTool} id="fierce">
+            Fierce
+            {
+                props.dns[1]? <span className="notification-button">!</span> : null 
+            }
+        </div>
+    </div>
+    <div>
+        {
+            (()=>{
+                switch(type){
+                    case "dig":
+                        return <TabDNSDig dns={tool}/>
+                    case 'fierce':
+                        return <TabDNSFierce dns={tool}/>
+                }
+            })()
+        }
+    </div>
+    </div>)
+}
+
+function TabDNSFierce(props){
+    const {fierce} = props.dns
+    return(
+        <div id="dns-fierce">
+            {fierce ? <p className="code">{fierce}</p> : null}
+        </div>
+    )
+}
+
+function TabDNSDig(props){
     const [option, setOption] = useState("A")
 
     function handleClick(e){
@@ -301,7 +372,7 @@ function TabDNS(props){
     if(props.dns.length === 0){
         return(<div id="dns">Nothing here</div>)
     }
-    return(<div id="dns" className="card-body">
+    return(<div id="dns-dig">
         <div className="dns-options">
             <button onClick={handleClick}>A</button>
             <button onClick={handleClick}>AAAA</button>
@@ -336,6 +407,7 @@ function TabServer(props){
 }
 
 function TabDetectWaf(props){
+    console.log(props.wafw00f)
     let wafs = props.wafw00f.wafs ? props.wafw00f.wafs : []
     return(<div id="detect-firewall" className='card-body'>
             {
@@ -357,7 +429,6 @@ function TabScan(props){
     const [tool,setTool] = useState([])
     const [type, setType] = useState("wpscan")
     let _type = type 
-
 
     useEffect(()=>{
         // set type scan-content when loading
@@ -407,7 +478,7 @@ function TabScan(props){
             {_type === "joomscan" ? <div>{
                 tool === "" || typeof tool !== "string" ? <div></div> : <div>{tool.split('\n').map(ele=>{
                     return <p>{ele}</p>
-                })}</div>}</div>: <div>{json2html(tool,1)}</div>}
+                })}</div>}</div>: <div>{json2htmlver2(tool)}</div>}
         </div>
     </div>)
 }

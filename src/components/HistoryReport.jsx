@@ -8,6 +8,7 @@ import '../css/Card.css'
 function HistoryReport(){
     const [history,setHistory] = useState([])
     const [location, setLocation] = useState({})
+
         
     useEffect(()=>{
         fetch(host+'/history',{
@@ -55,7 +56,7 @@ function HistoryReport(){
                         {
                             history.length !== 0 ? history.map((element, index)=>{
                                 return (<tr key={index}>
-                                    <td>{index}</td>
+                                    <td >{element._id}</td>
                                     <td>{element.url}</td>
                                     <td>{element.time_create}</td>
                                     <td><button className='btn btn-secondary btn-lg btn-block'>Create HTML file</button></td>
@@ -67,6 +68,7 @@ function HistoryReport(){
                                 <td></td>
                             </tr>
                         }
+                        
                     </tbody>
                 </table>
             </div>
