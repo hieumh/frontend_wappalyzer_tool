@@ -1,5 +1,7 @@
 import React,{useEffect, useState} from 'react'
-import {json2html,json2htmlver2} from '../lib_front'
+import { Card,Icon,Divider,Form,Button } from 'semantic-ui-react'
+import {host} from '../lib_front'
+import {json2htmlver2} from '../lib_front'
 
 
 function TechDetail(props){    
@@ -32,7 +34,7 @@ function TechDetail(props){
                 <button onClick={handleClick} className='collapsible'>CVE of {props.name} ({props.cve.length} cves)</button>
                 { props.cve.map(element =>{
                         return(
-                        <li key={element.cve} className='content'>
+                        <li key={element.cve} className='content__'>
                         <hr />
                             <p>CVE: {element.cve}</p>
                             <p>Year: {element.year}</p>
@@ -51,7 +53,6 @@ function TabTech(props){
     const tools = ["wapp","netcraft","largeio","webtech","whatweb"]
     const [tech, setTech] = useState([])
     const [type, setType] = useState('wapp')
-    console.log(props.tech)
   
     useEffect(()=>{
         let index = tools.lastIndexOf(type)
@@ -76,7 +77,7 @@ function TabTech(props){
             </div>
         )
     }   
-    return(<div id='techonologies' className="card-body">
+    return(<div id='techonologies' className="card-body__">
         <div className='list-tools'>
         <div className="btn btn-light button-tech" onClick={handleTech} id="wapp">
             Wappalyzer
@@ -110,7 +111,7 @@ function TabTech(props){
         </div>
         </div>
         <ul id="tab-detail">
-            {tech.map((data)=>{
+            {tech.map((data,index)=>{
                 let listCve = []
                 if(data.cve){
                     for (const index in data.cve){
@@ -120,7 +121,7 @@ function TabTech(props){
                 }
                 return (
                     <li key={data.name}>
-                        <TechDetail key={data.name} name={data.name} website={data.website} confidence={data.confidence} version={data.version} cve={listCve} link={data.link} description={data.description}/>
+                        <TechDetail key={index} name={data.name} website={data.website} confidence={data.confidence} version={data.version} cve={listCve} link={data.link} description={data.description}/>
                     </li>
                 ) 
                 
@@ -156,7 +157,7 @@ function TabDomain(props){
         
     // }
 
-    return(<div id='domain' className="card-body">
+    return(<div id='domain' className="card-body__">
         <div className='list-tools'>
         <div className="btn btn-light button-tech" onClick={handleDomain} id="whois">
             Whois
@@ -285,7 +286,7 @@ function TabDic(props){
         return(<div>Nothing here</div>)
     }
 
-    return(<div id="dic" className="card-body">
+    return(<div id="dic" className="card-body__">
             <div id="wappalyzer-link">
                 <h3>Wappalyzer</h3> 
                 <ul>{createTree(props.dic[0])}</ul>
@@ -323,7 +324,7 @@ function TabDNS(props){
         }
     }
 
-    return(<div id="dns" className="card-body">
+    return(<div id="dns" className="card-body__">
         <div className='list-tools'>
         <div className="btn btn-light button-tech" onClick={handleTool} id="dig">
             Dig
@@ -397,7 +398,7 @@ function TabDNSDig(props){
 function TabServer(props){
     let nmap = !props.nmap ? "" : props.nmap.split("\n")
     
-    return(<div id="server-network" className='card-body'>
+    return(<div id="server-network" className='card-body__'>
         {nmap==="" ? <div></div> : <div className='code'>
             {nmap.map((ele,index)=>{
                 return <p key={index}>{ele}</p>
@@ -407,9 +408,8 @@ function TabServer(props){
 }
 
 function TabDetectWaf(props){
-    console.log(props.wafw00f)
     let wafs = props.wafw00f.wafs ? props.wafw00f.wafs : []
-    return(<div id="detect-firewall" className='card-body'>
+    return(<div id="detect-firewall" className='card-body__'>
             {
                 wafs.map((ele,index)=>{
                     return(<div key={index}>
@@ -447,7 +447,7 @@ function TabScan(props){
     }
 
 
-    return(<div id="scans" className='card-body'>
+    return(<div id="scans" className='card-body__'>
         <div className='list-tools'>
         <div className="btn btn-light button-tech" onClick={handleScan} id="wpscan">
         Wpscan
@@ -483,6 +483,151 @@ function TabScan(props){
     </div>)
 }
 
+// function TabVuln(props){
+//     return <div>Hello world</div>
+// }
+
+function TabVuln(props){
+    const [vulns, setVuln] = useState([])
+    const [addVulnData,setAddVulnData] = useState({
+        Author: "", 
+        Date: "", 
+        Platform: "", 
+        Title: "", 
+        Type: "", 
+        URL: ""
+    })
+    console.log(props.vulns)
+    
+    function handleChangeVuln(e){
+        const {name, value} = e.target
+        let time = new Date()
+        setAddVulnData((prevState)=>{
+            return {
+                ...prevState,
+                [name]:value,
+                Date: time.getFullYear() + "-" +time.getMonth() +"-" + time.getDate()
+            }
+        })
+    }
+
+    async function handleAddVuln(e){
+        e.preventDefault()
+        let body = JSON.stringify({token:props.token,action:'add',vulns:addVulnData})
+        console.log({token:props.token,action:'add',vulns:addVulnData})
+        try{
+        let dataRecv = await fetch(host+'/update_vulns_table',{
+            method:"POST",
+            mode: 'cors',
+            headers:{
+                'content-type':'application/json',
+            },
+            body:body
+        })
+        
+            dataRecv = await dataRecv.json()
+            setVuln(dataRecv.vulns)
+            setAddVulnData({
+                Author: "", 
+                Date: "", 
+                Platform: "", 
+                Title: "", 
+                Type: "", 
+                URL: ""
+            })    
+        } catch (err){
+            console.error(err)
+        }
+
+    }
+
+    async function handleDeleteVuln(e){
+        let body = JSON.stringify({token:props.token,action:'delete',vulns:vulns[e.target.id]})
+        let dataRecv = await fetch(host+'/update_vulns_table',{
+            method:"post",
+            mode: "cors",
+            headers:{
+                'content-type':'application/json',
+            },
+            body:body
+        }).catch(err=>console.error(err))
+        try{
+            dataRecv = await dataRecv.json()
+            setVuln(dataRecv.vulns)
+        } catch (err){
+            console.error(err)
+        }
+    }
+
+    useEffect(async ()=>{
+        let body = {token:props.token,action:'load'}
+        let listVuln = await fetch(host+"/update_vulns_table",{
+            method:'POST',
+            mode:'cors',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:JSON.stringify(body)
+        }).catch(err=>console.error(err))
+        try{
+            listVuln = await listVuln.json()
+            console.log("this is data send back:",listVuln, typeof listVuln)
+            setVuln(listVuln.vulns)
+        } catch (err){
+            console.error("chưa có")
+        }
+    },[props.vulns])
+    
+ 
+    return(<div id='tab-vuln' className='card-body__'>
+        <Card.Group>
+            {
+                vulns.map((element,index)=>{
+                    return (
+                        <Card key={index} fluid>
+                            <Card.Content >
+                            <Icon id={index} link name='close' onClick={handleDeleteVuln} size="big" style={{float:"right"}}/>
+                            
+                                <Card.Header>{element.Platform}<Icon name={element.Platform} size="big" /></Card.Header>
+                                <Card.Meta>{element.Author}</Card.Meta>
+                                <Card.Description>
+                                  <p>Type: {element.Type}</p>
+                                  <p>Description: {element.Title}</p>
+                                  <p>Link report: <a target="_blank" href={element.URL}>{element.URL}</a></p>
+                                </Card.Description>
+                            </Card.Content>
+                            <Card.Content extra>
+                                {element.Date}
+                            </Card.Content></Card>)
+                        })
+            }
+        </Card.Group>
+
+        <Divider horizontal>Or add custom vulnerability</Divider>
+
+        <Form>
+            <Form.Input
+            fluid
+            placeholder='Platform here' name='Platform' onChange={handleChangeVuln} value={addVulnData.Platform}/>
+            <Form.Input
+            fluid
+            placeholder='Author here' name='Author' onChange={handleChangeVuln} value={addVulnData.Author}/>
+            <Form.Input
+            fluid
+            placeholder='Type vuln here' name='Type' onChange={handleChangeVuln} value={addVulnData.Type}/>
+            <Form.Input
+            fluid
+            placeholder='Description' name='Title' onChange={handleChangeVuln} value={addVulnData.Title}/>
+            <Form.Input
+            fluid
+            placeholder='Link to your report' name='URL' onChange={handleChangeVuln} value={addVulnData.URL}/>
+            <Button type='submit' onClick={handleAddVuln}>Add</Button>
+        </Form>
+        </div>)
+}
+
+
+
 
 export {
     TabTech,
@@ -491,5 +636,6 @@ export {
     TabDNS,
     TabServer,
     TabDetectWaf,
-    TabScan
+    TabScan,
+    TabVuln
 }

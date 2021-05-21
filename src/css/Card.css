@@ -1,23 +1,23 @@
-.card-header {
+.card-header__ {
     padding:0;
     background-color: #FFFFFF;
     border-bottom: none !important;
   }
 
-  .card-title {
+  .card-title__ {
     margin: 0;
     color: #333333;
     font-weight: 400;
   }
 
-  .card-category {
+  .card-category__ {
     font-size: 14px;
     font-weight: 400;
     color: #9A9A9A;
     margin-bottom: 0px;
   }
 
-  .card-body {
+  .card-body__ {
     margin: 35px 15px 10px 15px;
   }
   

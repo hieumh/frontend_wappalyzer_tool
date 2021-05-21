@@ -9,18 +9,18 @@
     background-color: #555;
   }
 
-  #id.content {
+  #id.content__ {
     padding: 0 18px;
     background-color: #f1f1f1;
   }
 
-  #cve .content {
+  #cve .content__ {
       padding: 0 18px;
       display: block;
       background-color: #f1f1f1;
   }
   
-  .content {
+  .content__ {
     padding: 0 18px;
     display: none;
     overflow: hidden;
@@ -248,30 +248,30 @@
   width: 100%;
   margin: 0 auto;
 }
-.tabs {
+.tabs__ {
   position: relative;
   height: 14.75rem;
 }
-.tabs::before,
-.tabs::after {
+.tabs__::before,
+.tabs__::after {
   content: "";
   display: table;
 }
-.tabs::after {
+.tabs__::after {
   clear: both;
 }
-.tab {
+.tab__ {
   float: left;
 }
-.tab-switch {
+.tab-switch__ {
   display: none;
 }
-.tab-label {
+.tab-label__ {
   position: relative;
   display: block;
   line-height: 2.75em;
   height: 3em;
-  padding: 0 1.618em;
+  padding: 0 1.4em;
   background: #9368e9;
   border-right: 0.125rem solid #8851f8;
   border-radius: 4px;
@@ -280,11 +280,11 @@
   top: 0;
   transition: all 0.25s;
 }
-.tab-label:hover {
+.tab-label__:hover {
   top: -0.25rem;
   transition: top 0.25s;
 }
-.tab-content {
+.tab-content__ {
   width: 100%; 
   position: absolute;
   z-index: 1;
@@ -297,7 +297,7 @@
   opacity: 0;
   transition: all 0.35s;
 }
-.tab-switch:checked + .tab-label {
+.tab-switch__:checked + .tab-label__ {
   background: #fff;
   color: #2c3e50;
   border-bottom: 0;
@@ -306,7 +306,7 @@
   z-index: 1;
   top: -0.0625rem;
 }
-.tab-switch:checked + label + .tab-content {
+.tab-switch__:checked + label + .tab-content__ {
   z-index: 2;
   opacity: 1;
   transition: all 0.35s;
@@ -358,26 +358,7 @@
 .level-3 {
   padding: 5px 0;
 }
-/*
-.level-4 {
-  padding-left:40px;
-}
 
-.level-5 {
-  padding-left:50px;
-}
-
-.level-6 {
-  padding-left:60px;
-}
-
-.level-7 {
-  padding-left:70px;
-} */
-
-/* .block-level-1 {
-  border-bottom:#a9a7a7 solid;
-} */
 
 .block-level-1 {
   border:#e7e6e6 0.001px solid;
@@ -436,14 +417,6 @@
   font-family: 'Titillium Web', sans-serif;
 }
 
-/* .block-level-2 > .level-2::after {
-  content:":";
-} */
-
-/* .block-level-2 > .level-3::before {
-  content:"• ";
-} */
-
 .block-level-3 > .level-3::after {
   content:":";
 }
@@ -455,6 +428,9 @@
 .block-level-5 > .level-5::after {
   content:":";
 }
-/* .block-level-3 {
-  border-bottom:#a9a7a7 solid;
-} */
+
+.progress-bar__ {
+  position: absolute;
+  top:0;
+  z-index: 1000000;
+}

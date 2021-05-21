@@ -9,7 +9,6 @@ import {
     Switch,
     Route
 } from 'react-router-dom'
-import LastReport from './LastReport'
 
 
 function Layout(){

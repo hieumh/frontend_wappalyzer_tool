@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {Redirect} from 'react-router-dom'
 import {host} from '../lib_front'
+import {Button, Table} from 'semantic-ui-react'
 import '../css/History.css'
 import '../css/Card.css'
 
@@ -21,15 +22,26 @@ function HistoryReport(){
         })
     },[])
 
+    // get back to analyze result
     function handleClick(e){
-        const name = e.target.getAttribute('id')
+        console.log(e.target.parentNode.id)
+        if(e.target.parentNode.id){
             setLocation({
                 pathname:'/analyze_result',
                 state:{
-                    url:name,
+                    token:e.target.parentNode.id,
                     isAnalyze:false
                 }
             })
+        }
+            
+    }
+
+    // create html file
+    function handleSubmit(e){
+        console.log("handle submit")
+        localStorage.setItem("report", JSON.stringify(history[e.target.id]))
+        window.open("http://localhost:3001/report", "_blank") //to open new page
     }
 
     if(JSON.stringify(location) !== JSON.stringify({})){
@@ -38,43 +50,35 @@ function HistoryReport(){
     return(
         <div id='history'>
         <div className='history-card'>
-            <div className='card-header'>
-                <h3 className='card-title'>History</h3>
-                <p className='card-category'>All report in database</p>
+            <div className='card-header__'>
+                <h3 className='card-title__'>History</h3>
+                <p className='card-category__'>All report in database</p>
             </div>
-            <div className='card-body table-full-width table-responsive'>
-                <table className='table table-hover table-striped'>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Url</th>
-                            <th>Created time</th>
-                            <th>Create HTML file</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
+            <div className='card-body__'>
+            <Table singleLine>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell>ID</Table.HeaderCell>
+                    <Table.HeaderCell>Url</Table.HeaderCell>
+                    <Table.HeaderCell>Created time</Table.HeaderCell>
+                    <Table.HeaderCell>Create HTML file</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+        <Table.Body>
+        {
                             history.length !== 0 ? history.map((element, index)=>{
-                                return (<tr key={index}>
-                                    <td >{element._id}</td>
-                                    <td>{element.url}</td>
-                                    <td>{element.time_create}</td>
-                                    <td><button className='btn btn-secondary btn-lg btn-block'>Create HTML file</button></td>
-                                </tr>)
-                            }) : <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                        
-                    </tbody>
-                </table>
+                                return (<Table.Row id={element.token} key={index} onClick={handleClick}>
+                                    <Table.Cell>{element._id}</Table.Cell>
+                                    <Table.Cell>{element.url}</Table.Cell>
+                                    <Table.Cell>{element.time_create}</Table.Cell>
+                                    <Table.Cell><Button id={index}onClick={handleSubmit}>Create HTML file</Button></Table.Cell>
+                                    </Table.Row>)
+                            }) : null
+        }
+        </Table.Body>
+  </Table>
             </div>
         </div>
-
-
         </div>
     )
 }

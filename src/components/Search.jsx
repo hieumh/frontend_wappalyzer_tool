@@ -46,11 +46,11 @@ function Search(){
     return(
         <div id="search">
             <div id='search-card'>
-                <div className="card-header">
-                    <h3 className='card-title'>Search Database</h3>
-                    <p className='card-category'>Search information about report in database</p>
+                <div className="card-header__">
+                    <h3 className='card-title__'>Search Database</h3>
+                    <p className='card-category__'>Search information about report in database</p>
                 </div>
-                <div id="search-bar" className='card-body'>
+                <div id="search-bar" className='card-body__'>
                     <p>All of this information will be taken in database that were collected by us</p>
                 <form method='get' action='' className='analyze'>
                     <div id="input-box">

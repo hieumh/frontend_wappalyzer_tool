@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import {Redirect} from 'react-router-dom'
+import { Input } from 'semantic-ui-react'
 import '../css/Search.css'
 
 function Content(){
@@ -9,7 +10,6 @@ function Content(){
 
     function handleChange(e){
        const {value} = e.target
-       console.log(value);
        setLink(value)
     }
 
@@ -41,12 +41,7 @@ function Content(){
                 <form method='post' action=''>
                     <div className="page">
                         <h4>Enter Url</h4>
-                        <label className="field field_v1">
-                            <input name="url" onChange={handleChange} className="field__input" placeholder="e.g. http://example.com" />
-                                <span className="field__label-wrap">
-                                    <span className="field__label">Url</span>
-                                </span>
-                        </label>
+                        <Input label='http://' placeholder='mysite.com' onChange={handleChange} value={link}/>
                         <button type="submit" onClick={handleSubmit} className="btn btn-info">Submit</button>
                     </div>
                     </form>
