@@ -168,7 +168,7 @@ function TabDomain(props){
         <div className="btn btn-light button-tech" onClick={handleDomain} id="sublist3r">
             Sublist3r
             {
-                props.domain[1].length ? <span className="notification-button">!</span> : null 
+                props.domain[1] ? <span className="notification-button">!</span> : null 
             }
         </div>
         </div>
@@ -270,6 +270,7 @@ function TabDomainSublist3r(props){
 
 
 function TabDic(props){
+    console.log(props.dic)
     function createTree(dic){
         let keys = Object.keys(dic)
 
@@ -289,7 +290,7 @@ function TabDic(props){
     return(<div id="dic" className="card-body__">
             <div id="wappalyzer-link">
                 <h3>Wappalyzer</h3> 
-                <ul>{createTree(props.dic[0])}</ul>
+                <ul>{props.dic[0] ? createTree(props.dic[0]) : null }</ul>
             </div> 
             <hr /> 
             <div id="gobuster">
@@ -388,9 +389,9 @@ function TabDNSDig(props){
             <button onClick={handleClick}>TXT</button>
         </div>
         <div className="code">
-        { props.dns[option].split("\n").map((ele,index)=>{
+        { props.dns[option] ? props.dns[option].split("\n").map((ele,index)=>{
             return <p key={index}>{ele === "" ? "\t" : ele}</p>
-        })}
+        }) : null}
         </div>
     </div>)
 }
@@ -497,7 +498,6 @@ function TabVuln(props){
         Type: "", 
         URL: ""
     })
-    console.log(props.vulns)
     
     function handleChangeVuln(e){
         const {name, value} = e.target
@@ -514,7 +514,7 @@ function TabVuln(props){
     async function handleAddVuln(e){
         e.preventDefault()
         let body = JSON.stringify({token:props.token,action:'add',vulns:addVulnData})
-        console.log({token:props.token,action:'add',vulns:addVulnData})
+        // console.log({token:props.token,action:'add',vulns:addVulnData})
         try{
         let dataRecv = await fetch(host+'/update_vulns_table',{
             method:"POST",
@@ -524,7 +524,6 @@ function TabVuln(props){
             },
             body:body
         })
-        
             dataRecv = await dataRecv.json()
             setVuln(dataRecv.vulns)
             setAddVulnData({
@@ -571,7 +570,7 @@ function TabVuln(props){
         }).catch(err=>console.error(err))
         try{
             listVuln = await listVuln.json()
-            console.log("this is data send back:",listVuln, typeof listVuln)
+            // console.log("this is data send back:",listVuln, typeof listVuln)
             setVuln(listVuln.vulns)
         } catch (err){
             console.error("chưa có")
@@ -586,9 +585,9 @@ function TabVuln(props){
                     return (
                         <Card key={index} fluid>
                             <Card.Content >
-                            <Icon id={index} link name='close' onClick={handleDeleteVuln} size="big" style={{float:"right"}}/>
+                            <Icon id={index} className='close' onClick={handleDeleteVuln} size="big" style={{float:"right"}}/>
                             
-                                <Card.Header>{element.Platform}<Icon name={element.Platform} size="big" /></Card.Header>
+                                <Card.Header>{element.Platform}<Icon className={element.Platform} size="big" /></Card.Header>
                                 <Card.Meta>{element.Author}</Card.Meta>
                                 <Card.Description>
                                   <p>Type: {element.Type}</p>

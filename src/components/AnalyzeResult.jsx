@@ -21,7 +21,7 @@ function AnalyzeResult(props){
     const [nikto, setNikto] = useState("")
 
     const [whois, setWhois] = useState("")
-    const [sublist3r, setSublist3r] = useState([])
+    const [sublist3r, setSublist3r] = useState("")
 
     const [gobuster, setGobuster] = useState("")
     const [dic, setDic] = useState("")
@@ -53,7 +53,7 @@ function AnalyzeResult(props){
             if(!isAnalyze){
                 method='get'
                 query="?token="+token
-                body=''
+                body=null
             }
     
             // console.log(method,query,body)
@@ -206,7 +206,7 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dic")
-                setDic(data)
+                setDic(data.dic)
                 setCount((prevState)=>{
                     return {
                         ...prevState,
@@ -256,7 +256,7 @@ function AnalyzeResult(props){
         
             // fetch for DNS
             fetch(host+'/url_analyze/dig'+query,{
-                method:'POST',
+                method:method,
                 mode: 'cors',
                 headers:{
                     'content-type': 'application/json',
@@ -274,7 +274,7 @@ function AnalyzeResult(props){
             }).catch(err=>console.error(err))
 
             fetch(host+'/url_analyze/fierce'+query,{
-                method:'POST',
+                method:method,
                 mode: 'cors',
                 headers:{
                     'content-type': 'application/json',
@@ -293,7 +293,7 @@ function AnalyzeResult(props){
     
             // fetch for detect web firewall
             fetch(host+'/url_analyze/wafw00f'+query,{
-                method:'POST',
+                method:method,
                 mode: 'cors',
                 headers:{
                     'content-type': 'application/json',
@@ -311,7 +311,7 @@ function AnalyzeResult(props){
             }).catch(err=>console.error(err))
 
             fetch(host+'/url_analyze/nikto'+query,{
-                method:'POST',
+                method:method,
                 mode: 'cors',
                 headers:{
                     'content-type': 'application/json',
@@ -345,7 +345,7 @@ function AnalyzeResult(props){
                 // fetch for scanning website
                 console.log("have cms");
             fetch(host+'/url_analyze/wpscan'+query,{
-                method:'POST',
+                method:method,
                 mode: 'cors',
                 
                 headers:{
@@ -365,7 +365,7 @@ function AnalyzeResult(props){
             }).catch(err=>console.error(err))
     
             fetch(host+'/url_analyze/droopescan'+query,{
-                method:'POST',
+                method:method,
                 mode: 'cors',
                 headers:{
                     'content-type': 'application/json',
@@ -383,7 +383,7 @@ function AnalyzeResult(props){
             }).catch(err=>console.error(err))
     
             fetch(host+'/url_analyze/joomscan'+query,{
-                method:'POST',
+                method:method,
                 mode: 'cors',
                 headers:{
                     'content-type': 'application/json',
