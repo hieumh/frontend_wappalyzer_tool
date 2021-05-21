@@ -206,7 +206,8 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dic")
-                setDic(data.dic)
+                console.log(data)
+                setDic(JSON.parse(data.dic))
                 setCount((prevState)=>{
                     return {
                         ...prevState,
