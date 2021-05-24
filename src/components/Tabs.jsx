@@ -270,12 +270,11 @@ function TabDomainSublist3r(props){
 
 
 function TabDic(props){
-    console.log(props.dic)
     function createTree(dic){
         let keys = Object.keys(dic)
 
         return keys.map(key =>{
-                if(JSON.stringify(dic[key])==="{}"){
+                if(dic[key]==="{}"){
                     return (<li key={key}><img alt="file" src='/icons/website/sticky-note-regular.svg' />{" "+key}</li>)
                 }
                 else{

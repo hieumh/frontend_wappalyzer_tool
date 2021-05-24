@@ -39,7 +39,8 @@ function AnalyzeResult(props){
         countDic:0,
         countServer:0,
         countWaf:0,
-        countScan:0
+        countScan:0,
+        countVuln:0
     })
 
 
@@ -68,12 +69,17 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                console.log("this wappalyzer",data)
                 setWapp(data.technologies)
                 setCount((prevState)=>{
                     return {
                         ...prevState,
                         countTech: prevState.countTech+1
+                    }
+                })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
                     }
                 })
             }).catch(err=>console.error(err))
@@ -87,12 +93,17 @@ function AnalyzeResult(props){
                 },
                 body:body
             }).then(res => res.json()).then(data => {
-                console.log("this netcraft:", data)
                 setNetcraft(data.technologies === "a" ? [] : data.technologies)
                 setCount((prevState)=>{
                     return {
                         ...prevState,
                         countTech:prevState.countTech+1
+                    }
+                })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
                     }
                 })
             }).catch(err=>console.error(err))
@@ -114,6 +125,12 @@ function AnalyzeResult(props){
                         countTech:prevState.countTech+1
                     }
                 })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
+                    }
+                })
             }).catch(err=>console.error(err))
     
             // Whatwebb
@@ -131,6 +148,12 @@ function AnalyzeResult(props){
                     return {
                         ...prevState,
                         countTech:prevState.countTech+1
+                    }
+                })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
                     }
                 })
             }).catch(err=>console.error(err))
@@ -152,6 +175,12 @@ function AnalyzeResult(props){
                         countTech:prevState.countTech+1
                     }
                 })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
+                    }
+                })
             }).catch(err=>console.error(err))
     
             //////////////////////////////////////////////////////////////////
@@ -167,7 +196,7 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this whois")
-                setWhois(data)
+                setWhois(data.domains)
                 setCount((prevState)=>{
                     return {
                         ...prevState,
@@ -206,8 +235,7 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dic")
-                console.log(data)
-                setDic(JSON.parse(data.dic))
+                setDic(data.trees)
                 setCount((prevState)=>{
                     return {
                         ...prevState,
@@ -253,6 +281,12 @@ function AnalyzeResult(props){
                         countServer:prevState.countServer+1
                     }
                 })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
+                    }
+                })
             }).catch(err=>console.error(err))
         
             // fetch for DNS
@@ -265,7 +299,8 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dns")
-                setDig(data)
+                console.log(data)
+                setDig(JSON.parse(data.dns))
                 setCount((prevState)=>{
                     return {
                         ...prevState,
@@ -340,7 +375,6 @@ function AnalyzeResult(props){
                 body:body
             })
             checkCms = await checkCms.json()
-            console.log(checkCms)
 
             if(checkCms.cms_name){
                 // fetch for scanning website
@@ -363,6 +397,12 @@ function AnalyzeResult(props){
                         countScan:prevState.countScan+1
                     }
                 })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
+                    }
+                })
             }).catch(err=>console.error(err))
     
             fetch(host+'/url_analyze/droopescan'+query,{
@@ -379,6 +419,12 @@ function AnalyzeResult(props){
                     return {
                         ...prevState,
                         countScan:prevState.countScan+1
+                    }
+                })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
                     }
                 })
             }).catch(err=>console.error(err))
@@ -399,6 +445,12 @@ function AnalyzeResult(props){
                         countScan:prevState.countScan+1
                     }
                 })
+                setCount((prevState)=>{
+                    return {
+                        ...prevState,
+                        countVuln: prevState.countVuln+1
+                    }
+                })
             }).catch(err=>console.error(err))
             } else {
                 console.log("no cms");
@@ -409,7 +461,7 @@ function AnalyzeResult(props){
         let {url, token, isAnalyze} = props.location.state
         
         // url = "http://example.com/"
-        url = 'https://wavecell.com/'
+        url = 'http://rest.vulnweb.com/'
         // console.log(url, isAnalyze)
         await getData(url, token, isAnalyze)
     },[])
@@ -418,7 +470,7 @@ function AnalyzeResult(props){
         e.preventDefault()
         let {url, token} = props.location.state
         // url = "http://example.com/"
-        url = 'https://wavecell.com/'
+        url = 'http://rest.vulnweb.com/'
         let body=JSON.stringify({url:url, token: token})
         let result = await fetch(host+'/create_report',{
             method:"post",
@@ -540,8 +592,8 @@ function AnalyzeResult(props){
         </div>
         <div className="tab__">
           <input type="radio" name="css-tabs" id="tab-8" className="tab-switch__"/>
-          <label htmlFor="tab-8" className="tab-label__" onClick={handleNotify} id="countScan">Vulnerability
-          {count.countTech === 0 ? null : <span className="notification-tab">{count.countTech}</span>}
+          <label htmlFor="tab-8" className="tab-label__" onClick={handleNotify} id="countVuln">Vulnerability
+          {count.countVuln === 0 ? null : <span className="notification-tab">{count.countVuln}</span>}
           </label>
           <div className="tab-content__">
           <div className="card-header__">
