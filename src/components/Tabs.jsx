@@ -184,7 +184,7 @@ function TabDomain(props){
 }
 
 function TabDomainWhois(props){
-    const domain = props.domain
+    const domain = props.domain ? props.domain : {}
     return(
         <div id="domain-whois">   
                 <b>Domain name</b>:{domain.domain_name != null ? domain.domain_name.map((ele)=>{
