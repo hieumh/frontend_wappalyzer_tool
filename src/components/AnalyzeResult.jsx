@@ -318,7 +318,8 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dns")
-                setFierce(data)
+                console.log("this is fierce :",data)
+                setFierce(data.dns)
                 setCount((prevState)=>{
                     return {
                         ...prevState,

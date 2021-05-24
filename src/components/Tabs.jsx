@@ -308,6 +308,7 @@ function TabDNS(props){
     const tools = ['dig','fierce']
     const [type,setType] = useState("dig")
     const [tool,setTool] = useState([])
+    console.log(tool)
 
     useEffect(()=>{
         let index = tools.lastIndexOf(type)
@@ -355,10 +356,27 @@ function TabDNS(props){
 }
 
 function TabDNSFierce(props){
-    const {fierce} = props.dns
+    const fierce = props.dns ? props.dns : ""
+    console.log(fierce,Boolean(fierce))
+    
+    function formatFierce(){
+        console.log("here fierce",typeof fierce)
+        if (!fierce){
+            return null
+        }
+        let output = fierce.replaceAll("\"","").replace(/\\n|\\t/g, "|")
+        console.log("ouput after replace:",output)
+        output = output.split("|")
+        output = output.filter((element)=> element.length)
+        console.log("format fierce:", output)
+        return output.map((element,index)=>{
+            return <p key={index}>{element}</p>
+        })
+    }
+
     return(
         <div id="dns-fierce">
-            {fierce ? <p className="code">{fierce}</p> : null}
+            {fierce ? <p className="code">{formatFierce()}</p> : null}
         </div>
     )
 }
@@ -591,7 +609,7 @@ function TabVuln(props){
                                 <Card.Description>
                                   <p>Type: {element.Type}</p>
                                   <p>Description: {element.Title}</p>
-                                  <p>Link report: <a target="_blank" href={element.URL}>{element.URL}</a></p>
+                                  <p>Link report: <a target="_blank" href={element.Path}>{element.Path}</a></p>
                                 </Card.Description>
                             </Card.Content>
                             <Card.Content extra>
