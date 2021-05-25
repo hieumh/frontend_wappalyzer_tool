@@ -214,7 +214,7 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this sublist3r")
-                setSublist3r(data.subdomains)
+                setSublist3r(data.domains)
                 setCount((prevState)=>{
                     return {
                         ...prevState,
@@ -299,7 +299,6 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dns")
-                console.log(data)
                 setDig(JSON.parse(data.dns))
                 setCount((prevState)=>{
                     return {
@@ -318,7 +317,6 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dns")
-                console.log("this is fierce :",data)
                 setFierce(data.dns)
                 setCount((prevState)=>{
                     return {

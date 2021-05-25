@@ -79,6 +79,9 @@ function json2htmlver2(input){
         let keys
         try {
             keys = Object.keys(input)
+            if (!keys){
+                throw "Error keys"
+            }
         } catch (err){
             // key rỗng
             return <></>

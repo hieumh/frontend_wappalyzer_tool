@@ -308,7 +308,6 @@ function TabDNS(props){
     const tools = ['dig','fierce']
     const [type,setType] = useState("dig")
     const [tool,setTool] = useState([])
-    console.log(tool)
 
     useEffect(()=>{
         let index = tools.lastIndexOf(type)
@@ -357,18 +356,14 @@ function TabDNS(props){
 
 function TabDNSFierce(props){
     const fierce = props.dns ? props.dns : ""
-    console.log(fierce,Boolean(fierce))
     
     function formatFierce(){
-        console.log("here fierce",typeof fierce)
         if (!fierce){
             return null
         }
         let output = fierce.replaceAll("\"","").replace(/\\n|\\t/g, "|")
-        console.log("ouput after replace:",output)
         output = output.split("|")
         output = output.filter((element)=> element.length)
-        console.log("format fierce:", output)
         return output.map((element,index)=>{
             return <p key={index}>{element}</p>
         })
@@ -496,7 +491,7 @@ function TabScan(props){
             {_type === "joomscan" ? <div>{
                 tool === "" || typeof tool !== "string" ? <div></div> : <div>{tool.split('\n').map(ele=>{
                     return <p>{ele}</p>
-                })}</div>}</div>: <div>{json2htmlver2(tool)}</div>}
+                })}</div>}</div>: <div>{tool ? json2htmlver2(tool) : null}</div>}
         </div>
     </div>)
 }
