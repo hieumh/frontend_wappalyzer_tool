@@ -41,6 +41,7 @@ function Dashboard(props) {
   const [ numTech, setTech ] = useState("")
   const [ numFramework, setFramework] = useState("")
   const [ programRatio, setProgramRatio ] = useState([])
+  const [ frameworkRatio, setFrameworkRatio ] = useState([])
 
   useEffect(async ()=>{
     async function getData(){
@@ -84,8 +85,17 @@ function Dashboard(props) {
       }
     })
     programRatio = await programRatio.json()
-    console.log(programRatio)
     setProgramRatio(programRatio)
+
+    let frameworkRatio = await fetch(host+"/dashboard/framework_ratio",{
+      method:"get",
+      mode:'cors',
+      headers:{
+        'content-type':'application/json',
+      }
+    })
+    frameworkRatio = await frameworkRatio.json()
+    setFrameworkRatio(frameworkRatio)
   }
 
 
