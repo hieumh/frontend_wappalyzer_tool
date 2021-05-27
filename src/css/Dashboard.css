@@ -5,7 +5,8 @@
     left: 15%;
     top:0;
     bottom:0;
-    background: rgba(203, 203, 210, 0.15);
+    background-color: rgba(203, 203, 210, 0.15);
+    overflow: scroll;
 }
 
 #title {
