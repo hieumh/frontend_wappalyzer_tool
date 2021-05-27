@@ -235,7 +235,8 @@ function AnalyzeResult(props){
                 body:body
             }).then(res => res.json()).then(data => {
                 // console.log("this dic")
-                setDic(data.trees)
+                console.log(data)
+                setDic(JSON.parse(data.trees))
                 setCount((prevState)=>{
                     return {
                         ...prevState,
@@ -458,10 +459,6 @@ function AnalyzeResult(props){
             
 
         let {url, token, isAnalyze} = props.location.state
-        
-        // url = "http://example.com/"
-        url = 'http://rest.vulnweb.com/'
-        // console.log(url, isAnalyze)
         await getData(url, token, isAnalyze)
     },[])
 
@@ -469,7 +466,6 @@ function AnalyzeResult(props){
         e.preventDefault()
         let {url, token} = props.location.state
         // url = "http://example.com/"
-        url = 'http://rest.vulnweb.com/'
         let body=JSON.stringify({url:url, token: token})
         let result = await fetch(host+'/create_report',{
             method:"post",
