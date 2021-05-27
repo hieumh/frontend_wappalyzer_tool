@@ -53,6 +53,7 @@ function TabTech(props){
     const tools = ["wapp","netcraft","largeio","webtech","whatweb"]
     const [tech, setTech] = useState([])
     const [type, setType] = useState('wapp')
+    console.log(props.tech)
   
     useEffect(()=>{
         let index = tools.lastIndexOf(type)
@@ -111,7 +112,7 @@ function TabTech(props){
         </div>
         </div>
         <ul id="tab-detail">
-            {tech.map((data,index)=>{
+            {tech ? tech.map((data,index)=>{
                 let listCve = []
                 if(data.cve){
                     for (const index in data.cve){
@@ -125,7 +126,7 @@ function TabTech(props){
                     </li>
                 ) 
                 
-            })}
+            }) : null}
             </ul>
         </div>
     )
@@ -371,7 +372,7 @@ function TabDNSFierce(props){
 
     return(
         <div id="dns-fierce">
-            {fierce ? <p className="code">{formatFierce()}</p> : null}
+            {fierce ? <div className="code">{formatFierce()}</div> : null}
         </div>
     )
 }
