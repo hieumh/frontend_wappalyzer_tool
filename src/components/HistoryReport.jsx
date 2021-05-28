@@ -9,7 +9,6 @@ import '../css/Card.css'
 function HistoryReport(){
     const [history,setHistory] = useState([])
     const [location, setLocation] = useState({})
-    console.log(history)
         
     useEffect(()=>{
         fetch(host+'/history',{
@@ -24,12 +23,12 @@ function HistoryReport(){
 
     // get back to analyze result
     function handleClick(e){
-        console.log(e.target.parentNode)
         if(e.target.parentNode.id){
             setLocation({
                 pathname:'/analyze_result',
                 state:{
                     token:e.target.parentNode.id,
+                    url:e.target.parentNode.childNodes[1].innerHTML,
                     isAnalyze:false
                 }
             })

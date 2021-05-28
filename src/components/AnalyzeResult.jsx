@@ -53,7 +53,7 @@ function AnalyzeResult(props){
             let body=JSON.stringify({url:url, token: token})
             if(!isAnalyze){
                 method='get'
-                query="?token="+token
+                query=`?token=${token}&url=${url}`
                 body=null
             }
     
@@ -465,7 +465,7 @@ function AnalyzeResult(props){
     async function handleSubmit(e){
         e.preventDefault()
         let {url, token} = props.location.state
-        // url = "http://example.com/"
+        
         let body=JSON.stringify({url:url, token: token})
         let result = await fetch(host+'/create_report',{
             method:"post",
