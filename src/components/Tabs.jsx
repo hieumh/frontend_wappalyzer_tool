@@ -1,653 +1,1289 @@
-import React,{useEffect, useState} from 'react'
-import { Card,Icon,Divider,Form,Button } from 'semantic-ui-react'
-import {host} from '../lib_front'
-import {json2htmlver2} from '../lib_front'
+import React, { useEffect, useState } from "react";
+import { Card, Icon, Divider, Form, Button } from "semantic-ui-react";
+import { host } from "../lib_front";
+import { json2htmlver2, createHTTPHeader } from "../lib_front";
 
-
-function TechDetail(props){    
-    function handleClick(e){
-        e.target.classList.toggle("active")
-        let content = e.target.nextElementSibling
-        while(content){
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-            if(!content){
-                return
-            }
-            content = content.nextElementSibling
-        }
+function TechDetail(props) {
+  function handleClick(e) {
+    e.target.classList.toggle("active");
+    let content = e.target.nextElementSibling;
+    while (content) {
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+      if (!content) {
+        return;
+      }
+      content = content.nextElementSibling;
     }
-        
-    return(
-        <div id="tech-detail">
-                {/* <img src={props.src} alt={props.website} width="30" height="30" /> */}
-                <h4 className="name-tech">{props.name}</h4>
-                <div className="body-tech">
-                {props.version ? <div><b>Version</b>:<p>{props.version}</p></div> : <div></div> }
-                {props.link || props.website ? <div><b>Link</b>:<p>{props.link} {props.website}</p></div> : <div></div> }
-                {props.confidence ? <div><b>Confidence</b>:<p>{props.confidence}</p></div> : <div></div> }
-                {props.description ? <div><b>Description</b>:<p>{props.description}</p></div> : <div></div> }
-                <ul>
-                <button onClick={handleClick} className='collapsible'>CVE of {props.name} ({props.cve.length} cves)</button>
-                { props.cve.map(element =>{
-                        return(
-                        <li key={element.cve} className='content__'>
-                        <hr />
-                            <p>CVE: {element.cve}</p>
-                            <p>Year: {element.year}</p>
-                            <p>Description: {element.desc}</p>
-                        </li>)
-                    })
-                    }
-                </ul>
-                </div>
-        </div>
-    )
+  }
+
+  return (
+    <div id="tech-detail">
+      {/* <img src={props.src} alt={props.website} width="30" height="30" /> */}
+      <h4 className="name-tech">{props.name}</h4>
+      <div className="body-tech">
+        {props.version ? (
+          <div>
+            <b>Version</b>:<p>{props.version}</p>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {props.link || props.website ? (
+          <div>
+            <b>Link</b>:
+            <p>
+              {props.link} {props.website}
+            </p>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {props.confidence ? (
+          <div>
+            <b>Confidence</b>:<p>{props.confidence}</p>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {props.description ? (
+          <div>
+            <b>Description</b>:<p>{props.description}</p>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        <ul>
+          <button onClick={handleClick} className="collapsible">
+            CVE of {props.name} ({props.cve.length} cves)
+          </button>
+          {props.cve.map((element) => {
+            return (
+              <li key={element.cve} className="content__">
+                <hr />
+                <p>CVE: {element.cve}</p>
+                <p>Year: {element.year}</p>
+                <p>Description: {element.desc}</p>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
 }
 
- 
-function TabTech(props){
-    const tools = ["wapp","netcraft","largeio","webtech","whatweb"]
-    const [tech, setTech] = useState([])
-    const [type, setType] = useState('wapp')
-    console.log(props.tech)
-  
-    useEffect(()=>{
-        let index = tools.lastIndexOf(type)
-        setTech(props.tech[index])
-    },[props.tech,type])
+function TabTech(props) {
+  const [tech, setTech] = useState({
+    wapp: [],
+    netcraft: [],
+    largeio: [],
+    webtech: [],
+    whatweb: [],
+  });
+  const [type, setType] = useState("wapp");
 
-    function handleTech(e){
-        e.preventDefault()
-        let index = tools.lastIndexOf(e.target.id)
-        setType(e.target.id)
-        setTech(props.tech[index])
+  useEffect(() => {
+    async function getData({ header, query }) {
+      fetch(host + "/url_analyze/wapp" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setTech((prev) => {
+            return {
+              ...prev,
+              wapp: data.technologies,
+            };
+          });
+          props.handleData((prev)=>{
+            return{
+              ...prev,
+              wapp:data.technologies
+            }
+          });
+          props.Count("wapp");  
+        })
+        .catch((err) => console.error(err));
 
-        if(e.target.childNodes[1]){
-            e.target.childNodes[1].setAttribute("style","display:none")
-        }
+      // netcrafts
+      fetch(host + "/url_analyze/netcraft" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setTech((prev) => {
+            return {
+              ...prev,
+              netcraft: data.technologies,
+            };
+          });
+          props.handleData((prev)=>{
+            return{
+              ...prev,
+              netcraft:data.technologies
+            }
+          });
+          props.Count("netcraft");
+        })
+        .catch((err) => console.error(err));
+
+      // largeio
+      fetch(host + "/url_analyze/largeio" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("this largeio")
+          setTech((prev) => {
+            return {
+              ...prev,
+              largeio: data.technologies,
+            };
+          });
+          props.handleData((prev)=>{
+            return{
+              ...prev,
+              largeio:data.technologies
+            }
+          });
+          props.Count("largeio");
+        })
+        .catch((err) => console.error(err));
+
+      // Whatwebb
+      fetch(host + "/url_analyze/whatweb" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setTech((prev) => {
+            return {
+              ...prev,
+              whatweb: data.technologies,
+            };
+          });
+          props.handleData((prev)=>{
+            return{
+              ...prev,
+              whatweb:data.technologies
+            }
+          });
+          props.Count("whatweb");
+        })
+        .catch((err) => console.error(err));
+
+      // Webtech
+      fetch(host + "/url_analyze/webtech" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("this webtech")
+          setTech((prev) => {
+            return {
+              ...prev,
+              webtech: data.technologies,
+            };
+          });
+          props.handleData((prev)=>{
+            return{
+              ...prev,
+              webtech:data.technologies
+            }
+          });
+          props.Count("webtech");
+        })
+        .catch((err) => console.error(err));
     }
 
-    if(props.tech.length === 0) {
-        return (
-            <div >
-                <p>We found nothing ... </p>
-            </div>
-        )
-    }   
-    return(<div id='techonologies' className="card-body__">
-        <div className='list-tools'>
-        <div className="btn btn-light button-tech" onClick={handleTech} id="wapp">
-            Wappalyzer
-            {
-                props.tech[0].length ? <span className="notification-button">!</span> : null 
-            }
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, []);
+
+  function handleTech(e) {
+    e.preventDefault();
+    setType(e.target.id);
+
+    if (e.target.childNodes[1]) {
+      e.target.childNodes[1].setAttribute("style", "display:none");
+    }
+  }
+
+  return (
+    <div id="techonologies" className="card-body__">
+      <div className="list-tools">
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleTech}
+          id="wapp"
+        >
+          Wappalyzer
+          {tech.wapp.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleTech} id="netcraft">
-            Netcraft
-            {
-                props.tech[1].length ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleTech}
+          id="netcraft"
+        >
+          Netcraft
+          {tech.netcraft.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleTech} id="largeio">
-        Largeio
-            {
-                props.tech[2].length ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleTech}
+          id="largeio"
+        >
+          Largeio
+          {tech.largeio.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleTech} id="webtech">
-        Webtech
-            {
-                props.tech[3].length ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleTech}
+          id="webtech"
+        >
+          Webtech
+          {tech.webtech.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleTech} id="whatweb">
-        Whatweb
-            {
-                props.tech[4].length ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleTech}
+          id="whatweb"
+        >
+          Whatweb
+          {tech.whatweb.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        </div>
-        <ul id="tab-detail">
-            {tech ? tech.map((data,index)=>{
-                let listCve = []
-                if(data.cve){
-                    for (const index in data.cve){
-                        listCve.push(data.cve[index])
-                    }
-                    listCve=listCve.slice(0,10)
+      </div>
+      <ul id="tab-detail">
+        {tech[type].length
+          ? tech[type].map((data, index) => {
+              let listCve = [];
+              if (data.cve) {
+                for (const index in data.cve) {
+                  listCve.push(data.cve[index]);
                 }
-                return (
-                    <li key={data.name}>
-                        <TechDetail key={index} name={data.name} website={data.website} confidence={data.confidence} version={data.version} cve={listCve} link={data.link} description={data.description}/>
-                    </li>
-                ) 
-                
-            }) : null}
-            </ul>
-        </div>
-    )
+                listCve = listCve.slice(0, 10);
+              }
+              return (
+                <li key={data.name}>
+                  <TechDetail
+                    key={index}
+                    name={data.name}
+                    website={data.website}
+                    confidence={data.confidence}
+                    version={data.version}
+                    cve={listCve}
+                    link={data.link}
+                    description={data.description}
+                  />
+                </li>
+              );
+            })
+          : null}
+      </ul>
+    </div>
+  );
 }
 
-function TabDomain(props){
-    const tools = ["whois","sublist3r"]
-    const [domain, setDomain] = useState(props.domain[0])
-    const [type, setType] = useState('whois')
+function TabDomain(props) {
+  const [domain, setDomain] = useState({
+    whois: { empty: true },
+    sublist3r: [],
+  });
+  const [type, setType] = useState("whois");
+  const _Component = {
+    whois: (data) => <TabDomainWhois domain={data} />,
+    sublist3r: (data) => <TabDomainSublist3r domain={data} />,
+  };
 
-    useEffect(()=>{
-        // when change props.domain this will update base on current type
-        let index = tools.lastIndexOf(type)
-        setDomain(props.domain[index])
-    },[props.domain,type])
+  useEffect(() => {
+    async function getData({ header, query }) {
+      fetch(host + "/url_analyze/whois" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setDomain((prev) => {
+            return {
+              ...prev,
+              whois: data.domains,
+            };
+          });
+          props.Count("whois");
+        })
+        .catch((err) => console.error(err));
 
-
-    function handleDomain(e){
-        let index = tools.lastIndexOf(e.target.id)
-        setDomain(props.domain[index])
-        setType(e.target.id)
-
-        if(e.target.childNodes[1]){
-            e.target.childNodes[1].setAttribute("style","display:none")
-        }
+      fetch(host + "/url_analyze/sublist3r" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("this sublist3r")
+          setDomain((prev) => {
+            return {
+              ...prev,
+              sublist3r: data.domains,
+            };
+          });
+          props.Count("sublist3r");
+        })
+        .catch((err) => console.error(err));
     }
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, []);
 
-    // function showToolResult(params){
-        
-    // }
+  function handleDomain(e) {
+    setType(e.target.id);
 
-    return(<div id='domain' className="card-body__">
-        <div className='list-tools'>
-        <div className="btn btn-light button-tech" onClick={handleDomain} id="whois">
-            Whois
-            {
-                props.domain[0] ? <span className="notification-button">!</span> : null 
-            }
+    if (e.target.childNodes[1]) {
+      e.target.childNodes[1].setAttribute("style", "display:none");
+    }
+  }
+
+  // function showToolResult(params){
+
+  // }
+
+  return (
+    <div id="domain" className="card-body__">
+      <div className="list-tools">
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleDomain}
+          id="whois"
+        >
+          Whois
+          {!domain.whois.empty ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleDomain} id="sublist3r">
-            Sublist3r
-            {
-                props.domain[1] ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleDomain}
+          id="sublist3r"
+        >
+          Sublist3r
+          {domain.sublist3r.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        </div>
-        {(()=>{
-            switch(type){
-                case "whois":
-                    return <TabDomainWhois domain={domain}/>
-            case "sublist3r":   
-                return <TabDomainSublist3r domain={domain}/>
-            }
-        })()}
-    </div>)
+      </div>
+      {_Component[type](domain[type])}
+    </div>
+  );
 }
 
-function TabDomainWhois(props){
-    const domain = props.domain ? props.domain : {}
-    return(
-        <div id="domain-whois">   
-                <b>Domain name</b>:{domain.domain_name != null ? domain.domain_name.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Creation date</b>:{domain.creation_date != null ? domain.creation_date.map((ele,index)=>{
-                    return <p key={index}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Dnssec</b>:{domain.dnssec != null ? domain.dnssec.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Email</b>: {domain.email != null ? domain.email.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Expiration date</b>:{domain.expiration_date != null ? domain.expiration_date.map((ele, index)=>{
-                    return <p key={index}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Name server</b>: {domain.name_server != null ? domain.name_server.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Org</b>:{domain.org != null ? domain.org.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Referral url</b>:{domain.referral_url != null ? domain.referral_url.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Registrar</b>:{domain.registrar != null ? domain.registrar.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>State</b>:{domain.state != null ? domain.state.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Status</b>: {domain.status != null ? domain.status.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Updated date</b>: {domain.updated_date != null ? domain.updated_date.map((ele,index)=>{
-                    return <p key={index}>{ele}</p>
-                }): <p>unknown</p>}
-                <br />
-                <b>Whois server</b>:{domain.whois_server != null ? domain.whois_server.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Address</b>:{domain.address != null ? domain.address.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>City</b>:{domain.city != null ? domain.city.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Country</b>:{domain.country != null ? domain.country.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-                <br />
-                <b>Zipcode</b>:{domain.zipcode != null ? domain.zipcode.map((ele)=>{
-                    return <p key={ele}>{ele}</p>
-                }) : <p>unknown</p>}
-            </div>
-    )
+function TabDomainWhois(props) {
+  const domain = props.domain ? props.domain : {};
+  return (
+    <div id="domain-whois">
+      <b>Domain name</b>:
+      {domain.domain_name != null ? (
+        domain.domain_name.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Creation date</b>:
+      {domain.creation_date != null ? (
+        domain.creation_date.map((ele, index) => {
+          return <p key={index}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Dnssec</b>:
+      {domain.dnssec != null ? (
+        domain.dnssec.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Email</b>:{" "}
+      {domain.email != null ? (
+        domain.email.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Expiration date</b>:
+      {domain.expiration_date != null ? (
+        domain.expiration_date.map((ele, index) => {
+          return <p key={index}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Name server</b>:{" "}
+      {domain.name_server != null ? (
+        domain.name_server.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Org</b>:
+      {domain.org != null ? (
+        domain.org.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Referral url</b>:
+      {domain.referral_url != null ? (
+        domain.referral_url.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Registrar</b>:
+      {domain.registrar != null ? (
+        domain.registrar.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>State</b>:
+      {domain.state != null ? (
+        domain.state.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Status</b>:{" "}
+      {domain.status != null ? (
+        domain.status.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Updated date</b>:{" "}
+      {domain.updated_date != null ? (
+        domain.updated_date.map((ele, index) => {
+          return <p key={index}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Whois server</b>:
+      {domain.whois_server != null ? (
+        domain.whois_server.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Address</b>:
+      {domain.address != null ? (
+        domain.address.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>City</b>:
+      {domain.city != null ? (
+        domain.city.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Country</b>:
+      {domain.country != null ? (
+        domain.country.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <br />
+      <b>Zipcode</b>:
+      {domain.zipcode != null ? (
+        domain.zipcode.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+    </div>
+  );
 }
 
-function TabDomainSublist3r(props){
-    const domain = props.domain
-    return(
+function TabDomainSublist3r(props) {
+  const domain = props.domain;
+  return (
     <div id="domain-sublist3r">
-    { !domain ? <p></p> : domain.map((ele,index)=>{
-        return <p key={index}>{ele}</p>
-    })}
-    </div>)
-}
-
-
-function TabDic(props){
-    function createTree(dic){
-        let keys = Object.keys(dic)
-
-        return keys.map(key =>{
-                if(dic[key]==="{}"){
-                    return (<li key={key}><img alt="file" src='/icons/website/sticky-note-regular.svg' />{" "+key}</li>)
-                }
-                else{
-                    return(<li id={key} key={key}><img alt="folder" src='/icons/website/folder-solid.svg'/>{" "+key}<ul>{createTree(dic[key])}</ul></li>)
-                }
+      {!domain ? (
+        <p></p>
+      ) : (
+        domain.map((ele, index) => {
+          return <p key={index}>{ele}</p>;
         })
-    }
-    if(props.dic ===""){
-        return(<div>Nothing here</div>)
-    }
-
-    return(<div id="dic" className="card-body__">
-            <div id="wappalyzer-link">
-                <h3>Wappalyzer</h3> 
-                <ul>{props.dic[0] ? createTree(props.dic[0]) : null }</ul>
-            </div> 
-            <hr /> 
-            <div id="gobuster">
-                <h3>Gobuster</h3>
-                <ul>{!Array.isArray(props.dic[1]) ? <p></p> : props.dic[1].directories.map((ele,index)=>{
-                    return <li key={index}><img alt="folder" src='/icons/website/folder-solid.svg'/>{" "+ele}</li>
-                })}</ul>
-                <ul>{!Array.isArray(props.dic[1]) ? <p></p> : props.dic[1].files.map((ele,index)=>{
-                    return <li key={index}><img alt="file" src='/icons/website/sticky-note-regular.svg' />{" "+ele}</li>
-                })}</ul>
-            </div>
-    </div>)
+      )}
+    </div>
+  );
 }
 
-function TabDNS(props){
-    const tools = ['dig','fierce']
-    const [type,setType] = useState("dig")
-    const [tool,setTool] = useState([])
+function TabDic(props) {
+  const [dic, setDic] = useState({
+    wapp: {},
+    gobuster: {},
+  });
 
-    useEffect(()=>{
-        let index = tools.lastIndexOf(type)
-        setTool(props.dns[index])
-    },[props.dns,type])
-
-    function handleTool(e){
-        let index = tools.lastIndexOf(e.target.id)
-        setTool(props.dns[index])
-        setType(e.target.id)
-
-        if(e.target.childNodes[1]){
-            e.target.childNodes[1].setAttribute("style","display:none")
-        }
-    }
-
-    return(<div id="dns" className="card-body__">
-        <div className='list-tools'>
-        <div className="btn btn-light button-tech" onClick={handleTool} id="dig">
-            Dig
-            {
-                props.dns[0] ? <span className="notification-button">!</span> : null 
-            }
-        </div>
-        <div className="btn btn-light button-tech" onClick={handleTool} id="fierce">
-            Fierce
-            {
-                props.dns[1]? <span className="notification-button">!</span> : null 
-            }
-        </div>
-    </div>
-    <div>
-        {
-            (()=>{
-                switch(type){
-                    case "dig":
-                        return <TabDNSDig dns={tool}/>
-                    case 'fierce':
-                        return <TabDNSFierce dns={tool}/>
-                }
-            })()
-        }
-    </div>
-    </div>)
-}
-
-function TabDNSFierce(props){
-    const fierce = props.dns ? props.dns : ""
-    
-    function formatFierce(){
-        if (!fierce){
-            return null
-        }
-        let output = fierce.replaceAll("\"","").replace(/\\n|\\t/g, "|")
-        output = output.split("|")
-        output = output.filter((element)=> element.length)
-        return output.map((element,index)=>{
-            return <p key={index}>{element}</p>
+  useEffect(() => {
+    async function getData({ header, query }) {
+      fetch(host + "/url_analyze/dic" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setDic((prev) => {
+            return {
+              ...prev,
+              wapp: JSON.parse(data.trees),
+            };
+          });
         })
-    }
+        .catch((err) => console.error(err));
 
-    return(
-        <div id="dns-fierce">
-            {fierce ? <div className="code">{formatFierce()}</div> : null}
-        </div>
-    )
+      fetch(host + "/url_analyze/gobuster" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setDic((prev) => {
+            return {
+              ...prev,
+              gobuster: data,
+            };
+          });
+        })
+        .catch((err) => console.error(err));
+    }
+    if (!props.data.length) {
+      return;
+    }
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, [props.data]);
+  function createTree(dic) {
+    let keys = Object.keys(dic);
+
+    return keys.map((key) => {
+      if (dic[key] === "{}") {
+        return (
+          <li key={key}>
+            <img alt="file" src="/icons/website/sticky-note-regular.svg" />
+            {" " + key}
+          </li>
+        );
+      } else {
+        return (
+          <li id={key} key={key}>
+            <img alt="folder" src="/icons/website/folder-solid.svg" />
+            {" " + key}
+            <ul>{createTree(dic[key])}</ul>
+          </li>
+        );
+      }
+    });
+  }
+
+  return (
+    <div id="dic" className="card-body__">
+      <div id="wappalyzer-link">
+        <h3>Wappalyzer</h3>
+        <ul>{dic.wapp ? createTree(dic.wapp) : null}</ul>
+      </div>
+      <hr />
+      <div id="gobuster">
+        <h3>Gobuster</h3>
+        <ul>
+          {!Array.isArray(dic.gobuster.directories) ? (
+            <p></p>
+          ) : (
+            dic.gobuster.directories.map((ele, index) => {
+              return (
+                <li key={index}>
+                  <img alt="folder" src="/icons/website/folder-solid.svg" />
+                  {" " + ele}
+                </li>
+              );
+            })
+          )}
+        </ul>
+        <ul>
+          {!Array.isArray(dic.gobuster.files) ? (
+            <p></p>
+          ) : (
+            dic.gobuster.files.map((ele, index) => {
+              return (
+                <li key={index}>
+                  <img
+                    alt="file"
+                    src="/icons/website/sticky-note-regular.svg"
+                  />
+                  {" " + ele}
+                </li>
+              );
+            })
+          )}
+        </ul>
+      </div>
+    </div>
+  );
 }
 
-function TabDNSDig(props){
-    const [option, setOption] = useState("A")
+function TabDNS(props) {
+  const [type, setType] = useState("dig");
+  const [dns, setDns] = useState({
+    dig: { empty: true },
+    fierce: "",
+  });
+  const _Component = {
+    dig: (data) => <TabDNSDig dns={data} />,
+    fierce: (data) => <TabDNSFierce dns={data} />,
+  };
 
-    function handleClick(e){
-        setOption(e.target.innerHTML)
+  useEffect(() => {
+    async function getData({ header, query }) {
+      fetch(host + "/url_analyze/dig" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("this dns")
+          setDns((prev) => {
+            return {
+              ...prev,
+              dig: JSON.parse(data.dns),
+            };
+          });
+          props.Count("dig");
+        })
+        .catch((err) => console.error(err));
+
+      fetch(host + "/url_analyze/fierce" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setDns((prev) => {
+            return {
+              ...prev,
+              fierce: data.dns,
+            };
+          });
+          props.Count("fierce");
+        })
+        .catch((err) => console.error(err));
     }
 
-    if(props.dns.length === 0){
-        return(<div id="dns">Nothing here</div>)
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, []);
+
+  function handleTool(e) {
+    setType(e.target.id);
+
+    if (e.target.childNodes[1]) {
+      e.target.childNodes[1].setAttribute("style", "display:none");
     }
-    return(<div id="dns-dig">
-        <div className="dns-options">
-            <button onClick={handleClick}>A</button>
-            <button onClick={handleClick}>AAAA</button>
-            <button onClick={handleClick}>ANY</button>
-            <button onClick={handleClick}>CAA</button>
-            <button onClick={handleClick}>CNAME</button>
-            <button onClick={handleClick}>MX</button>
-            <button onClick={handleClick}>NS</button>
-            <button onClick={handleClick}>PTR</button>
-            <button onClick={handleClick}>SOA</button>
-            <button onClick={handleClick}>SRV</button>
-            <button onClick={handleClick}>TXT</button>
+  }
+
+  return (
+    <div id="dns" className="card-body__">
+      <div className="list-tools">
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleTool}
+          id="dig"
+        >
+          Dig
+          {!dns.dig.empty ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleTool}
+          id="fierce"
+        >
+          Fierce
+          {dns.fierce.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
+        </div>
+      </div>
+      <div>{_Component[type](dns[type])}</div>
+    </div>
+  );
+}
+
+function TabDNSFierce(props) {
+  const fierce = props.dns ? props.dns : "";
+
+  function formatFierce() {
+    if (!fierce) {
+      return null;
+    }
+    let output = fierce.replaceAll('"', "").replace(/\\n|\\t/g, "|");
+    output = output.split("|");
+    output = output.filter((element) => element.length);
+    return output.map((element, index) => {
+      return <p key={index}>{element}</p>;
+    });
+  }
+
+  return (
+    <div id="dns-fierce">
+      {fierce ? <div className="code">{formatFierce()}</div> : null}
+    </div>
+  );
+}
+
+function TabDNSDig(props) {
+  const [option, setOption] = useState("A");
+
+  function handleClick(e) {
+    setOption(e.target.innerHTML);
+  }
+
+  if (props.dns.length === 0) {
+    return <div id="dns">Nothing here</div>;
+  }
+  return (
+    <div id="dns-dig">
+      <div className="dns-options">
+        <button onClick={handleClick}>A</button>
+        <button onClick={handleClick}>AAAA</button>
+        <button onClick={handleClick}>ANY</button>
+        <button onClick={handleClick}>CAA</button>
+        <button onClick={handleClick}>CNAME</button>
+        <button onClick={handleClick}>MX</button>
+        <button onClick={handleClick}>NS</button>
+        <button onClick={handleClick}>PTR</button>
+        <button onClick={handleClick}>SOA</button>
+        <button onClick={handleClick}>SRV</button>
+        <button onClick={handleClick}>TXT</button>
+      </div>
+      <div className="code">
+        {props.dns[option]
+          ? props.dns[option].split("\n").map((ele, index) => {
+              return <p key={index}>{ele === "" ? "\t" : ele}</p>;
+            })
+          : null}
+      </div>
+    </div>
+  );
+}
+
+function TabServer(props) {
+  const [nmap, setNmap] = useState("");
+
+  useEffect(() => {
+    async function getData({ header, query }) {
+      fetch(host + "/url_analyze/server" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setNmap(data.nmap);
+          props.handleData((prev)=>{
+            return{
+              ...prev,
+              nmap:data.nmap
+            }
+          });
+          props.Count("nmap");
+        })
+        .catch((err) => console.error(err));
+    }
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, []);
+
+  return (
+    <div id="server-network" className="card-body__">
+      {nmap === "" ? (
+        <div></div>
+      ) : (
         <div className="code">
-        { props.dns[option] ? props.dns[option].split("\n").map((ele,index)=>{
-            return <p key={index}>{ele === "" ? "\t" : ele}</p>
-        }) : null}
+          {nmap.split("\n").map((ele, index) => {
+            return <p key={index}>{ele}</p>;
+          })}
         </div>
-    </div>)
+      )}
+    </div>
+  );
 }
 
-function TabServer(props){
-    let nmap = !props.nmap ? "" : props.nmap.split("\n")
-    
-    return(<div id="server-network" className='card-body__'>
-        {nmap==="" ? <div></div> : <div className='code'>
-            {nmap.map((ele,index)=>{
-                return <p key={index}>{ele}</p>
-            })}
-        </div>}
-    </div>)
-}
+function TabDetectWaf(props) {
+  const [wafs, setWaf] = useState([]);
 
-function TabDetectWaf(props){
-    let wafs = props.wafw00f.wafs ? props.wafw00f.wafs : []
-    return(<div id="detect-firewall" className='card-body__'>
-            {
-                wafs.map((ele,index)=>{
-                    return(<div key={index}>
-                        <b>Firewall:</b>
-                        <p>{ele.firewall}</p>
-                        <b>Manufacturer:</b>
-                        <p>{ele.manufacturer}</p>
-                        <hr />
-                        </div>)
-                })
-            }
-        </div>)
-}
-
-function TabScan(props){
-    const tools = ["wpscan","droopescan","joomscan","nikto"]
-    const [tool,setTool] = useState([])
-    const [type, setType] = useState("wpscan")
-    let _type = type 
-
-    useEffect(()=>{
-        // set type scan-content when loading
-        _type = type
-        let index = tools.lastIndexOf(_type)
-        setTool(props.scans[index])
-    },[props.scans,type])
-
-    function handleScan(e){
-        setType(e.target.id)
-
-        if(e.target.childNodes[1]){
-            e.target.childNodes[1].setAttribute("style","display:none")
-        }
-
+  useEffect(() => {
+    async function getData({ header, query }) {
+      fetch(host + "/url_analyze/wafw00f" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("this wafw00f")
+          setWaf(data.wafs);
+          props.Count("wafw00f");
+        })
+        .catch((err) => console.error(err));
     }
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, []);
+  return (
+    <div id="detect-firewall" className="card-body__">
+      {wafs.map((ele, index) => {
+        return (
+          <div key={index}>
+            <b>Firewall:</b>
+            <p>{ele.firewall}</p>
+            <b>Manufacturer:</b>
+            <p>{ele.manufacturer}</p>
+            <hr />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
+function TabScan(props) {
+  const [scan, setScan] = useState({
+    wpscan: { empty: true },
+    droopescan: { empty: true },
+    joomscan: "",
+    nikto: { empty: true },
+  });
+  const [type, setType] = useState("wpscan");
 
-    return(<div id="scans" className='card-body__'>
-        <div className='list-tools'>
-        <div className="btn btn-light button-tech" onClick={handleScan} id="wpscan">
-        Wpscan
-            {
-                props.scans[0] ? <span className="notification-button">!</span> : null 
+  useEffect(() => {
+    // set type scan-content when loading
+    async function getData({ header, query }) {
+      let checkCms = await fetch(host + "/url_analyze/cmseek", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          url: props.options.url,
+          token: props.options.token,
+        }),
+      });
+
+      fetch(host + "/url_analyze/nikto" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("this nikto")
+          setScan((prev) => {
+            return {
+              ...prev,
+              nikto: data,
+            };
+          });
+          props.handleData((prev)=>{
+            return{
+              ...prev,
+              nikto:data
             }
+          });
+          props.Count("nikto");
+        })
+        .catch((err) => console.error(err));
+
+      checkCms = await checkCms.json();
+      if (checkCms.cms_name) {
+        // fetch for scanning website
+        console.log("have cms");
+        fetch(host + "/url_analyze/wpscan" + query, header)
+          .then((res) => res.json())
+          .then((data) => {
+            setScan((prev) => {
+              return {
+                ...prev,
+                wpscan: data,
+              };
+            });
+            props.handleData((prev)=>{
+              return{
+                ...prev,
+                wpscan:data
+              }
+            });
+            props.Count("wpscan");
+          })
+          .catch((err) => console.error(err));
+        fetch(host + "/url_analyze/droopescan" + query, header)
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log("this droope")
+            setScan((prev) => {
+              return {
+                ...prev,
+                droopescan: data,
+              };
+            });
+            props.handleData((prev)=>{
+              return{
+                ...prev,
+                droopescan:data
+              }
+            });
+            props.Count("droope");
+          })
+          .catch((err) => console.error(err));
+        fetch(host + "/url_analyze/joomscan" + query, header)
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log("this joomscan")
+            setScan((prev) => {
+              return {
+                ...prev,
+                joomscan: data,
+              };
+            });
+            props.handleData((prev)=>{
+              return{
+                ...prev,
+                joomscan:data
+              }
+            });
+            props.Count("joomscan");
+          })
+          .catch((err) => console.error(err));
+      }
+      console.log("no cms");
+    }
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, []);
+
+  function handleScan(e) {
+    setType(e.target.id);
+
+    if (e.target.childNodes[1]) {
+      e.target.childNodes[1].setAttribute("style", "display:none");
+    }
+  }
+
+  return (
+    <div id="scans" className="card-body__">
+      <div className="list-tools">
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleScan}
+          id="wpscan"
+        >
+          Wpscan
+          {!scan.wpscan.empty ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleScan} id="droopescan">
-        Droopescan
-            {
-                props.scans[1] ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleScan}
+          id="droopescan"
+        >
+          Droopescan
+          {!scan.droopescan.empty ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleScan} id="joomscan">
-        Joomscan
-            {
-                props.scans[2] ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleScan}
+          id="joomscan"
+        >
+          Joomscan
+          {scan.joomscan.length ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        <div className="btn btn-light button-tech" onClick={handleScan} id="nikto">
-        Nikto
-            {
-                props.scans[3] ? <span className="notification-button">!</span> : null 
-            }
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleScan}
+          id="nikto"
+        >
+          Nikto
+          {!scan.nikto.empty ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-        </div>
-        <div className="scan-content">
-            {_type === "joomscan" ? <div>{
-                tool === "" || typeof tool !== "string" ? <div></div> : <div>{tool.split('\n').map(ele=>{
-                    return <p>{ele}</p>
-                })}</div>}</div>: <div>{tool ? json2htmlver2(tool) : null}</div>}
-        </div>
-    </div>)
+      </div>
+      <div className="scan-content">
+        {type === "joomscan" ? (
+          <div>
+            {scan.joomscan === "" || typeof scan.joomscan !== "string" ? (
+              <div></div>
+            ) : (
+              <div>
+                {scan.joomscan.split("\n").map((ele) => {
+                  return <p>{ele}</p>;
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div>{!scan[type].empty ? json2htmlver2(scan[type]) : null}</div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // function TabVuln(props){
 //     return <div>Hello world</div>
 // }
 
-function TabVuln(props){
-    const [vulns, setVuln] = useState([])
-    const [addVulnData,setAddVulnData] = useState({
-        Author: "", 
-        Date: "", 
-        Platform: "", 
-        Title: "", 
-        Type: "", 
-        URL: ""
-    })
-    
-    function handleChangeVuln(e){
-        const {name, value} = e.target
-        let time = new Date()
-        setAddVulnData((prevState)=>{
-            return {
-                ...prevState,
-                [name]:value,
-                Date: time.getFullYear() + "-" +time.getMonth() +"-" + time.getDate()
-            }
-        })
+function TabVuln(props) {
+  const [feature, setFeature] = useState("list");
+  const [vulns, setVuln] = useState([]);
+  
+
+  const _Component = {
+    list: (handleData, data) => (
+      <TopVulnList vulns={data} setVuln={handleData} />
+    ),
+    add: (handleData) => <TopVulnAdd setVuln={handleData} />,
+  };
+
+  function handleVuln(e){
+    setFeature(e.target.id)
+  }
+
+  useEffect(() => {
+    async function getData() {
+      let body = { token: props.token, action: "load" };
+      let listVuln = await fetch(host + "/update_vulns_table", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }).catch((err) => console.error(err));
+      try {
+        listVuln = await listVuln.json();
+        // console.log("this is data send back:",listVuln, typeof listVuln)
+        console.log(listVuln.vulns)
+        setVuln(listVuln.vulns);
+      } catch (err) {
+        console.error("chưa có");
+      }
     }
+    getData();
+    console.log("load data");
+  }, [props.data]);
 
-    async function handleAddVuln(e){
-        e.preventDefault()
-        let body = JSON.stringify({token:props.token,action:'add',vulns:addVulnData})
-        // console.log({token:props.token,action:'add',vulns:addVulnData})
-        try{
-        let dataRecv = await fetch(host+'/update_vulns_table',{
-            method:"POST",
-            mode: 'cors',
-            headers:{
-                'content-type':'application/json',
-            },
-            body:body
-        })
-            dataRecv = await dataRecv.json()
-            setVuln(dataRecv.vulns)
-            setAddVulnData({
-                Author: "", 
-                Date: "", 
-                Platform: "", 
-                Title: "", 
-                Type: "", 
-                URL: ""
-            })    
-        } catch (err){
-            console.error(err)
-        }
-
-    }
-
-    async function handleDeleteVuln(e){
-        let body = JSON.stringify({token:props.token,action:'delete',vulns:vulns[e.target.id]})
-        let dataRecv = await fetch(host+'/update_vulns_table',{
-            method:"post",
-            mode: "cors",
-            headers:{
-                'content-type':'application/json',
-            },
-            body:body
-        }).catch(err=>console.error(err))
-        try{
-            dataRecv = await dataRecv.json()
-            setVuln(dataRecv.vulns)
-        } catch (err){
-            console.error(err)
-        }
-    }
-
-    useEffect(async ()=>{
-        let body = {token:props.token,action:'load'}
-        let listVuln = await fetch(host+"/update_vulns_table",{
-            method:'POST',
-            mode:'cors',
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:JSON.stringify(body)
-        }).catch(err=>console.error(err))
-        try{
-            listVuln = await listVuln.json()
-            // console.log("this is data send back:",listVuln, typeof listVuln)
-            setVuln(listVuln.vulns)
-        } catch (err){
-            console.error("chưa có")
-        }
-    },[props.vulns])
-    
- 
-    return(<div id='tab-vuln' className='card-body__'>
-        <Card.Group>
-            {
-                vulns.map((element,index)=>{
-                    return (
-                        <Card key={index} fluid>
-                            <Card.Content >
-                            <Icon id={index} className='close' onClick={handleDeleteVuln} size="big" style={{float:"right"}}/>
-                            
-                                <Card.Header>{element.Platform}<Icon className={element.Platform} size="big" /></Card.Header>
-                                <Card.Meta>{element.Author}</Card.Meta>
-                                <Card.Description>
-                                  <p>Type: {element.Type}</p>
-                                  <p>Description: {element.Title}</p>
-                                  <p>Link report: <a target="_blank" href={element.Path}>{element.Path}</a></p>
-                                </Card.Description>
-                            </Card.Content>
-                            <Card.Content extra>
-                                {element.Date}
-                            </Card.Content></Card>)
-                        })
-            }
-        </Card.Group>
-
-        <Divider horizontal>Or add custom vulnerability</Divider>
-
-        <Form>
-            <Form.Input
-            fluid
-            placeholder='Platform here' name='Platform' onChange={handleChangeVuln} value={addVulnData.Platform}/>
-            <Form.Input
-            fluid
-            placeholder='Author here' name='Author' onChange={handleChangeVuln} value={addVulnData.Author}/>
-            <Form.Input
-            fluid
-            placeholder='Type vuln here' name='Type' onChange={handleChangeVuln} value={addVulnData.Type}/>
-            <Form.Input
-            fluid
-            placeholder='Description' name='Title' onChange={handleChangeVuln} value={addVulnData.Title}/>
-            <Form.Input
-            fluid
-            placeholder='Link to your report' name='URL' onChange={handleChangeVuln} value={addVulnData.URL}/>
-            <Button type='submit' onClick={handleAddVuln}>Add</Button>
-        </Form>
-        </div>)
+  return (
+    <div id="tab-vuln" className="card-body__">
+      <div className="list-tools">
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleVuln}
+          id="list"
+        >
+          List Vuln
+        </div>
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleVuln}
+          id="add"
+        >
+          Add vuln
+        </div>
+      </div>
+      {_Component[feature](setVuln, vulns)}
+    </div>
+  );
 }
 
+function TopVulnList(props) {
+  async function handleDeleteVuln(e) {
+    let body = JSON.stringify({
+      token: props.token,
+      action: "delete",
+      vulns: props.vulns[e.target.id],
+    });
+    let dataRecv = await fetch(host + "/update_vulns_table", {
+      method: "post",
+      mode: "cors",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: body,
+    }).catch((err) => console.error(err));
+    try {
+      dataRecv = await dataRecv.json();
+      props.setVuln(dataRecv.vulns);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  return (
+    <Card.Group>
+      {props.vulns.length
+        ? props.vulns.map((element, index) => {
+            return (
+              <Card key={index} fluid>
+                <Card.Content>
+                  <Icon
+                    id={index}
+                    className="close"
+                    onClick={handleDeleteVuln}
+                    size="big"
+                    style={{ float: "right" }}
+                  />
 
+                  <Card.Header>
+                    {element.Platform}
+                    <Icon className={element.Platform} size="big" />
+                  </Card.Header>
+                  <Card.Meta>{element.Author}</Card.Meta>
+                  <Card.Description>
+                    <p>Type: {element.Type}</p>
+                    <p>Description: {element.Title}</p>
+                    <p>
+                      Link report:{" "}
+                      <a target="_blank" href={element.Path}>
+                        {element.Path}
+                      </a>
+                    </p>
+                  </Card.Description>
+                </Card.Content>
+                <Card.Content extra>{element.Date}</Card.Content>
+              </Card>
+            );
+          })
+        : null}
+    </Card.Group>
+  );
+}
 
+function TopVulnAdd(props) {
+  const [addVulnData, setAddVulnData] = useState({
+    Author: "",
+    Date: "",
+    Platform: "",
+    Title: "",
+    Type: "",
+    URL: "",
+  });
+
+  function handleChangeVuln(e) {
+    const { name, value } = e.target;
+    let time = new Date();
+    setAddVulnData((prevState) => {
+      return {
+        ...prevState,
+        [name]: value,
+        Date: time.getFullYear() + "-" + time.getMonth() + "-" + time.getDate(),
+      };
+    });
+  }
+
+  async function handleAddVuln(e) {
+    e.preventDefault();
+    let body = JSON.stringify({
+      token: props.token,
+      action: "add",
+      vulns: addVulnData,
+    });
+    // console.log({token:props.token,action:'add',vulns:addVulnData})
+    try {
+      let dataRecv = await fetch(host + "/update_vulns_table", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: body,
+      });
+      dataRecv = await dataRecv.json();
+      props.setVuln(dataRecv.vulns);
+      setAddVulnData({
+        Author: "",
+        Date: "",
+        Platform: "",
+        Title: "",
+        Type: "",
+        URL: "",
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  return (
+    <Form>
+      <Form.Input
+        fluid
+        placeholder="Platform here"
+        name="Platform"
+        onChange={handleChangeVuln}
+        value={addVulnData.Platform}
+      />
+      <Form.Input
+        fluid
+        placeholder="Author here"
+        name="Author"
+        onChange={handleChangeVuln}
+        value={addVulnData.Author}
+      />
+      <Form.Input
+        fluid
+        placeholder="Type vuln here"
+        name="Type"
+        onChange={handleChangeVuln}
+        value={addVulnData.Type}
+      />
+      <Form.Input
+        fluid
+        placeholder="Description"
+        name="Title"
+        onChange={handleChangeVuln}
+        value={addVulnData.Title}
+      />
+      <Form.Input
+        fluid
+        placeholder="Link to your report"
+        name="URL"
+        onChange={handleChangeVuln}
+        value={addVulnData.URL}
+      />
+      <Button type="submit" onClick={handleAddVuln}>
+        Add
+      </Button>
+    </Form>
+  );
+}
 
 export {
-    TabTech,
-    TabDomain,
-    TabDic,
-    TabDNS,
-    TabServer,
-    TabDetectWaf,
-    TabScan,
-    TabVuln
-}
+  TabTech,
+  TabDomain,
+  TabDic,
+  TabDNS,
+  TabServer,
+  TabDetectWaf,
+  TabScan,
+  TabVuln,
+};

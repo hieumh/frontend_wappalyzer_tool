@@ -1,610 +1,252 @@
-import React,{useState,useEffect} from 'react'
-import {TabDic,TabServer, TabDNS, TabDomain, TabTech, TabDetectWaf, TabScan, TabVuln} from './Tabs'
-import {host} from '../lib_front'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import '../css/Report.css'
-import '../css/Card.css'
+import React, { useState, useEffect, Children } from "react";
+import {
+  TabDic,
+  TabServer,
+  TabDNS,
+  TabDomain,
+  TabTech,
+  TabDetectWaf,
+  TabScan,
+  TabVuln,
+} from "./Tabs";
+import { host } from "../lib_front";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../css/Report.css";
+import "../css/Card.css";
+import html2canvas from "html2canvas";
 
+function AnalyzeResult(props) {
+  // this variable use for logic of directory of wapp
+  const [vulns, setVulns] = useState({
+    wapp: [],
+    netcraft: [],
+    whatweb: [],
+    largeio: [],
+    webtech: [],
+    wpscan: [],
+    droopescan: [],
+    joomscan: [],
+    nikto: [],
+    nmap: [],
+  });
 
-function AnalyzeResult(props){
-    const [wapp, setWapp] = useState([])
-    const [netcraft, setNetcraft] = useState([])
-    const [largeio, setLargeio] = useState([])
-    const [whatweb, setWhatweb] = useState([])
-    const [webtech, setWebtech] = useState([])
+  async function handleSubmit(e) {
+    e.preventDefault();
+    let { url, token } = props.location.state;
 
-    const [wafw00f,setWafw00f] = useState("")
-    const [wpscan, setWpscan] = useState("")
-    const [droopescan, setDroope] = useState("")
-    const [joomscan,setJoomscan] = useState("")
-    const [nikto, setNikto] = useState("")
+    let body = JSON.stringify({ url: url, token: token });
+    let result = await fetch(host + "/create_report", {
+      method: "post",
+      mode: "cors",
 
-    const [whois, setWhois] = useState("")
-    const [sublist3r, setSublist3r] = useState("")
+      headers: {
+        "content-type": "application/json",
+      },
+      body: body,
+    });
+    toast.success("Create report success");
+  }
 
-    const [gobuster, setGobuster] = useState("")
-    const [dic, setDic] = useState("")
+  return (
+    <div id="report">
+      <ScreenShot />
+      <button className="create-report btn btn-info" onClick={handleSubmit}>
+        Create report
+      </button>
+      <ToastContainer />
+      <TableTab>
+        <ChildrenTab
+          id="tab_1"
+          title="Technologies"
+          handleData={setVulns}
+          defaultChecked="true"
+          description="Information about the platform of target website"
+          locations={props.location.state}
+        >
+          <TabTech />
+        </ChildrenTab>
 
-    const [dig, setDig] = useState("")
-    const [fierce, setFierce] = useState("")
+        <ChildrenTab
+          id="tab_2"
+          title="Domain"
+          description="Information about the domain of target website"
+          locations={props.location.state}
+        >
+          <TabDomain />
+        </ChildrenTab>
 
-    const [serverInfor, setServerInfor] = useState("")
+        <ChildrenTab
+          id="tab_3"
+          title="Directory tree"
+          data={vulns.wapp}
+          description="Information about the dictionary of target website"
+          locations={props.location.state}
+        >
+          <TabDic />
+        </ChildrenTab>
 
+        <ChildrenTab
+          id="tab_4"
+          title="DNS"
+          description="Information about the dns of target website"
+          locations={props.location.state}
+        >
+          <TabDNS />
+        </ChildrenTab>
 
-    const [count, setCount] =useState({
-        countTech:0,
-        countDomain:0,
-        countDns:0,
-        countDic:0,
-        countServer:0,
-        countWaf:0,
-        countScan:0,
-        countVuln:0
-    })
+        <ChildrenTab
+          id="tab_5"
+          title="Server Information"
+          handleData={setVulns}
+          description="Information about the server of target website"
+          locations={props.location.state}
+        >
+          <TabServer />
+        </ChildrenTab>
 
+        <ChildrenTab
+          id="tab_6"
+          title="Detect web firewall"
+          description="Information about the web application firewall of target website"
+          locations={props.location.state}
+        >
+          <TabDetectWaf />
+        </ChildrenTab>
 
-
-    // use Effect for fetch data
-    useEffect(async ()=>{
-        async function getData(url, token, isAnalyze){
-            let method='post'
-            let query=''
-            let body=JSON.stringify({url:url, token: token})
-            if(!isAnalyze){
-                method='get'
-                query=`?token=${token}&url=${url}`
-                body=null
-            }
-    
-            // console.log(method,query,body)
-            ////////////////////////////////////////
-            // fetch for technologies
-            // fetch for Tech
-            await fetch(host+'/url_analyze/wapp'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                setWapp(data.technologies)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countTech: prevState.countTech+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            // netcrafts
-            fetch(host+'/url_analyze/netcraft'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                setNetcraft(data.technologies === "a" ? [] : data.technologies)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countTech:prevState.countTech+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
+        <ChildrenTab
+          id="tab_7"
+          title="Server scanning"
+          handleData={setVulns}
+          description="Information about the server of target website"
+          locations={props.location.state}
+        >
+          <TabScan />
+        </ChildrenTab>
         
-            // largeio
-            fetch(host+'/url_analyze/largeio'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this largeio")
-                setLargeio(data.technologies)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countTech:prevState.countTech+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            // Whatwebb
-            fetch(host+'/url_analyze/whatweb'+query,{
-                method: method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this whatweb")
-                setWhatweb(data.technologies)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countTech:prevState.countTech+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            // Webtech
-            fetch(host+'/url_analyze/webtech'+query,{
-                method: method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this webtech")
-                setWebtech(data.technologies)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countTech:prevState.countTech+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            //////////////////////////////////////////////////////////////////
-        
-            ////////////////////////////////////////////////////////////////
-            // fetch for domain
-            fetch(host+'/url_analyze/whois'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this whois")
-                setWhois(data.domains)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countDomain:prevState.countDomain+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            fetch(host+'/url_analyze/sublist3r'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this sublist3r")
-                setSublist3r(data.domains)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countDomain:prevState.countDomain+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-            /////////////////////////////////////////////////////////////////
-        
-            ////////////////////////////////////////////////////////////////
-            // fetch for dic
-            fetch(host+'/url_analyze/dic'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this dic")
-                console.log(data)
-                setDic(JSON.parse(data.trees))
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countDic:prevState.countDic+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            fetch(host+'/url_analyze/gobuster'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this gobuster")
-                setGobuster(data)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countDic:prevState.countDic+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            ///////////////////////////////////////////////////////////////////
-        
-            // fetch for server
-            fetch(host+'/url_analyze/server'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this nmap")
-                setServerInfor(data.nmap)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countServer:prevState.countServer+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-        
-            // fetch for DNS
-            fetch(host+'/url_analyze/dig'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this dns")
-                setDig(JSON.parse(data.dns))
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countDns:prevState.countDns+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-
-            fetch(host+'/url_analyze/fierce'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this dns")
-                setFierce(data.dns)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countDns:prevState.countDns+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            // fetch for detect web firewall
-            fetch(host+'/url_analyze/wafw00f'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this wafw00f")
-                setWafw00f(data)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countWaf:prevState.countWaf+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-
-            fetch(host+'/url_analyze/nikto'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this nikto")
-                setNikto(data)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countScan:prevState.countScan+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-        
-
-            //////////////////////////////////////////////
-            let checkCms = await fetch(host+'/url_analyze/cmseek',{
-                method:'POST',
-                mode:"cors",
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            })
-            checkCms = await checkCms.json()
-
-            if(checkCms.cms_name){
-                // fetch for scanning website
-                console.log("have cms");
-            fetch(host+'/url_analyze/wpscan'+query,{
-                method:method,
-                mode: 'cors',
-                
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this wpscan")
-
-                setWpscan(data)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countScan:prevState.countScan+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            fetch(host+'/url_analyze/droopescan'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this droope")
-                setDroope(data)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countScan:prevState.countScan+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-    
-            fetch(host+'/url_analyze/joomscan'+query,{
-                method:method,
-                mode: 'cors',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body:body
-            }).then(res => res.json()).then(data => {
-                // console.log("this joomscan")
-                setJoomscan(data)
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countScan:prevState.countScan+1
-                    }
-                })
-                setCount((prevState)=>{
-                    return {
-                        ...prevState,
-                        countVuln: prevState.countVuln+1
-                    }
-                })
-            }).catch(err=>console.error(err))
-            } else {
-                console.log("no cms");
-            }
-        }
-            
-
-        let {url, token, isAnalyze} = props.location.state
-        await getData(url, token, isAnalyze)
-    },[])
-
-    async function handleSubmit(e){
-        e.preventDefault()
-        let {url, token} = props.location.state
-        
-        let body=JSON.stringify({url:url, token: token})
-        let result = await fetch(host+'/create_report',{
-            method:"post",
-            mode: 'cors',
-            
-            headers:{
-                'content-type': 'application/json',
-            },
-            body:body
-        })
-        toast.success("Create report success")
-    }
-
-    function handleNotify(e){
-        setCount((prevState)=>{
-            return {
-                ...prevState,
-                [e.target.id]:0
-            }
-        })
-    }
-
-    return(<div id="report">
-        
-    <button className="create-report btn btn-info" onClick={handleSubmit}>Create report</button>
-    <ToastContainer />
-    <div className="tabs__">
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-1" defaultChecked className="tab-switch__"/>
-          <label htmlFor="tab-1" className="tab-label__" onClick={handleNotify} id="countTech">Technologies
-          {count.countTech === 0 ? null : <span className="notification-tab">{count.countTech}</span>}
-          </label>
-          
-          <div className="tab-content__"> 
-          <div className="card-header__">
-                <h3 className="card-title__">Technologies</h3>
-                <p className="card-category__">Information about the platform of target website</p>
-          </div>
-          <TabTech tech={[wapp,netcraft,largeio,webtech,whatweb]}/>
-          </div>
-          </div>
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-2" className="tab-switch__"/>
-          <label htmlFor="tab-2" className="tab-label__" onClick={handleNotify} id="countDomain">Domain
-          {count.countDomain === 0 ? null : <span className="notification-tab">{count.countDomain}</span>}
-          </label>
-          <div className="tab-content__">
-          <div className="card-header__">
-                <h3 className="card-title__">Domain</h3>
-                <p className="card-category__">Information about the domain of target website</p>
-          </div>
-          <TabDomain domain={[whois,sublist3r]}/>
-          </div>
-        </div>
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-3" className="tab-switch__"/>
-          <label htmlFor="tab-3" className="tab-label__" onClick={handleNotify} id="countDic">Directory  tree
-          {count.countDic === 0 ? null : <span className="notification-tab">{count.countDic}</span>}
-          </label>
-          <div className="tab-content__">
-          <div className="card-header__">
-                <h3 className="card-title__">Directory</h3>
-                <p className="card-category__">Information about the dictionary of target website</p>
-          </div>
-          <TabDic dic={[dic,gobuster]} />
-          </div>
-        </div>
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-4" className="tab-switch__"/>
-          <label htmlFor="tab-4" className="tab-label__" onClick={handleNotify} id="countDns">DNS
-          {count.countDns === 0 ? null : <span className="notification-tab">{count.countDns}</span>}
-          </label>
-          <div className="tab-content__">
-          <div className="card-header__">
-                <h3 className="card-title__">DNS</h3>
-                <p className="card-category__">Information about the dns of target website</p>
-          </div>
-          <TabDNS dns={[dig,fierce]} />
-          </div>
-        </div>
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-5" className="tab-switch__"/>
-          <label htmlFor="tab-5" className="tab-label__" onClick={handleNotify} id="countServer">Server Information
-          {count.countServer === 0 ? null : <span className="notification-tab">{count.countServer}</span>}
-          </label>
-          <div className="tab-content__">
-          <div className="card-header__">
-                <h3 className="card-title__">Server</h3>
-                <p className="card-category__">Information about the server of target website</p>
-          </div>
-          <TabServer nmap={serverInfor ? serverInfor : ""}/>
-          </div>
-        </div>
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-6" className="tab-switch__"/>
-          <label htmlFor="tab-6" className="tab-label__" onClick={handleNotify} id="countWaf">Detect web firewall
-          {count.countWaf === 0 ? null : <span className="notification-tab">{count.countWaf}</span>}
-          </label>
-          <div className="tab-content__">
-          <div className="card-header__">
-                <h3 className="card-title__">Detect web firewall</h3>
-                <p className="card-category__">Information about the web application firewall of target website</p>
-          </div>
-          <TabDetectWaf wafw00f={wafw00f}/>
-          </div>
-        </div>
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-7" className="tab-switch__"/>
-          <label htmlFor="tab-7" className="tab-label__" onClick={handleNotify} id="countScan">Server scanning
-          {count.countScan === 0 ? null : <span className="notification-tab">{count.countScan}</span>}
-          </label>
-          <div className="tab-content__">
-          <div className="card-header__">
-                <h3 className="card-title__">Server</h3>
-                <p className="card-category__">Information about the server of target website</p>
-          </div>
-          <TabScan scans={[wpscan,droopescan,joomscan,nikto]}/>
-          </div>
-        </div>
-        <div className="tab__">
-          <input type="radio" name="css-tabs" id="tab-8" className="tab-switch__"/>
-          <label htmlFor="tab-8" className="tab-label__" onClick={handleNotify} id="countVuln">Vulnerability
-          {count.countVuln === 0 ? null : <span className="notification-tab">{count.countVuln}</span>}
-          </label>
-          <div className="tab-content__">
-          <div className="card-header__">
-                <h3 className="card-title__">Vulnerability</h3>
-                <p className="card-category__">Information about the vulnerability of the target website</p>
-          </div>
-          <TabVuln token={props.location.state.token} vulns={[wapp,netcraft,largeio,webtech,whatweb, wpscan,droopescan,joomscan,nikto,serverInfor]} />
-          {/* <TabVuln token={props.location.state.token} vulns={vulns}/>  */}
-          </div>
-        </div>
+        <ChildrenTab
+          id="tab_8"
+          title="Vulnerability"
+          data={vulns}
+          description="Information about the vulnerability of the target website"
+          locations={props.location.state}
+        ><TabVuln /></ChildrenTab>
+      </TableTab>
     </div>
-    
-    </div>)
+  );
 }
 
-export default AnalyzeResult
+export default AnalyzeResult;
 
-{/* <div className="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> */}
-    
+{
+  /* <div className="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> */
+}
+
+function ScreenShot() {
+  const [html, setHTML] = useState("");
+  const [iframeStyle, setIframeStyle] = useState({});
+
+  useEffect(() => {
+    async function getData() {
+      let html = await fetch(
+        host + "/analyze_result/curl?url=http://testaspnet.vulnweb.com",
+        {
+          method: "get",
+          mode: "cors",
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+
+      html = await html.text();
+      setHTML(html);
+    }
+    getData();
+  }, []);
+
+  useEffect(() => {
+    async function addCanvas() {
+      let iframe = document.getElementsByTagName("iframe")[0];
+      if (!Boolean(iframe.srcdoc)) {
+        return;
+      }
+      let iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      console.log("start analyze canvas", document.body);
+      html2canvas(document.body, (canvas) => {
+        console.log("created canvas", canvas);
+        document.getElementById("screenshot").appendChild(canvas);
+        setIframeStyle({ visibility: "hidden" });
+      });
+    }
+    addCanvas();
+  }, [html]);
+
+  return (
+    <div id="screenshot">
+      <iframe
+        id="__canvas"
+        width="300"
+        srcDoc={html}
+        frameBorder="0"
+        style={iframeStyle}
+      ></iframe>
+    </div>
+  );
+}
+
+function TableTab(props) {
+  return <div className="tabs__">{props.children}</div>;
+}
+
+function ChildrenTab(props) {
+  const [count, setCount] = useState({});
+
+  function Count(data) {
+    setCount((prev) => {
+      return {
+        ...prev,
+        [data]: "",
+      };
+    });
+  }
+
+  function handleNotify() {
+    setCount({});
+  }
+  return (
+    <div className="tab__">
+      <input
+        type="radio"
+        name="css-tabs"
+        id={props.id}
+        defaultChecked={props.defaultChecked == true ? "true" : "false"}
+        className="tab-switch__"
+      />
+      <label
+        htmlFor={props.id}
+        className="tab-label__"
+        onClick={handleNotify}
+        id="countTech"
+      >
+        {props.title}
+        {Object.keys(count).length === 0 ? null : (
+          <span className="notification-tab">{Object.keys(count).length}</span>
+        )}
+      </label>
+
+      <div className="tab-content__">
+        <div className="card-header__">
+          <h3 className="card-title__">{props.title}</h3>
+          <p className="card-category__">{props.description}</p>
+        </div>
+        {React.cloneElement(props.children, {
+          options: props.locations,
+          Count: Count,
+          handleData: props.handleData,
+          data: props.data,
+        })}
+      </div>
+    </div>
+  );
+}

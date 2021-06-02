@@ -4,10 +4,6 @@ import {
   Card,
   Grid,
   Table,
-  Label,
-  Menu,
-  Icon,
-  Item,
   Statistic,
 } from "semantic-ui-react";
 import { Pie, Bar } from "react-chartjs-2";
@@ -84,16 +80,19 @@ function Dashboard(props) {
 function NumFrame(props) {
   const [numFramework, setFramework] = useState("");
 
-  useEffect(async () => {
-    let numFramework = await fetch(host + "/dashboard/num_framework", {
-      method: "get",
-      mode: "cors",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    numFramework = await numFramework.json();
-    setFramework(numFramework);
+  useEffect(() => {
+    async function getData() {
+      let numFramework = await fetch(host + "/dashboard/num_framework", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      numFramework = await numFramework.json();
+      setFramework(numFramework);
+    }
+    getData();
   }, []);
 
   return (
@@ -107,16 +106,19 @@ function NumFrame(props) {
 function NumTech(props) {
   const [numTech, setTech] = useState("");
 
-  useEffect(async () => {
-    let numTech = await fetch(host + "/dashboard/num_tech", {
-      method: "get",
-      mode: "cors",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    numTech = await numTech.json();
-    setTech(numTech);
+  useEffect(() => {
+    async function getData() {
+      let numTech = await fetch(host + "/dashboard/num_tech", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      numTech = await numTech.json();
+      setTech(numTech);
+    }
+    getData();
   }, []);
   return (
     <Statistic>
@@ -129,16 +131,19 @@ function NumTech(props) {
 function NumVuln(props) {
   const [numVuln, setVuln] = useState([]);
 
-  useEffect(async () => {
-    let numVuln = await fetch(host + "/dashboard/num_vuln", {
-      method: "get",
-      mode: "cors",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    numVuln = await numVuln.json();
-    setVuln(numVuln);
+  useEffect( () => {
+    async function getData() {
+      let numVuln = await fetch(host + "/dashboard/num_vuln", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      numVuln = await numVuln.json();
+      setVuln(numVuln);
+    }
+    getData();
   }, []);
 
   return (
@@ -152,16 +157,19 @@ function NumVuln(props) {
 function NumReport(props) {
   const [numReport, setReport] = useState("");
 
-  useEffect(async () => {
-    let numReport = await fetch(host + "/dashboard/num_report", {
-      method: "get",
-      mode: "cors",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    numReport = await numReport.json();
-    setReport(numReport);
+  useEffect(() => {
+    async function getData() {
+      let numReport = await fetch(host + "/dashboard/num_report", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      numReport = await numReport.json();
+      setReport(numReport);
+    }
+    getData();
   }, []);
   return (
     <Statistic>
@@ -176,19 +184,22 @@ function LanguageChart(props) {
     label: [],
     data: [],
   });
-  useEffect(async () => {
-    let programRatio = await fetch(host + "/dashboard/language_ratio", {
-      method: "get",
-      mode: "cors",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    programRatio = await programRatio.json();
-    setProgramRatio({
-      label: programRatio.map((element) => element["programing_language"]),
-      data: programRatio.map((element) => element["count"]),
-    });
+  useEffect(() => {
+    async function getData() {
+      let programRatio = await fetch(host + "/dashboard/language_ratio", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      programRatio = await programRatio.json();
+      setProgramRatio({
+        label: programRatio.map((element) => element["programing_language"]),
+        data: programRatio.map((element) => element["count"]),
+      });
+    }
+    getData();
   }, []);
   return (
     <Pie
@@ -238,19 +249,22 @@ function FameworkChart(props) {
     data: [],
   });
 
-  useEffect(async () => {
-    let frameworkRatio = await fetch(host + "/dashboard/framework_ratio", {
-      method: "get",
-      mode: "cors",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    frameworkRatio = await frameworkRatio.json();
-    setFrameworkRatio({
-      label: frameworkRatio.map((element) => element["framework"]),
-      data: frameworkRatio.map((element) => element["count"]),
-    });
+  useEffect(() => {
+    async function getData() {
+      let frameworkRatio = await fetch(host + "/dashboard/framework_ratio", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      frameworkRatio = await frameworkRatio.json();
+      setFrameworkRatio({
+        label: frameworkRatio.map((element) => element["framework"]),
+        data: frameworkRatio.map((element) => element["count"]),
+      });
+    }
+    getData();
   }, []);
 
   return (
@@ -259,7 +273,6 @@ function FameworkChart(props) {
         labels: frameworkRatio.label,
         datasets: [
           {
-            label: frameworkRatio.label,
             backgroundColor: [
               "#B21F00",
               "#C9DE00",
@@ -287,8 +300,7 @@ function FameworkChart(props) {
           fontSize: 20,
         },
         legend: {
-          display: true,
-          position: "right",
+          display: false,
         },
       }}
     />
@@ -298,30 +310,33 @@ function FameworkChart(props) {
 function ListWaf(props) {
   const [listTopWaf, setListTopWaf] = useState([]);
 
-  useEffect(async () => {
-    let listTopWaf = await fetch(
-      host + "/dashboard/get_five_most_common?type=waf",
-      {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-    listTopWaf = await listTopWaf.json();
-    setListTopWaf(listTopWaf);
+  useEffect(() => {
+    async function getData() {
+      let listTopWaf = await fetch(
+        host + "/dashboard/get_five_most_common?type=waf",
+        {
+          method: "get",
+          mode: "cors",
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      listTopWaf = await listTopWaf.json();
+      setListTopWaf(listTopWaf);
+    }
+    getData();
   }, []);
 
   return (
     <Table singleLine>
       <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Name</Table.HeaderCell>
-        <Table.HeaderCell>Manufacturer</Table.HeaderCell>
-        <Table.HeaderCell>Record count</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Manufacturer</Table.HeaderCell>
+          <Table.HeaderCell>Record count</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
       <Table.Body>
         {listTopWaf
           ? listTopWaf.map((element, index) => {
@@ -342,30 +357,33 @@ function ListWaf(props) {
 function ListVuln(props) {
   const [listTopVuln, setListTopVuln] = useState([]);
 
-  useEffect(async () => {
-    let listTopVuln = await fetch(
-      host + "/dashboard/get_five_most_common?type=vuln",
-      {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-    listTopVuln = await listTopVuln.json();
-    setListTopVuln(listTopVuln);
+  useEffect(() => {
+    async function getData() {
+      let listTopVuln = await fetch(
+        host + "/dashboard/get_five_most_common?type=vuln",
+        {
+          method: "get",
+          mode: "cors",
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      listTopVuln = await listTopVuln.json();
+      setListTopVuln(listTopVuln);
+    }
+    getData();
   }, []);
 
   return (
     <Table singleLine>
       <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Platform</Table.HeaderCell>
-        <Table.HeaderCell>Description</Table.HeaderCell>
-        <Table.HeaderCell>Record count</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Platform</Table.HeaderCell>
+          <Table.HeaderCell>Description</Table.HeaderCell>
+          <Table.HeaderCell>Record count</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
       <Table.Body>
         {listTopVuln
           ? listTopVuln.map((element, index) => {
@@ -390,29 +408,32 @@ function ListVuln(props) {
 function ListUrl(props) {
   const [urlList, setUrlList] = useState([]);
 
-  useEffect(async () => {
-    let urlList = await fetch(
-      host + "/dashboard/get_five_most_common?type=url",
-      {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-    urlList = await urlList.json();
-    setUrlList(urlList);
+  useEffect(() => {
+    async function getData() {
+      let urlList = await fetch(
+        host + "/dashboard/get_five_most_common?type=url",
+        {
+          method: "get",
+          mode: "cors",
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      urlList = await urlList.json();
+      setUrlList(urlList);
+    }
+    getData();
   }, []);
 
   return (
     <Table singleLine size="small">
       <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Url</Table.HeaderCell>
-        <Table.HeaderCell>Record count</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Url</Table.HeaderCell>
+          <Table.HeaderCell>Record count</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
       <Table.Body>
         {urlList
           ? urlList.map((element, index) => {
