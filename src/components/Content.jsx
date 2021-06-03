@@ -18,7 +18,7 @@ function Content(){
         e.preventDefault()
         
         // Get token 
-        let response = await fetch('http://localhost:3000/token/generator');
+        let response = await fetch(`http://localhost:3000/initialize?url=${link}`);
         let token = await response.text();
 
         setLocation({

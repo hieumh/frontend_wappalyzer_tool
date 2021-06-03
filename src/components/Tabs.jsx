@@ -258,7 +258,7 @@ function TabTech(props) {
         </div>
       </div>
       <ul id="tab-detail">
-        {tech[type].length
+        {tech[type].length && tech[type]
           ? tech[type].map((data, index) => {
               let listCve = [];
               if (data.cve) {
@@ -534,7 +534,7 @@ function TabDomainWhois(props) {
 }
 
 function TabDomainSublist3r(props) {
-  const domain = props.domain;
+  const domain = props.domain && props.domain.length ? props.domain : [];
   return (
     <div id="domain-sublist3r">
       {!domain ? (
@@ -1078,10 +1078,10 @@ function TabVuln(props) {
   const [vulns, setVuln] = useState([]);
 
   const _Component = {
-    list: (handleData, data) => (
-      <TopVulnList vulns={data} setVuln={handleData} />
+    list: (handleData,options, data) => (
+      <TopVulnList vulns={data} setVuln={handleData} options={options}/>
     ),
-    add: (handleData) => <TopVulnAdd setVuln={handleData} />,
+    add: (handleData,options) => <TopVulnAdd setVuln={handleData} options={options}/>,
   };
 
   function handleVuln(e) {
@@ -1090,7 +1090,7 @@ function TabVuln(props) {
 
   useEffect(() => {
     async function getData() {
-      let body = { token: props.token, action: "load" };
+      let body = { token: props.options.token, action: "load" };
       let listVuln = await fetch(host + "/update_vulns_table", {
         method: "POST",
         mode: "cors",
@@ -1101,8 +1101,8 @@ function TabVuln(props) {
       }).catch((err) => console.error(err));
       try {
         listVuln = await listVuln.json();
-        // console.log("this is data send back:",listVuln, typeof listVuln)
         setVuln(listVuln.vulns);
+        props.Count("vuln")
       } catch (err) {
         console.error("chưa có");
       }
@@ -1128,7 +1128,7 @@ function TabVuln(props) {
           Add vuln
         </div>
       </div>
-      {_Component[feature](setVuln, vulns)}
+      {_Component[feature](setVuln,props.options, vulns)}
     </div>
   );
 }
@@ -1136,7 +1136,7 @@ function TabVuln(props) {
 function TopVulnList(props) {
   async function handleDeleteVuln(e) {
     let body = JSON.stringify({
-      token: props.token,
+      token: props.options.token,
       action: "delete",
       vulns: props.vulns[e.target.id],
     });
@@ -1220,7 +1220,7 @@ function TopVulnAdd(props) {
   async function handleAddVuln(e) {
     e.preventDefault();
     let body = JSON.stringify({
-      token: props.token,
+      token: props.options.token,
       action: "add",
       vulns: addVulnData,
     });
