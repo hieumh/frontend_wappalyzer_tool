@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Icon, Divider, Form, Button } from "semantic-ui-react";
+import { Card, Icon, Form, Button, Image } from "semantic-ui-react";
 import { host } from "../lib_front";
 import { json2htmlver2, createHTTPHeader } from "../lib_front";
 
@@ -97,13 +97,13 @@ function TabTech(props) {
               wapp: data.technologies,
             };
           });
-          props.handleData((prev)=>{
-            return{
+          props.handleData((prev) => {
+            return {
               ...prev,
-              wapp:data.technologies
-            }
+              wapp: data.technologies,
+            };
           });
-          props.Count("wapp");  
+          props.Count("wapp");
         })
         .catch((err) => console.error(err));
 
@@ -117,11 +117,11 @@ function TabTech(props) {
               netcraft: data.technologies,
             };
           });
-          props.handleData((prev)=>{
-            return{
+          props.handleData((prev) => {
+            return {
               ...prev,
-              netcraft:data.technologies
-            }
+              netcraft: data.technologies,
+            };
           });
           props.Count("netcraft");
         })
@@ -138,11 +138,11 @@ function TabTech(props) {
               largeio: data.technologies,
             };
           });
-          props.handleData((prev)=>{
-            return{
+          props.handleData((prev) => {
+            return {
               ...prev,
-              largeio:data.technologies
-            }
+              largeio: data.technologies,
+            };
           });
           props.Count("largeio");
         })
@@ -158,11 +158,11 @@ function TabTech(props) {
               whatweb: data.technologies,
             };
           });
-          props.handleData((prev)=>{
-            return{
+          props.handleData((prev) => {
+            return {
               ...prev,
-              whatweb:data.technologies
-            }
+              whatweb: data.technologies,
+            };
           });
           props.Count("whatweb");
         })
@@ -179,11 +179,11 @@ function TabTech(props) {
               webtech: data.technologies,
             };
           });
-          props.handleData((prev)=>{
-            return{
+          props.handleData((prev) => {
+            return {
               ...prev,
-              webtech:data.technologies
-            }
+              webtech: data.technologies,
+            };
           });
           props.Count("webtech");
         })
@@ -593,14 +593,24 @@ function TabDic(props) {
       if (dic[key] === "{}") {
         return (
           <li key={key}>
-            <img alt="file" src="/icons/website/sticky-note-regular.svg" />
+            <Image
+              alt="file"
+              src="/icons/website/sticky-note-regular.svg"
+              wrapped
+              className="img"
+            />
             {" " + key}
           </li>
         );
       } else {
         return (
           <li id={key} key={key}>
-            <img alt="folder" src="/icons/website/folder-solid.svg" />
+            <Image
+              alt="file"
+              src="/icons/website/folder-solid.svg"
+              wrapped
+              className="img"
+            />
             {" " + key}
             <ul>{createTree(dic[key])}</ul>
           </li>
@@ -625,7 +635,12 @@ function TabDic(props) {
             dic.gobuster.directories.map((ele, index) => {
               return (
                 <li key={index}>
-                  <img alt="folder" src="/icons/website/folder-solid.svg" />
+                  <Image
+                    alt="folder"
+                    src="/icons/website/folder-solid.svg"
+                    wrapped
+                    className="img"
+                  />
                   {" " + ele}
                 </li>
               );
@@ -639,9 +654,11 @@ function TabDic(props) {
             dic.gobuster.files.map((ele, index) => {
               return (
                 <li key={index}>
-                  <img
+                  <Image
                     alt="file"
-                    src="/icons/website/sticky-note-regular.svg"
+                    src="//icons/website/sticky-note-regular.svg"
+                    wrapped
+                    className="img"
                   />
                   {" " + ele}
                 </li>
@@ -803,11 +820,11 @@ function TabServer(props) {
         .then((res) => res.json())
         .then((data) => {
           setNmap(data.nmap);
-          props.handleData((prev)=>{
-            return{
+          props.handleData((prev) => {
+            return {
               ...prev,
-              nmap:data.nmap
-            }
+              nmap: data.nmap,
+            };
           });
           props.Count("nmap");
         })
@@ -819,7 +836,7 @@ function TabServer(props) {
 
   return (
     <div id="server-network" className="card-body__">
-      {nmap === "" ? (
+      {!nmap ? (
         <div></div>
       ) : (
         <div className="code">
@@ -851,17 +868,19 @@ function TabDetectWaf(props) {
   }, []);
   return (
     <div id="detect-firewall" className="card-body__">
-      {wafs.map((ele, index) => {
-        return (
-          <div key={index}>
-            <b>Firewall:</b>
-            <p>{ele.firewall}</p>
-            <b>Manufacturer:</b>
-            <p>{ele.manufacturer}</p>
-            <hr />
-          </div>
-        );
-      })}
+      {wafs
+        ? wafs.map((ele, index) => {
+            return (
+              <div key={index}>
+                <b>Firewall:</b>
+                <p>{ele.firewall}</p>
+                <b>Manufacturer:</b>
+                <p>{ele.manufacturer}</p>
+                <hr />
+              </div>
+            );
+          })
+        : null}
     </div>
   );
 }
@@ -900,11 +919,11 @@ function TabScan(props) {
               nikto: data,
             };
           });
-          props.handleData((prev)=>{
-            return{
+          props.handleData((prev) => {
+            return {
               ...prev,
-              nikto:data
-            }
+              nikto: data,
+            };
           });
           props.Count("nikto");
         })
@@ -923,11 +942,11 @@ function TabScan(props) {
                 wpscan: data,
               };
             });
-            props.handleData((prev)=>{
-              return{
+            props.handleData((prev) => {
+              return {
                 ...prev,
-                wpscan:data
-              }
+                wpscan: data,
+              };
             });
             props.Count("wpscan");
           })
@@ -942,11 +961,11 @@ function TabScan(props) {
                 droopescan: data,
               };
             });
-            props.handleData((prev)=>{
-              return{
+            props.handleData((prev) => {
+              return {
                 ...prev,
-                droopescan:data
-              }
+                droopescan: data,
+              };
             });
             props.Count("droope");
           })
@@ -961,11 +980,11 @@ function TabScan(props) {
                 joomscan: data,
               };
             });
-            props.handleData((prev)=>{
-              return{
+            props.handleData((prev) => {
+              return {
                 ...prev,
-                joomscan:data
-              }
+                joomscan: data,
+              };
             });
             props.Count("joomscan");
           })
@@ -1057,7 +1076,6 @@ function TabScan(props) {
 function TabVuln(props) {
   const [feature, setFeature] = useState("list");
   const [vulns, setVuln] = useState([]);
-  
 
   const _Component = {
     list: (handleData, data) => (
@@ -1066,8 +1084,8 @@ function TabVuln(props) {
     add: (handleData) => <TopVulnAdd setVuln={handleData} />,
   };
 
-  function handleVuln(e){
-    setFeature(e.target.id)
+  function handleVuln(e) {
+    setFeature(e.target.id);
   }
 
   useEffect(() => {
@@ -1084,14 +1102,12 @@ function TabVuln(props) {
       try {
         listVuln = await listVuln.json();
         // console.log("this is data send back:",listVuln, typeof listVuln)
-        console.log(listVuln.vulns)
         setVuln(listVuln.vulns);
       } catch (err) {
         console.error("chưa có");
       }
     }
     getData();
-    console.log("load data");
   }, [props.data]);
 
   return (

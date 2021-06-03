@@ -9,12 +9,11 @@ import {
   TabScan,
   TabVuln,
 } from "./Tabs";
-import { host } from "../lib_front";
 import { ToastContainer, toast } from "react-toastify";
+import { Image} from "semantic-ui-react";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/Report.css";
 import "../css/Card.css";
-import html2canvas from "html2canvas";
 
 function AnalyzeResult(props) {
   // this variable use for logic of directory of wapp
@@ -31,29 +30,25 @@ function AnalyzeResult(props) {
     nmap: [],
   });
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    let { url, token } = props.location.state;
+  // async function handleSubmit(e) {
+  //   e.preventDefault();
+  //   let { url, token } = props.location.state;
 
-    let body = JSON.stringify({ url: url, token: token });
-    let result = await fetch(host + "/create_report", {
-      method: "post",
-      mode: "cors",
+  //   let body = JSON.stringify({ url: url, token: token });
+  //   let result = await fetch(host + "/create_report", {
+  //     method: "post",
+  //     mode: "cors",
 
-      headers: {
-        "content-type": "application/json",
-      },
-      body: body,
-    });
-    toast.success("Create report success");
-  }
+  //     headers: {
+  //       "content-type": "application/json",
+  //     },
+  //     body: body,
+  //   });
+  //   toast.success("Create report success");
+  // }
 
   return (
     <div id="report">
-      <ScreenShot />
-      <button className="create-report btn btn-info" onClick={handleSubmit}>
-        Create report
-      </button>
       <ToastContainer />
       <TableTab>
         <ChildrenTab
@@ -123,14 +118,25 @@ function AnalyzeResult(props) {
         >
           <TabScan />
         </ChildrenTab>
-        
+
         <ChildrenTab
           id="tab_8"
           title="Vulnerability"
           data={vulns}
           description="Information about the vulnerability of the target website"
           locations={props.location.state}
-        ><TabVuln /></ChildrenTab>
+        >
+          <TabVuln />
+        </ChildrenTab>
+
+        <ChildrenTab
+          id="tab_9"
+          title="Screenshot"
+          description="Screenshot of target website"
+          locations={props.location.state}
+        >
+          <ScreenShot url={props.location.state.url}/>
+        </ChildrenTab>
       </TableTab>
     </div>
   );
@@ -142,57 +148,19 @@ export default AnalyzeResult;
   /* <div className="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> */
 }
 
-function ScreenShot() {
-  const [html, setHTML] = useState("");
-  const [iframeStyle, setIframeStyle] = useState({});
-
-  useEffect(() => {
-    async function getData() {
-      let html = await fetch(
-        host + "/analyze_result/curl?url=http://testaspnet.vulnweb.com",
-        {
-          method: "get",
-          mode: "cors",
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
-
-      html = await html.text();
-      setHTML(html);
-    }
-    getData();
-  }, []);
-
-  useEffect(() => {
-    async function addCanvas() {
-      let iframe = document.getElementsByTagName("iframe")[0];
-      if (!Boolean(iframe.srcdoc)) {
-        return;
-      }
-      let iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-      console.log("start analyze canvas", document.body);
-      html2canvas(document.body, (canvas) => {
-        console.log("created canvas", canvas);
-        document.getElementById("screenshot").appendChild(canvas);
-        setIframeStyle({ visibility: "hidden" });
-      });
-    }
-    addCanvas();
-  }, [html]);
-
-  return (
-    <div id="screenshot">
-      <iframe
-        id="__canvas"
-        width="300"
-        srcDoc={html}
-        frameBorder="0"
-        style={iframeStyle}
-      ></iframe>
-    </div>
-  );
+function ScreenShot(props) {
+  function handleOnLoad(){
+    props.Count("img")
+  }
+  return <div id="screenshot">
+    <Image
+    src={`http://localhost:3000/analyze_result/screenshot?url=${props.url}`}
+    as='a'
+    fluid
+    onLoad={handleOnLoad}
+    bordered 
+  />
+  </div>;
 }
 
 function TableTab(props) {
@@ -220,7 +188,7 @@ function ChildrenTab(props) {
         type="radio"
         name="css-tabs"
         id={props.id}
-        defaultChecked={props.defaultChecked == true ? "true" : "false"}
+        defaultChecked={props.defaultChecked}
         className="tab-switch__"
       />
       <label
