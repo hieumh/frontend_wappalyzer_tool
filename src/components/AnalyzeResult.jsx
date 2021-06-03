@@ -132,6 +132,7 @@ function AnalyzeResult(props) {
         <ChildrenTab
           id="tab_9"
           title="Screenshot"
+          data={vulns.wapp}
           description="Screenshot of target website"
           locations={props.location.state}
         >
@@ -149,17 +150,28 @@ export default AnalyzeResult;
 }
 
 function ScreenShot(props) {
+  const [isRun,setRun] = useState(false)
   function handleOnLoad(){
     props.Count("img")
   }
+
+  useEffect(()=>{
+    console.log("run screenshot")
+    if(props.data.length){
+      setRun(true)
+    }
+  },[props.data])
   return <div id="screenshot">
-    <Image
-    src={`http://localhost:3000/analyze_result/screenshot?url=${props.url}`}
-    as='a'
-    fluid
-    onLoad={handleOnLoad}
-    bordered 
-  />
+    {
+      isRun ? <Image
+      src={`http://localhost:3000/analyze_result/screenshot?url=${props.url}`}
+      as='a'
+      fluid
+      onLoad={handleOnLoad}
+      bordered 
+    /> : null
+    }
+    
   </div>;
 }
 
