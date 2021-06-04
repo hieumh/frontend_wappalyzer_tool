@@ -30,6 +30,7 @@ function SearchDatabase() {
 
     let link =
       host + "/search_database?pattern=" + search + "&option=" + option;
+      console.log("link:",link)
     setHidden({});
     setSearch("");
 
@@ -46,6 +47,7 @@ function SearchDatabase() {
         for (const index in data) {
           result.push(data[index]);
         }
+        console.log("data received:", result)
         setResult(result);
       });
   }
@@ -104,6 +106,7 @@ function SearchDatabase() {
             <Form.Field>
               <Checkbox
                 radio
+                float='left'
                 label="Search table"
                 name="checkboxRadioGroup"
                 value="search"
@@ -143,7 +146,6 @@ function SearchDatabase() {
                     <Card.Content>
                       <Card.Header>{element.url}</Card.Header>
                       <Card.Meta>{element.time_create}</Card.Meta>
-                      <Card.Description>{element._id}</Card.Description>
                     </Card.Content>
                   </Card>
                 );

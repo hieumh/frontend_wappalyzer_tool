@@ -258,7 +258,7 @@ function TabTech(props) {
         </div>
       </div>
       <ul id="tab-detail">
-        {tech[type].length && tech[type]
+        {Array.isArray(tech[type]) && tech[type]
           ? tech[type].map((data, index) => {
               let listCve = [];
               if (data.cve) {
@@ -307,7 +307,7 @@ function TabDomain(props) {
           setDomain((prev) => {
             return {
               ...prev,
-              whois: data.domains,
+              whois: data ? data.domains : { empty: true },
             };
           });
           props.Count("whois");
@@ -321,7 +321,7 @@ function TabDomain(props) {
           setDomain((prev) => {
             return {
               ...prev,
-              sublist3r: data.domains,
+              sublist3r: data ? data.domains : [],
             };
           });
           props.Count("sublist3r");
@@ -364,13 +364,17 @@ function TabDomain(props) {
           ) : null}
         </div>
       </div>
-      {_Component[type](domain[type])}
+      {(() => {
+        console.log(type)
+        console.log(_Component[type])
+        return _Component[type](domain[type]);
+      })()}
     </div>
   );
 }
 
 function TabDomainWhois(props) {
-  const domain = props.domain ? props.domain : {};
+  const domain = props.domain && !props.domain.empty ? props.domain : {};
   return (
     <div id="domain-whois">
       <b>Domain name</b>:
@@ -687,7 +691,7 @@ function TabDNS(props) {
           setDns((prev) => {
             return {
               ...prev,
-              dig: JSON.parse(data.dns),
+              dig: data ? JSON.parse(data.dns) : { empty: true },
             };
           });
           props.Count("dig");
@@ -700,7 +704,7 @@ function TabDNS(props) {
           setDns((prev) => {
             return {
               ...prev,
-              fierce: data.dns,
+              fierce: data ? data.dns: "",
             };
           });
           props.Count("fierce");
@@ -853,7 +857,6 @@ function TabDetectWaf(props) {
       fetch(host + "/url_analyze/wafw00f" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          // console.log("this wafw00f")
           setWaf(data.wafs);
           props.Count("wafw00f");
         })
@@ -1073,10 +1076,12 @@ function TabVuln(props) {
   const [vulns, setVuln] = useState([]);
 
   const _Component = {
-    list: (handleData,options, data) => (
-      <TopVulnList vulns={data} setVuln={handleData} options={options}/>
+    list: (handleData, options, data) => (
+      <TopVulnList vulns={data} setVuln={handleData} options={options} />
     ),
-    add: (handleData,options) => <TopVulnAdd setVuln={handleData} options={options}/>,
+    add: (handleData, options) => (
+      <TopVulnAdd setVuln={handleData} options={options} />
+    ),
   };
 
   function handleVuln(e) {
@@ -1097,7 +1102,7 @@ function TabVuln(props) {
       try {
         listVuln = await listVuln.json();
         setVuln(listVuln.vulns);
-        props.Count("vuln")
+        props.Count("vuln");
       } catch (err) {
         console.error("chưa có");
       }
@@ -1123,7 +1128,7 @@ function TabVuln(props) {
           Add vuln
         </div>
       </div>
-      {_Component[feature](setVuln,props.options, vulns)}
+      {_Component[feature](setVuln, props.options, vulns)}
     </div>
   );
 }
