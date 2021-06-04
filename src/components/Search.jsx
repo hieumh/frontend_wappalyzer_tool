@@ -1,32 +1,37 @@
 import React, { useState } from "react";
+import {Redirect} from 'react-router-dom'
 import { host } from "../lib_front";
-import {Card} from 'semantic-ui-react'
+import { Card, Input, Checkbox, Form } from "semantic-ui-react";
 import "../css/Report.css";
 import "../css/Search.css";
 import "../css/Animation.css";
 import "../css/Card.css";
 
-function Search() {
+function SearchDatabase() {
   const [search, setSearch] = useState("");
-  const [result,setResult] = useState([])
+  const [option, setOption] = useState("search");
+  const [result, setResult] = useState([]);
   const [hidden, setHidden] = useState({ visibility: "hidden" });
+  const [location, setLocation] = useState({});
 
-  function handleChange(e) {
-    if (e.keyCode === 13) {
-      document.getElementById("submit-button").click();
-      return;
-    }
-
+  function handleChangeSearch(e) {
     const { value } = e.target;
     setSearch(value);
-    // setSearch(value)
+  }
+
+  function handleChangeOption(e, { value }) {
+    setOption(value);
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
+    if (e.keyCode !== 13) {
+      return;
+    }
 
-    let link = host + "/search_database?pattern=" + search;
+    let link =
+      host + "/search_database?pattern=" + search + "&option=" + option;
     setHidden({});
+    setSearch("");
 
     fetch(link, {
       method: "get",
@@ -41,9 +46,32 @@ function Search() {
         for (const index in data) {
           result.push(data[index]);
         }
-        console.log(result)
-        setResult(result)
+        setResult(result);
       });
+  }
+
+  function handleAnalyze(e) {
+    // console.log(e.target.id, result[e.target.id].token, result[e.target.id].url)
+    console.log(e.target.parentNode.parentNode, e.target);
+    let target = e.target.parentNode;
+    if (target.nodeName === "DIV") {
+      target = target.parentNode;
+    }
+    console.log("right result:", target);
+    if (target.id) {
+      setLocation({
+        pathname: "/analyze_result",
+        state: {
+          token: result[target.id].token,
+          url: result[target.id].url,
+          isAnalyze: false,
+        },
+      });
+    }
+  }
+
+  if (JSON.stringify(location) !== JSON.stringify({})) {
+    return <Redirect to={location} />;
   }
 
   return (
@@ -60,46 +88,71 @@ function Search() {
             All of this information will be taken in database that were
             collected by us
           </p>
-          <form method="get" action="" className="analyze">
-            <div id="input-box">
-              <img src="/icons/website/search-solid_2.svg" alt="" />
-              <input
-                type="text"
-                name="target"
-                className="input"
+          <Form>
+            <Form.Field>
+              <Input
+                fluid
+                size="large"
+                icon="search"
                 placeholder="Search..."
-                onChange={handleChange}
+                onChange={handleChangeSearch}
+                onKeyDown={handleSubmit}
+                value={search}
               />
-              <input
-                id="submit-button"
-                type="submit"
-                onClick={handleSubmit}
-                hidden
+            </Form.Field>
+            <p>Choose where to search:</p>
+            <Form.Field>
+              <Checkbox
+                radio
+                label="Search table"
+                name="checkboxRadioGroup"
+                value="search"
+                checked={option === "search"}
+                onChange={handleChangeOption}
               />
-            </div>
-          </form>
+            </Form.Field>
+            <Form.Field>
+              <Checkbox
+                radio
+                label="Report table"
+                name="checkboxRadioGroup"
+                value="report"
+                checked={option === "report"}
+                onChange={handleChangeOption}
+              />
+            </Form.Field>
+            <Form.Field>
+              <Checkbox
+                radio
+                label="All table"
+                name="checkboxRadioGroup"
+                value="all"
+                checked={option === "all"}
+                onChange={handleChangeOption}
+              />
+            </Form.Field>
+          </Form>
         </div>
 
         <div id="search-result" style={hidden}>
           <h4>Search result:</h4>
-          {
-              result.length ? result.map((element,index)=>{
-                  return (<Card fluid key={index}>
+          {result.length
+            ? result.map((element, index) => {
+                return (
+                  <Card fluid key={index} id={index} onClick={handleAnalyze}>
                     <Card.Content>
                       <Card.Header>{element.url}</Card.Header>
                       <Card.Meta>{element.time_create}</Card.Meta>
-                      <Card.Description>
-                          {element._id}
-                      </Card.Description>
+                      <Card.Description>{element._id}</Card.Description>
                     </Card.Content>
-                  </Card>)
-              }) : null
-          }
-          
+                  </Card>
+                );
+              })
+            : null}
         </div>
       </div>
     </div>
   );
 }
 
-export default Search;
+export default SearchDatabase;

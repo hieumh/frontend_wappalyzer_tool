@@ -83,3 +83,7 @@ button:hover {
       border: 1px solid #ccc;  
     }
   }
+
+  .i > div > i{
+      padding:0;
+  }

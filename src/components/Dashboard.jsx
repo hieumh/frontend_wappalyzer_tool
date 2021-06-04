@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/Home.css";
-import {
-  Card,
-  Grid,
-  Table,
-  Statistic,
-} from "semantic-ui-react";
-import { Pie, Bar } from "react-chartjs-2";
+import { Card, Grid, Table, Statistic } from "semantic-ui-react";
+import { Pie, Bar, Chart } from "react-chartjs-2";
 import { host } from "../lib_front";
 
 function Dashboard(props) {
@@ -131,7 +126,7 @@ function NumTech(props) {
 function NumVuln(props) {
   const [numVuln, setVuln] = useState([]);
 
-  useEffect( () => {
+  useEffect(() => {
     async function getData() {
       let numVuln = await fetch(host + "/dashboard/num_vuln", {
         method: "get",
@@ -209,18 +204,18 @@ function LanguageChart(props) {
           {
             label: "Rainfall",
             backgroundColor: [
-              "#B21F00",
               "#C9DE00",
               "#2FDE00",
               "#00A6B4",
               "#6800B4",
+              "#B21F00",
             ],
             hoverBackgroundColor: [
-              "#501800",
               "#4B5000",
               "#175000",
               "#003350",
               "#35014F",
+              "#501800",
             ],
             data: programRatio.data,
           },
@@ -248,6 +243,13 @@ function FameworkChart(props) {
     label: [],
     data: [],
   });
+  const options = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
 
   useEffect(() => {
     async function getData() {
@@ -274,18 +276,18 @@ function FameworkChart(props) {
         datasets: [
           {
             backgroundColor: [
-              "#B21F00",
               "#C9DE00",
               "#2FDE00",
               "#00A6B4",
               "#6800B4",
+              "#B21F00",
             ],
             hoverBackgroundColor: [
-              "#501800",
               "#4B5000",
               "#175000",
               "#003350",
               "#35014F",
+              "#501800",
             ],
             data: frameworkRatio.data,
           },
@@ -293,16 +295,7 @@ function FameworkChart(props) {
       }}
       height={100}
       width={200}
-      options={{
-        title: {
-          display: true,
-          text: "Average Rainfall per month",
-          fontSize: 20,
-        },
-        legend: {
-          display: false,
-        },
-      }}
+      options={options}
     />
   );
 }
@@ -440,8 +433,8 @@ function ListUrl(props) {
               return (
                 <Table.Row key={index}>
                   <Table.Cell>
-                    {element.url.length >= 20
-                      ? element.url.slice(0, 20) + "..."
+                    {element.url.length >= 15
+                      ? element.url.slice(0, 15) + "..."
                       : element.url}
                   </Table.Cell>
                   <Table.Cell>{element.count}</Table.Cell>

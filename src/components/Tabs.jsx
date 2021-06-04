@@ -340,10 +340,6 @@ function TabDomain(props) {
     }
   }
 
-  // function showToolResult(params){
-
-  // }
-
   return (
     <div id="domain" className="card-body__">
       <div className="list-tools">
@@ -912,11 +908,10 @@ function TabScan(props) {
       fetch(host + "/url_analyze/nikto" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          // console.log("this nikto")
           setScan((prev) => {
             return {
               ...prev,
-              nikto: data,
+              nikto: data ? JSON.parse(data.nikto) : {},
             };
           });
           props.handleData((prev) => {

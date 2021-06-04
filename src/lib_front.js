@@ -1,5 +1,12 @@
 const host = "http://localhost:3000";
 
+function getHostFromUrl(url){
+  if(url.split('//').length == 2){
+      return url.split('//')[1].split('.')[0]
+  }
+  return url.split('.')[0]
+}
+
 function isArrayObject(input) {
   if (!Array.isArray(input)) {
     return false;
@@ -232,4 +239,4 @@ function createHTTPHeader({ url, token, isAnalyze }) {
   return {header:header, query:options.query}
 }
 
-export { host, json2html, json2htmlver2, createHTTPHeader };
+export { host, json2html, json2htmlver2, createHTTPHeader,getHostFromUrl };

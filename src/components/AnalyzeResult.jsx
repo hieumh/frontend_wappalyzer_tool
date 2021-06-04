@@ -9,8 +9,9 @@ import {
   TabScan,
   TabVuln,
 } from "./Tabs";
-import { ToastContainer, toast } from "react-toastify";
-import { Image} from "semantic-ui-react";
+import { getHostFromUrl } from "../lib_front";
+import { ToastContainer } from "react-toastify";
+import { Image } from "semantic-ui-react";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/Report.css";
 import "../css/Card.css";
@@ -136,7 +137,7 @@ function AnalyzeResult(props) {
           description="Screenshot of target website"
           locations={props.location.state}
         >
-          <ScreenShot url={props.location.state.url}/>
+          <ScreenShot />
         </ChildrenTab>
       </TableTab>
     </div>
@@ -150,29 +151,44 @@ export default AnalyzeResult;
 }
 
 function ScreenShot(props) {
-  const [isRun,setRun] = useState(false)
-  function handleOnLoad(){
-    props.Count("img")
+  const [isRun, setRun] = useState(false);
+  const [option, setOption] = useState("");
+  const feature = {
+    url: props.options.url,
+    pic: getHostFromUrl(props.options.url)+'.png',
+  };
+
+  function handleOnLoad() {
+    props.Count("img");
   }
 
-  useEffect(()=>{
-    console.log("run screenshot")
-    if(props.data.length){
-      setRun(true)
+  useEffect(() => {
+    if (props.options.isAnalyze) {
+      setOption("url");
+      return;
     }
-  },[props.data])
-  return <div id="screenshot">
-    {
-      isRun ? <Image
-      src={`http://localhost:3000/analyze_result/screenshot?url=${props.url}`}
-      as='a'
-      fluid
-      onLoad={handleOnLoad}
-      bordered 
-    /> : null
+    setOption("pic");
+  }, []);
+
+  useEffect(() => {
+    console.log("run screenshot");
+    if (props.data.length) {
+      setRun(true);
     }
-    
-  </div>;
+  }, [props.data]);
+  return (
+    <div id="screenshot">
+      {isRun ? (
+        <Image
+          src={`http://localhost:3000/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
+          as="a"
+          fluid
+          onLoad={handleOnLoad}
+          bordered
+        />
+      ) : null}
+    </div>
+  );
 }
 
 function TableTab(props) {
