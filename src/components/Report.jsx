@@ -6,12 +6,12 @@ import {
   Segment,
   Image,
   List,
-  Table
+  Table,
+  Item,
 } from "semantic-ui-react";
 
 function Report(props) {
   const report = JSON.parse(localStorage.report);
-  console.log(report);
   const linkImg = `http://localhost:3000/analyze_result/screenshot?pic=${report.pic}`;
   // return <div>{json2htmlver2(JSON.parse(localStorage.report))}</div>
   return (
@@ -48,82 +48,42 @@ function Report(props) {
       </Segment>
       <Segment>
         <Header as="h2" content="Technologies" />
-        <Table definition>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell />
-              <Table.HeaderCell>Arguments</Table.HeaderCell>
-              <Table.HeaderCell>Description</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>reset rating</Table.Cell>
-              <Table.Cell>None</Table.Cell>
-              <Table.Cell>Resets rating to default value</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>set rating</Table.Cell>
-              <Table.Cell>rating (integer)</Table.Cell>
-              <Table.Cell>
-                Sets the current star rating to specified value
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
+        <p>All technologies that tool collected:</p>
+        <TechnologiesSegments
+          list={[
+            report.wapp.technologies,
+            report.netcraft.technologies,
+            report.largeio.technologies,
+            report.whatweb.technologies,
+            report.webtech.technologies,
+          ]}
+        />
       </Segment>
       <Segment>
         <Header as="h2" content="Domain" />
-        <p>
-          This prototype features how to create a carousel with the{" "}
-          <code>Card</code> component, take a look into{" "}
-          <code>examples/CardCarousel</code> to get more details.
-        </p>
+        <DomainWhoisSegment whois={report.whois} />
       </Segment>
       <Segment>
         <Header as="h2" content="Directories" />
-        <p>
-          This prototype features how to create a carousel with the{" "}
-          <code>Card</code> component, take a look into{" "}
-          <code>examples/CardCarousel</code> to get more details.
-        </p>
+        <Header as="h3" content="Wappalyzer tree" />
+        <p>This information extract from wappalyzer result analyze.</p>
+        <DirectoriesDicSegment dic={report.dic.trees} />
+        <hr />
+        <Header as="h3" content="Gobuster tree" />
+        <DirectoriesGobusterSegment gobuster={report.gobuster.gobuster} />
       </Segment>
       <Segment>
         <Header as="h2" content="DNS" />
-        <p>
-          This prototype features how to create a carousel with the{" "}
-          <code>Card</code> component, take a look into{" "}
-          <code>examples/CardCarousel</code> to get more details.
-        </p>
+        <DnsDigSegment dns={JSON.parse(report.dig.dns)} />
       </Segment>
       <Segment>
         <Header as="h2" content="Detect website application firewall" />
-        <p>
-          This prototype features how to create a carousel with the{" "}
-          <code>Card</code> component, take a look into{" "}
-          <code>examples/CardCarousel</code> to get more details.
-        </p>
+        <DetectWafSegment wafs={report.wafw00f} />
       </Segment>
 
       <Segment>
         <Header as="h2" content="Vulnerabilities" />
-        <p>
-          This prototype features how to create a carousel with the{" "}
-          <code>Card</code> component, take a look into{" "}
-          <code>examples/CardCarousel</code> to get more details.
-        </p>
-      </Segment>
-
-      <Segment>
-        List tool use
-        <List as="ul">
-          <List.Item as="li">Wappalyzer: </List.Item>
-          <List.Item as="li">Netcraft: </List.Item>
-          <List.Item as="li">Largeio: </List.Item>
-          <List.Item as="li">Whatweb: </List.Item>
-          <List.Item as="li">Webtech: </List.Item>
-        </List>
+        <VulnerabiltiesSegment vulns={report.vulns} />
       </Segment>
     </Container>
   );
@@ -132,25 +92,377 @@ function Report(props) {
 export default Report;
 
 function TechnologiesSegments(props) {
-  return <div></div>;
+  const list = props.list ? props.list : []
+
+  function CreateRow([wapp, netcraft, largeio, whatweb, webtech]) {
+    return (
+      <Table.Row>
+        <Table.Cell>{wapp}</Table.Cell>
+        <Table.Cell>{netcraft}</Table.Cell>
+        <Table.Cell>{largeio}</Table.Cell>
+        <Table.Cell>{whatweb}</Table.Cell>
+        <Table.Cell>{webtech}</Table.Cell>
+      </Table.Row>
+    );
+  }
+
+  function compareFunc(objA, objB) {
+    return objA.name.charCodeAt(0) - objB.name.charCodeAt(0);
+  }
+
+  function CreateTableContent(props) {
+    let list = props.list ? props.list : [];
+    list = list.map((element) => {
+      return element.sort(compareFunc);
+    });
+
+    let listLongest = list.reduce((total, element) => {
+      return total.length > element.length ? total : element;
+    });
+
+    return listLongest.map((element, index) => {
+      return CreateRow([
+        list[0][index] ? list[0][index].name : null,
+        list[1][index] ? list[1][index].name : null,
+        list[2][index] ? list[2][index].name : null,
+        list[3][index] ? list[3][index].name : null,
+        list[4][index] ? list[4][index].name : null,
+      ]);
+    });
+  }
+
+  return (
+    <Table celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Wappalyzer</Table.HeaderCell>
+          <Table.HeaderCell>Netcraft</Table.HeaderCell>
+          <Table.HeaderCell>Largeio</Table.HeaderCell>
+          <Table.HeaderCell>Whatweb</Table.HeaderCell>
+          <Table.HeaderCell>Webtech</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+
+      <Table.Body>
+        <CreateTableContent list={list} />
+      </Table.Body>
+    </Table>
+  );
 }
 
-function DomainSegment(props) {
-  return <div></div>;
+function DomainWhoisSegment(props) {
+  const whois = props.whois ? props.whois : {}
+  const domains = whois.domains ? whois.domains : {}
+  return (
+    <div>
+      <b>Domain name</b>:
+      {domains.domain_name ? (
+        domains.domain_name.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Creation date</b>:
+      {domains.creation_date ? (
+        domains.creation_date.map((ele, index) => {
+          return <p key={index}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Dnssec</b>:
+      {domains.dnssec ? (
+        domains.dnssec.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Email</b>:{" "}
+      {domains.email ? (
+        domains.email.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Expiration date</b>:
+      {domains.expiration_date ? (
+        domains.expiration_date.map((ele, index) => {
+          return <p key={index}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Name server</b>:
+      {domains.name_server? (
+        domains.name_server.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Org</b>:
+      {domains.org ? (
+        domains.org.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Referral url</b>:
+      {domains.referral_url ? (
+        domains.referral_url.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Registrar</b>:
+      {domains.registrar ? (
+        domains.registrar.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>State</b>:
+      {domains.state ? (
+        domains.state.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Status</b>:{" "}
+      {domains.status ? (
+        domains.status.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Updated date</b>:{" "}
+      {domains.updated_date ? (
+        domains.updated_date.map((ele, index) => {
+          return <p key={index}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Whois server</b>:
+      {domains.whois_server ? (
+        domains.whois_server.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Address</b>:
+      {domains.address ? (
+        domains.address.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>City</b>:
+      {domains.city ? (
+        domains.city.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Country</b>:
+      {domains.country ? (
+        domains.country.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+      <b>Zipcode</b>:
+      {domains.zipcode ? (
+        domains.zipcode.map((ele) => {
+          return <p key={ele}>{ele}</p>;
+        })
+      ) : (
+        <p>unknown</p>
+      )}
+    </div>
+  );
 }
 
-function DirectoriesSegment(props) {
-  return <div></div>;
+function DirectoriesDicSegment(props) {
+  const tree = props.dic ? props.dic : JSON.stringify({})
+  function createTree(dic) {
+    let keys = Object.keys(dic);
+
+    return keys.map((key) => {
+      if (dic[key] === "{}") {
+        return (
+          <li key={key}>
+            <Image
+              alt="file"
+              src="/icons/website/sticky-note-regular.svg"
+              wrapped
+              className="img"
+            />
+            {" " + key}
+          </li>
+        );
+      } else {
+        return (
+          <li id={key} key={key}>
+            <Image
+              alt="file"
+              src="/icons/website/folder-solid.svg"
+              wrapped
+              className="img"
+            />
+            {" " + key}
+            <ul>{createTree(dic[key])}</ul>
+          </li>
+        );
+      }
+    });
+  }
+
+  return <div>{createTree(JSON.parse(tree))}</div>;
 }
 
-function DnsSegment(props) {
-  return <div></div>;
+function DirectoriesGobusterSegment(props) {
+  const gobuster = props.gobuster ? props.gobuster : {};
+  return (
+    <div>
+      <ul>
+        {!Array.isArray(gobuster.directories) ? (
+          <p></p>
+        ) : (
+          gobuster.directories.map((ele, index) => {
+            return (
+              <li key={index}>
+                <Image
+                  alt="folder"
+                  src="/icons/website/folder-solid.svg"
+                  wrapped
+                  className="img"
+                />
+                {" " + ele}
+              </li>
+            );
+          })
+        )}
+      </ul>
+      <ul>
+        {!Array.isArray(gobuster.files) ? (
+          <p></p>
+        ) : (
+          gobuster.files.map((ele, index) => {
+            return (
+              <li key={index}>
+                <Image
+                  alt="file"
+                  src="/icons/website/sticky-note-regular.svg"
+                  wrapped
+                  className="img"
+                />
+                {" " + ele}
+              </li>
+            );
+          })
+        )}
+      </ul>
+    </div>
+  );
+}
+
+function DnsDigSegment(props) {
+  const dns = props.dns ? props.dns : ""
+  return (
+    <div>
+      <Table basic="very" celled collapsing>
+        {(() => {
+          let keys = Object.keys(dns);
+
+          return keys.map((key, index) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>Type {key}</Table.Cell>
+                <Table.Cell>
+                  {dns[key].split("\n").filter(element=>element !== '').map((element, index) => (
+                    <code key={index}>
+                      {element === "\n" || !element ? null : element}
+                      <br />
+                    </code>
+                  ))}
+                </Table.Cell>
+              </Table.Row>
+            );
+          });
+        })()}
+      </Table>
+    </div>
+  );
 }
 
 function DetectWafSegment(props) {
-  return <div></div>;
+  const wafw00f = props.wafw00f ? props.wafw00f : {}
+  const wafs = wafw00f.waf ? wafw00f.waf : []
+  return (
+    <div>
+      {wafs.map((ele, index) => {
+            return (
+              <div key={index}>
+                <b>Firewall:</b>
+                <p>{ele.firewall}</p>
+                <b>Manufacturer:</b>
+                <p>{ele.manufacturer}</p>
+                <hr />
+              </div>
+            );
+          })}
+    </div>
+  );
 }
 
 function VulnerabiltiesSegment(props) {
-  return <div></div>;
+  const vulns = props.vulns ? props.vulns : [];
+  return (
+    <Table fixed>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Author</Table.HeaderCell>
+          <Table.HeaderCell>Date</Table.HeaderCell>
+          <Table.HeaderCell>EDB-ID</Table.HeaderCell>
+          <Table.HeaderCell>Path</Table.HeaderCell>
+          <Table.HeaderCell>Platform</Table.HeaderCell>
+          <Table.HeaderCell>Title</Table.HeaderCell>
+          <Table.HeaderCell>Type</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+
+      <Table.Body>
+        {vulns.map((vuln, index) => {
+          return (
+            <Table.Row key={index}>
+              <Table.Cell>{vuln["Author"]}</Table.Cell>
+              <Table.Cell>{vuln["Date"]}</Table.Cell>
+              <Table.Cell>{vuln["EDB-ID"]}</Table.Cell>
+              <Table.Cell>
+                <a href={vuln["Path"]} target="_blank">
+                  {vuln["Path"]}
+                </a>
+              </Table.Cell>
+              <Table.Cell>{vuln["Platform"]}</Table.Cell>
+              <Table.Cell>{vuln["Title"]}</Table.Cell>
+              <Table.Cell>{vuln["Type"]}</Table.Cell>
+            </Table.Row>
+          );
+        })}
+      </Table.Body>
+    </Table>
+  );
 }
