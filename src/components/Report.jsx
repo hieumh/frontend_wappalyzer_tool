@@ -7,7 +7,6 @@ import {
   Image,
   List,
   Table,
-  Item,
 } from "semantic-ui-react";
 
 function Report(props) {
@@ -67,14 +66,14 @@ function Report(props) {
         <Header as="h2" content="Directories" />
         <Header as="h3" content="Wappalyzer tree" />
         <p>This information extract from wappalyzer result analyze.</p>
-        <DirectoriesDicSegment dic={report.dic.trees} />
+        <DirectoriesDicSegment dic={report.dic} />
         <hr />
         <Header as="h3" content="Gobuster tree" />
-        <DirectoriesGobusterSegment gobuster={report.gobuster.gobuster} />
+        <DirectoriesGobusterSegment gobuster={report.gobuster} />
       </Segment>
       <Segment>
         <Header as="h2" content="DNS" />
-        <DnsDigSegment dns={JSON.parse(report.dig.dns)} />
+        <DnsDigSegment dig={report.dig} />
       </Segment>
       <Segment>
         <Header as="h2" content="Detect website application firewall" />
@@ -94,9 +93,9 @@ export default Report;
 function TechnologiesSegments(props) {
   const list = props.list ? props.list : []
 
-  function CreateRow([wapp, netcraft, largeio, whatweb, webtech]) {
+  function CreateRow([wapp, netcraft, largeio, whatweb, webtech],key) {
     return (
-      <Table.Row>
+      <Table.Row key={key}>
         <Table.Cell>{wapp}</Table.Cell>
         <Table.Cell>{netcraft}</Table.Cell>
         <Table.Cell>{largeio}</Table.Cell>
@@ -127,7 +126,7 @@ function TechnologiesSegments(props) {
         list[2][index] ? list[2][index].name : null,
         list[3][index] ? list[3][index].name : null,
         list[4][index] ? list[4][index].name : null,
-      ]);
+      ],index);
     });
   }
 
@@ -296,7 +295,8 @@ function DomainWhoisSegment(props) {
 }
 
 function DirectoriesDicSegment(props) {
-  const tree = props.dic ? props.dic : JSON.stringify({})
+  const dic = props.dic ? props.dic : {}
+  const tree = dic.trees ? dic.trees : JSON.stringify({})
   function createTree(dic) {
     let keys = Object.keys(dic);
 
@@ -334,7 +334,8 @@ function DirectoriesDicSegment(props) {
 }
 
 function DirectoriesGobusterSegment(props) {
-  const gobuster = props.gobuster ? props.gobuster : {};
+  const _gobuster = props.gobuster ? props.gobuster : {}
+  const gobuster = _gobuster.gobuster ? _gobuster.gobuster : {};
   return (
     <div>
       <ul>
@@ -380,7 +381,9 @@ function DirectoriesGobusterSegment(props) {
 }
 
 function DnsDigSegment(props) {
-  const dns = props.dns ? props.dns : ""
+  const dig = props.dig ? props.dig : {}
+  const dns = dig.dns ? JSON.parse(dig.dns) : {}
+  console.log(dns,typeof dns)
   return (
     <div>
       <Table basic="very" celled collapsing>
