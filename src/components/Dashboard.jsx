@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/Home.css";
 import { Card, Grid, Table, Statistic } from "semantic-ui-react";
-import { Pie, Bar, Chart } from "react-chartjs-2";
+import { Pie, Bar } from "react-chartjs-2";
 import { host } from "../lib_front";
 
 function Dashboard(props) {

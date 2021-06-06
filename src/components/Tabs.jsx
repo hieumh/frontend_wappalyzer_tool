@@ -63,13 +63,13 @@ function TabTech(props) {
           setTech((prev) => {
             return {
               ...prev,
-              wapp: data.technologies,
+              wapp: Array.isArray(data.technologies) ? data.technologies : [],
             };
           });
           props.handleData((prev) => {
             return {
               ...prev,
-              wapp: data.technologies,
+              wapp: Array.isArray(data.technologies) ? data.technologies : [],
             };
           });
           props.Count("wapp");
@@ -83,13 +83,17 @@ function TabTech(props) {
           setTech((prev) => {
             return {
               ...prev,
-              netcraft: data.technologies,
+              netcraft: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.handleData((prev) => {
             return {
               ...prev,
-              netcraft: data.technologies,
+              netcraft: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.Count("netcraft");
@@ -104,13 +108,17 @@ function TabTech(props) {
           setTech((prev) => {
             return {
               ...prev,
-              largeio: data.technologies,
+              largeio: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.handleData((prev) => {
             return {
               ...prev,
-              largeio: data.technologies,
+              largeio: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.Count("largeio");
@@ -124,13 +132,17 @@ function TabTech(props) {
           setTech((prev) => {
             return {
               ...prev,
-              whatweb: data.technologies,
+              whatweb: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.handleData((prev) => {
             return {
               ...prev,
-              whatweb: data.technologies,
+              whatweb: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.Count("whatweb");
@@ -145,13 +157,17 @@ function TabTech(props) {
           setTech((prev) => {
             return {
               ...prev,
-              webtech: data.technologies,
+              webtech: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.handleData((prev) => {
             return {
               ...prev,
-              webtech: data.technologies,
+              webtech: Array.isArray(data.technologies)
+                ? data.technologies
+                : [],
             };
           });
           props.Count("webtech");
@@ -268,7 +284,7 @@ function TabDomain(props) {
           setDomain((prev) => {
             return {
               ...prev,
-              whois: data ? data.domains : { empty: true },
+              whois: data.domains ? data.domains : { empty: true },
             };
           });
           props.Count("whois");
@@ -282,7 +298,7 @@ function TabDomain(props) {
           setDomain((prev) => {
             return {
               ...prev,
-              sublist3r: data ? data.domains : [],
+              sublist3r: Array.isArray(data.domains) ? data.domains : [],
             };
           });
           props.Count("sublist3r");
@@ -326,16 +342,19 @@ function TabDomain(props) {
         </div>
       </div>
       {(() => {
-        console.log(type);
-        console.log(_Component[type]);
-        return _Component[type](domain[type]);
+        if (!_Component[type]) {
+          console.log("this is error type:", type);
+        }
+        return _Component[type] && {}.toString.call(_Component[type])
+          ? _Component[type](domain[type])
+          : null;
       })()}
     </div>
   );
 }
 
 function TabDomainWhois(props) {
-  const domain = props.domain && !props.domain.empty ? props.domain : {};
+  const domain = props.domain ? props.domain : {};
   return (
     <div id="domain-whois">
       <b>Domain name</b>:
@@ -495,7 +514,7 @@ function TabDomainWhois(props) {
 }
 
 function TabDomainSublist3r(props) {
-  const domain = props.domain && props.domain.length ? props.domain : [];
+  const domain = Array.isArray(props.domain) ? props.domain : [];
   return (
     <div id="domain-sublist3r">
       {!domain ? (
@@ -652,7 +671,7 @@ function TabDNS(props) {
           setDns((prev) => {
             return {
               ...prev,
-              dig: data ? JSON.parse(data.dns) : { empty: true },
+              dig: data.dns ? JSON.parse(data.dns) : { empty: true },
             };
           });
           props.Count("dig");
@@ -665,7 +684,7 @@ function TabDNS(props) {
           setDns((prev) => {
             return {
               ...prev,
-              fierce: data ? data.dns : "",
+              fierce: data.dns ? data.dns : "",
             };
           });
           props.Count("fierce");
@@ -709,7 +728,11 @@ function TabDNS(props) {
           ) : null}
         </div>
       </div>
-      <div>{_Component[type](dns[type])}</div>
+      <div>
+        {_Component[type] && {}.toString.call(_Component[type])
+          ? _Component[type](dns[type])
+          : null}
+      </div>
     </div>
   );
 }
@@ -738,6 +761,7 @@ function TabDNSFierce(props) {
 
 function TabDNSDig(props) {
   const [option, setOption] = useState("A");
+  const dns = props.dns ? props.dns : {};
 
   function handleClick(e) {
     setOption(e.target.innerHTML);
@@ -762,8 +786,8 @@ function TabDNSDig(props) {
         <button onClick={handleClick}>TXT</button>
       </div>
       <div className="code">
-        {props.dns[option]
-          ? props.dns[option].split("\n").map((ele, index) => {
+        {dns[option]
+          ? dns[option].split("\n").map((ele, index) => {
               return <p key={index}>{ele === "" ? "\t" : ele}</p>;
             })
           : null}
@@ -780,11 +804,11 @@ function TabServer(props) {
       fetch(host + "/url_analyze/server" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          setNmap(data.nmap);
+          setNmap(data.nmap ? data.nmap : "");
           props.handleData((prev) => {
             return {
               ...prev,
-              nmap: data.nmap,
+              nmap: data.nmap ? data.nmap : "",
             };
           });
           props.Count("nmap");
@@ -818,7 +842,7 @@ function TabDetectWaf(props) {
       fetch(host + "/url_analyze/wafw00f" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          setWaf(data.wafs);
+          setWaf(Array.isArray(data.wafs) ? data.wafs : []);
           props.Count("wafw00f");
         })
         .catch((err) => console.error(err));
@@ -875,7 +899,7 @@ function TabScan(props) {
           setScan((prev) => {
             return {
               ...prev,
-              nikto: data ? JSON.parse(data.nikto) : {},
+              nikto: data.nikto ? JSON.parse(data.nikto) : { empty: true },
             };
           });
           props.handleData((prev) => {
@@ -898,13 +922,13 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                wpscan: data,
+                wpscan: data ? data : { empty: true },
               };
             });
             props.handleData((prev) => {
               return {
                 ...prev,
-                wpscan: data,
+                wpscan: data ? data : { empty: true },
               };
             });
             props.Count("wpscan");
@@ -917,13 +941,13 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                droopescan: data,
+                droopescan: data ? data : { empty: true },
               };
             });
             props.handleData((prev) => {
               return {
                 ...prev,
-                droopescan: data,
+                droopescan: data ? data : { empty: true },
               };
             });
             props.Count("droope");
@@ -936,13 +960,13 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                joomscan: data,
+                joomscan: data ? data : "",
               };
             });
             props.handleData((prev) => {
               return {
                 ...prev,
-                joomscan: data,
+                joomscan: data ? data : "",
               };
             });
             props.Count("joomscan");
@@ -1060,13 +1084,9 @@ function TabVuln(props) {
         },
         body: JSON.stringify(body),
       }).catch((err) => console.error(err));
-      try {
-        listVuln = await listVuln.json();
-        setVuln(listVuln.vulns);
-        props.Count("vuln");
-      } catch (err) {
-        console.error("chưa có");
-      }
+      listVuln = await listVuln.json();
+      setVuln(Array.isArray(listVuln.vulns) ? listVuln.vulns : []);
+      props.Count("vuln");
     }
     getData();
   }, [props.data]);
@@ -1089,17 +1109,22 @@ function TabVuln(props) {
           Add vuln
         </div>
       </div>
-      {_Component[feature](setVuln, props.options, vulns)}
+      {_Component[feature] && {}.toString.call(_Component[feature])
+        ? _Component[feature](setVuln, props.options, vulns)
+        : null}
     </div>
   );
 }
 
 function TopVulnList(props) {
+  const vulns = Array.isArray(props.vulns) ? props.vulns : []
+  const options = props.options ? props.options : {} 
+
   async function handleDeleteVuln(e) {
     let body = JSON.stringify({
-      token: props.options.token,
+      token: options.token,
       action: "delete",
-      vulns: props.vulns[e.target.id],
+      vulns: vulns[e.target.id],
     });
     let dataRecv = await fetch(host + "/update_vulns_table", {
       method: "post",
@@ -1118,8 +1143,8 @@ function TopVulnList(props) {
   }
   return (
     <Card.Group>
-      {props.vulns.length
-        ? props.vulns.map((element, index) => {
+      {vulns.length
+        ? vulns.map((element, index) => {
             return (
               <Card key={index} fluid>
                 <Card.Content>
@@ -1165,6 +1190,7 @@ function TopVulnAdd(props) {
     Type: "",
     URL: "",
   });
+  const options = props.options ? props.options : {}
 
   function handleChangeVuln(e) {
     const { name, value } = e.target;
@@ -1181,7 +1207,7 @@ function TopVulnAdd(props) {
   async function handleAddVuln(e) {
     e.preventDefault();
     let body = JSON.stringify({
-      token: props.options.token,
+      token: options.token,
       action: "add",
       vulns: addVulnData,
     });
