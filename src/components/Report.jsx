@@ -7,6 +7,7 @@ import {
   Image,
   List,
   Table,
+  TableBody,
 } from "semantic-ui-react";
 
 function Report(props) {
@@ -91,9 +92,9 @@ function Report(props) {
 export default Report;
 
 function TechnologiesSegments(props) {
-  const list = props.list ? props.list : []
+  const list = props.list ? props.list : [];
 
-  function CreateRow([wapp, netcraft, largeio, whatweb, webtech],key) {
+  function CreateRow([wapp, netcraft, largeio, whatweb, webtech], key) {
     return (
       <Table.Row key={key}>
         <Table.Cell>{wapp}</Table.Cell>
@@ -120,13 +121,16 @@ function TechnologiesSegments(props) {
     });
 
     return listLongest.map((element, index) => {
-      return CreateRow([
-        list[0][index] ? list[0][index].name : null,
-        list[1][index] ? list[1][index].name : null,
-        list[2][index] ? list[2][index].name : null,
-        list[3][index] ? list[3][index].name : null,
-        list[4][index] ? list[4][index].name : null,
-      ],index);
+      return CreateRow(
+        [
+          list[0][index] ? list[0][index].name : null,
+          list[1][index] ? list[1][index].name : null,
+          list[2][index] ? list[2][index].name : null,
+          list[3][index] ? list[3][index].name : null,
+          list[4][index] ? list[4][index].name : null,
+        ],
+        index
+      );
     });
   }
 
@@ -150,8 +154,8 @@ function TechnologiesSegments(props) {
 }
 
 function DomainWhoisSegment(props) {
-  const whois = props.whois ? props.whois : {}
-  const domains = whois.domains ? whois.domains : {}
+  const whois = props.whois ? props.whois : {};
+  const domains = whois.domains ? whois.domains : {};
   return (
     <div>
       <b>Domain name</b>:
@@ -195,7 +199,7 @@ function DomainWhoisSegment(props) {
         <p>unknown</p>
       )}
       <b>Name server</b>:
-      {domains.name_server? (
+      {domains.name_server ? (
         domains.name_server.map((ele) => {
           return <p key={ele}>{ele}</p>;
         })
@@ -295,8 +299,8 @@ function DomainWhoisSegment(props) {
 }
 
 function DirectoriesDicSegment(props) {
-  const dic = props.dic ? props.dic : {}
-  const tree = dic.trees ? dic.trees : JSON.stringify({})
+  const dic = props.dic ? props.dic : {};
+  const tree = dic.trees ? dic.trees : JSON.stringify({});
   function createTree(dic) {
     let keys = Object.keys(dic);
 
@@ -334,7 +338,7 @@ function DirectoriesDicSegment(props) {
 }
 
 function DirectoriesGobusterSegment(props) {
-  const _gobuster = props.gobuster ? props.gobuster : {}
+  const _gobuster = props.gobuster ? props.gobuster : {};
   const gobuster = _gobuster.gobuster ? _gobuster.gobuster : {};
   return (
     <div>
@@ -381,52 +385,56 @@ function DirectoriesGobusterSegment(props) {
 }
 
 function DnsDigSegment(props) {
-  const dig = props.dig ? props.dig : {}
-  const dns = dig.dns ? JSON.parse(dig.dns) : {}
-  console.log(dns,typeof dns)
+  const dig = props.dig ? props.dig : {};
+  const dns = dig.dns ? JSON.parse(dig.dns) : {};
   return (
     <div>
       <Table basic="very" celled collapsing>
-        {(() => {
-          let keys = Object.keys(dns);
+        <TableBody>
+          {(() => {
+            let keys = Object.keys(dns);
 
-          return keys.map((key, index) => {
-            return (
-              <Table.Row key={index}>
-                <Table.Cell>Type {key}</Table.Cell>
-                <Table.Cell>
-                  {dns[key].split("\n").filter(element=>element !== '').map((element, index) => (
-                    <code key={index}>
-                      {element === "\n" || !element ? null : element}
-                      <br />
-                    </code>
-                  ))}
-                </Table.Cell>
-              </Table.Row>
-            );
-          });
-        })()}
+            return keys.map((key, index) => {
+              return (
+                <Table.Row key={index}>
+                  <Table.Cell>Type {key}</Table.Cell>
+                  <Table.Cell>
+                    {dns[key]
+                      .split("\n")
+                      .filter((element) => element !== "")
+                      .map((element, index) => (
+                        <code key={index}>
+                          {element === "\n" || !element ? null : element}
+                          <br />
+                        </code>
+                      ))}
+                  </Table.Cell>
+                </Table.Row>
+              );
+            });
+          })()}
+        </TableBody>
       </Table>
     </div>
   );
 }
 
 function DetectWafSegment(props) {
-  const wafw00f = props.wafw00f ? props.wafw00f : {}
-  const wafs = wafw00f.waf ? wafw00f.waf : []
+  const wafw00f = props.wafw00f ? props.wafw00f : {};
+  const wafs = wafw00f.waf ? wafw00f.waf : [];
   return (
     <div>
       {wafs.map((ele, index) => {
-            return (
-              <div key={index}>
-                <b>Firewall:</b>
-                <p>{ele.firewall}</p>
-                <b>Manufacturer:</b>
-                <p>{ele.manufacturer}</p>
-                <hr />
-              </div>
-            );
-          })}
+        return (
+          <div key={index}>
+            <b>Firewall:</b>
+            <p>{ele.firewall}</p>
+            <b>Manufacturer:</b>
+            <p>{ele.manufacturer}</p>
+            <hr />
+          </div>
+        );
+      })}
     </div>
   );
 }

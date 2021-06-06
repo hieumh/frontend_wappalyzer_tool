@@ -4,22 +4,6 @@ import { host } from "../lib_front";
 import { json2htmlver2, createHTTPHeader } from "../lib_front";
 
 function TechDetail(props) {
-  function handleClick(e) {
-    e.target.classList.toggle("active");
-    let content = e.target.nextElementSibling;
-    while (content) {
-      if (content.style.display === "block") {
-        content.style.display = "none";
-      } else {
-        content.style.display = "block";
-      }
-      if (!content) {
-        return;
-      }
-      content = content.nextElementSibling;
-    }
-  }
-
   return (
     <div id="tech-detail">
       {/* <img src={props.src} alt={props.website} width="30" height="30" /> */}
@@ -56,21 +40,6 @@ function TechDetail(props) {
         ) : (
           <div></div>
         )}
-        <ul>
-          <button onClick={handleClick} className="collapsible">
-            CVE of {props.name} ({props.cve.length} cves)
-          </button>
-          {props.cve.map((element) => {
-            return (
-              <li key={element.cve} className="content__">
-                <hr />
-                <p>CVE: {element.cve}</p>
-                <p>Year: {element.year}</p>
-                <p>Description: {element.desc}</p>
-              </li>
-            );
-          })}
-        </ul>
       </div>
     </div>
   );
@@ -260,13 +229,6 @@ function TabTech(props) {
       <ul id="tab-detail">
         {Array.isArray(tech[type]) && tech[type]
           ? tech[type].map((data, index) => {
-              let listCve = [];
-              if (data.cve) {
-                for (const index in data.cve) {
-                  listCve.push(data.cve[index]);
-                }
-                listCve = listCve.slice(0, 10);
-              }
               return (
                 <li key={data.name}>
                   <TechDetail
@@ -275,7 +237,6 @@ function TabTech(props) {
                     website={data.website}
                     confidence={data.confidence}
                     version={data.version}
-                    cve={listCve}
                     link={data.link}
                     description={data.description}
                   />
@@ -365,8 +326,8 @@ function TabDomain(props) {
         </div>
       </div>
       {(() => {
-        console.log(type)
-        console.log(_Component[type])
+        console.log(type);
+        console.log(_Component[type]);
         return _Component[type](domain[type]);
       })()}
     </div>
@@ -704,7 +665,7 @@ function TabDNS(props) {
           setDns((prev) => {
             return {
               ...prev,
-              fierce: data ? data.dns: "",
+              fierce: data ? data.dns : "",
             };
           });
           props.Count("fierce");

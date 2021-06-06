@@ -77,15 +77,18 @@ function NumFrame(props) {
 
   useEffect(() => {
     async function getData() {
-      let numFramework = await fetch(host + "/dashboard/num_framework", {
+      fetch(host + "/dashboard/num_framework", {
         method: "get",
         mode: "cors",
         headers: {
           "content-type": "application/json",
         },
-      });
-      numFramework = await numFramework.json();
-      setFramework(numFramework);
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setFramework(data);
+        })
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -103,15 +106,16 @@ function NumTech(props) {
 
   useEffect(() => {
     async function getData() {
-      let numTech = await fetch(host + "/dashboard/num_tech", {
+      fetch(host + "/dashboard/num_tech", {
         method: "get",
         mode: "cors",
         headers: {
           "content-type": "application/json",
         },
-      });
-      numTech = await numTech.json();
-      setTech(numTech);
+      })
+        .then((res) => res.json())
+        .then((data) => setTech(data))
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -128,15 +132,16 @@ function NumVuln(props) {
 
   useEffect(() => {
     async function getData() {
-      let numVuln = await fetch(host + "/dashboard/num_vuln", {
+      fetch(host + "/dashboard/num_vuln", {
         method: "get",
         mode: "cors",
         headers: {
           "content-type": "application/json",
         },
-      });
-      numVuln = await numVuln.json();
-      setVuln(numVuln);
+      })
+        .then((res) => res.json())
+        .then((data) => setVuln(data))
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -154,15 +159,16 @@ function NumReport(props) {
 
   useEffect(() => {
     async function getData() {
-      let numReport = await fetch(host + "/dashboard/num_report", {
+      fetch(host + "/dashboard/num_report", {
         method: "get",
         mode: "cors",
         headers: {
           "content-type": "application/json",
         },
-      });
-      numReport = await numReport.json();
-      setReport(numReport);
+      })
+        .then((res) => res.json())
+        .then((data) => setReport(data))
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -181,18 +187,21 @@ function LanguageChart(props) {
   });
   useEffect(() => {
     async function getData() {
-      let programRatio = await fetch(host + "/dashboard/language_ratio", {
+      fetch(host + "/dashboard/language_ratio", {
         method: "get",
         mode: "cors",
         headers: {
           "content-type": "application/json",
         },
-      });
-      programRatio = await programRatio.json();
-      setProgramRatio({
-        label: programRatio.map((element) => element["programing_language"]),
-        data: programRatio.map((element) => element["count"]),
-      });
+      })
+        .then((res) => res.json())
+        .then((data) =>
+          setProgramRatio({
+            label: data.map((element) => element["programing_language"]),
+            data: data.map((element) => element["count"]),
+          })
+        )
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -253,18 +262,21 @@ function FameworkChart(props) {
 
   useEffect(() => {
     async function getData() {
-      let frameworkRatio = await fetch(host + "/dashboard/framework_ratio", {
+      fetch(host + "/dashboard/framework_ratio", {
         method: "get",
         mode: "cors",
         headers: {
           "content-type": "application/json",
         },
-      });
-      frameworkRatio = await frameworkRatio.json();
-      setFrameworkRatio({
-        label: frameworkRatio.map((element) => element["framework"]),
-        data: frameworkRatio.map((element) => element["count"]),
-      });
+      })
+        .then((res) => res.json())
+        .then((data) =>
+          setFrameworkRatio({
+            label: data.map((element) => element["framework"]),
+            data: data.map((element) => element["count"]),
+          })
+        )
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -305,18 +317,16 @@ function ListWaf(props) {
 
   useEffect(() => {
     async function getData() {
-      let listTopWaf = await fetch(
-        host + "/dashboard/get_five_most_common?type=waf",
-        {
-          method: "get",
-          mode: "cors",
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
-      listTopWaf = await listTopWaf.json();
-      setListTopWaf(listTopWaf);
+      fetch(host + "/dashboard/get_five_most_common?type=waf", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setListTopWaf(data))
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -352,18 +362,16 @@ function ListVuln(props) {
 
   useEffect(() => {
     async function getData() {
-      let listTopVuln = await fetch(
-        host + "/dashboard/get_five_most_common?type=vuln",
-        {
-          method: "get",
-          mode: "cors",
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
-      listTopVuln = await listTopVuln.json();
-      setListTopVuln(listTopVuln);
+      fetch(host + "/dashboard/get_five_most_common?type=vuln", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setListTopVuln(data))
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
@@ -403,18 +411,16 @@ function ListUrl(props) {
 
   useEffect(() => {
     async function getData() {
-      let urlList = await fetch(
-        host + "/dashboard/get_five_most_common?type=url",
-        {
-          method: "get",
-          mode: "cors",
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
-      urlList = await urlList.json();
-      setUrlList(urlList);
+      fetch(host + "/dashboard/get_five_most_common?type=url", {
+        method: "get",
+        mode: "cors",
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setUrlList(data))
+        .catch((error) => console.error(error));
     }
     getData();
   }, []);
