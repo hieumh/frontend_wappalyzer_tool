@@ -239,4 +239,4 @@ function createHTTPHeader({ url, token, isAnalyze }) {
   return {header:header, query:options.query}
 }
 
-export { host, json2html, json2htmlver2, createHTTPHeader,getHostFromUrl };
+export { host, json2html, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey };

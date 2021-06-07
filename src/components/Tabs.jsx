@@ -1,45 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Card, Icon, Form, Button, Image } from "semantic-ui-react";
 import { host } from "../lib_front";
-import { json2htmlver2, createHTTPHeader } from "../lib_front";
+import { json2htmlver2, createHTTPHeader, handleKey } from "../lib_front";
 
 function TechDetail(props) {
+  const data = props.data ? props.data : {};
   return (
     <div id="tech-detail">
-      {/* <img src={props.src} alt={props.website} width="30" height="30" /> */}
-      <h4 className="name-tech">{props.name}</h4>
+      <h3 className="name-tech">{data.name}</h3>
       <div className="body-tech">
-        {props.version ? (
-          <div>
-            <b>Version</b>:<p>{props.version}</p>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        {props.link || props.website ? (
-          <div>
-            <b>Link</b>:
-            <p>
-              {props.link} {props.website}
-            </p>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        {props.confidence ? (
-          <div>
-            <b>Confidence</b>:<p>{props.confidence}</p>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        {props.description ? (
-          <div>
-            <b>Description</b>:<p>{props.description}</p>
-          </div>
-        ) : (
-          <div></div>
-        )}
+        {(() => {
+          let keys = Object.keys(data);
+          console.log("this is keys:",keys)
+          return keys.map((key,index) => {
+            return Array.isArray(data[key]) ? null : (
+              <div key={index} style={{padding:"10px 0px",borderBottom:"1px solid #c8c8c8"}}>
+                <b>{handleKey(key)}</b>:<p style={{paddingLeft:"10px"}}>{data[key]}</p>
+              </div>
+            );
+          });
+        })()}
+        {/* {json2htmlver2(data)} */}
       </div>
     </div>
   );
@@ -60,6 +41,7 @@ function TabTech(props) {
       fetch(host + "/url_analyze/wapp" + query, header)
         .then((res) => res.json())
         .then((data) => {
+          console.log("this is wapp",data)
           setTech((prev) => {
             return {
               ...prev,
@@ -80,6 +62,7 @@ function TabTech(props) {
       fetch(host + "/url_analyze/netcraft" + query, header)
         .then((res) => res.json())
         .then((data) => {
+          console.log("this is netcraft:",data)
           setTech((prev) => {
             return {
               ...prev,
@@ -247,15 +230,7 @@ function TabTech(props) {
           ? tech[type].map((data, index) => {
               return (
                 <li key={data.name}>
-                  <TechDetail
-                    key={index}
-                    name={data.name}
-                    website={data.website}
-                    confidence={data.confidence}
-                    version={data.version}
-                    link={data.link}
-                    description={data.description}
-                  />
+                  <TechDetail key={index} data={data} />
                 </li>
               );
             })
@@ -1076,17 +1051,20 @@ function TabVuln(props) {
   useEffect(() => {
     async function getData() {
       let body = { token: props.options.token, action: "load" };
-      let listVuln = await fetch(host + "/update_vulns_table", {
+      fetch(host + "/update_vulns_table", {
         method: "POST",
         mode: "cors",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify(body),
-      }).catch((err) => console.error(err));
-      listVuln = await listVuln.json();
-      setVuln(Array.isArray(listVuln.vulns) ? listVuln.vulns : []);
-      props.Count("vuln");
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setVuln(Array.isArray(data.vulns) ? data.vulns : []);
+          props.Count("vuln");
+        })
+        .catch((err) => console.error(err));
     }
     getData();
   }, [props.data]);
@@ -1117,8 +1095,8 @@ function TabVuln(props) {
 }
 
 function TopVulnList(props) {
-  const vulns = Array.isArray(props.vulns) ? props.vulns : []
-  const options = props.options ? props.options : {} 
+  const vulns = Array.isArray(props.vulns) ? props.vulns : [];
+  const options = props.options ? props.options : {};
 
   async function handleDeleteVuln(e) {
     let body = JSON.stringify({
@@ -1190,7 +1168,7 @@ function TopVulnAdd(props) {
     Type: "",
     URL: "",
   });
-  const options = props.options ? props.options : {}
+  const options = props.options ? props.options : {};
 
   function handleChangeVuln(e) {
     const { name, value } = e.target;
