@@ -77,7 +77,7 @@ function NumFrame(props) {
 
   useEffect(() => {
     async function getData() {
-      fetch(host + "/dashboard/num_framework", {
+      fetch(host + "/dashboard/element?type=framework&option=number", {
         method: "get",
         mode: "cors",
         headers: {
@@ -86,6 +86,7 @@ function NumFrame(props) {
       })
         .then((res) => res.json())
         .then((data) => {
+          console.log(data )
           setFramework(data);
         })
         .catch((error) => console.error(error));
@@ -106,7 +107,7 @@ function NumTech(props) {
 
   useEffect(() => {
     async function getData() {
-      fetch(host + "/dashboard/num_tech", {
+      fetch(host + "/dashboard/element?type=language &option=number", {
         method: "get",
         mode: "cors",
         headers: {
@@ -114,7 +115,9 @@ function NumTech(props) {
         },
       })
         .then((res) => res.json())
-        .then((data) => setTech(data))
+        .then((data) => {
+          console.log(data)
+          setTech(data)})
         .catch((error) => console.error(error));
     }
     getData();
@@ -187,7 +190,7 @@ function LanguageChart(props) {
   });
   useEffect(() => {
     async function getData() {
-      fetch(host + "/dashboard/language_ratio", {
+      fetch(host + "/dashboard/element?type=language&option=ratio", {
         method: "get",
         mode: "cors",
         headers: {
@@ -262,7 +265,7 @@ function FameworkChart(props) {
 
   useEffect(() => {
     async function getData() {
-      fetch(host + "/dashboard/framework_ratio", {
+      fetch(host + "/dashboard/element?type=framework&option=ratio", {
         method: "get",
         mode: "cors",
         headers: {
