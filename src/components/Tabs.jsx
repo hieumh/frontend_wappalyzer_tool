@@ -11,7 +11,6 @@ function TechDetail(props) {
       <div className="body-tech">
         {(() => {
           let keys = Object.keys(data);
-          console.log("this is keys:",keys)
           return keys.map((key,index) => {
             return Array.isArray(data[key]) ? null : (
               <div key={index} style={{padding:"10px 0px",borderBottom:"1px solid #c8c8c8"}}>
@@ -41,7 +40,6 @@ function TabTech(props) {
       fetch(host + "/url_analyze/wapp" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          console.log("this is wapp",data)
           setTech((prev) => {
             return {
               ...prev,
@@ -62,7 +60,6 @@ function TabTech(props) {
       fetch(host + "/url_analyze/netcraft" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          console.log("this is netcraft:",data)
           setTech((prev) => {
             return {
               ...prev,
@@ -317,9 +314,6 @@ function TabDomain(props) {
         </div>
       </div>
       {(() => {
-        if (!_Component[type]) {
-          console.log("this is error type:", type);
-        }
         return _Component[type] && {}.toString.call(_Component[type])
           ? _Component[type](domain[type])
           : null;
