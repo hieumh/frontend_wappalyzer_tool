@@ -461,3 +461,10 @@ i {
   border-radius: 4px;
   background-clip: border-box;
 }
+
+.empty-page {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px;
+}

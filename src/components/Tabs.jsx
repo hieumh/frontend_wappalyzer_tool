@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Card, Icon, Form, Button, Image } from "semantic-ui-react";
+import React, { useEffect, useState, useRef } from "react";
+import { Card, Icon, Form, Button, Image, Loader } from "semantic-ui-react";
 import { host } from "../lib_front";
 import { json2htmlver2, createHTTPHeader, handleKey } from "../lib_front";
 
@@ -11,10 +11,17 @@ function TechDetail(props) {
       <div className="body-tech">
         {(() => {
           let keys = Object.keys(data);
-          return keys.map((key,index) => {
+          return keys.map((key, index) => {
             return Array.isArray(data[key]) ? null : (
-              <div key={index} style={{padding:"10px 0px",borderBottom:"1px solid #c8c8c8"}}>
-                <b>{handleKey(key)}</b>:<p style={{paddingLeft:"10px"}}>{data[key]}</p>
+              <div
+                key={index}
+                style={{
+                  padding: "10px 0px",
+                  borderBottom: "1px solid #c8c8c8",
+                }}
+              >
+                <b>{handleKey(key)}</b>:
+                <p style={{ paddingLeft: "10px" }}>{data[key]}</p>
               </div>
             );
           });
@@ -33,7 +40,29 @@ function TabTech(props) {
     webtech: [],
     whatweb: [],
   });
+  const [isDone, setIsDone] = useState({
+    wapp: false,
+    netcraft: false,
+    largeio: false,
+    webtech: false,
+    whatweb: false,
+  });
+  const pageEmpty = useRef(null);
   const [type, setType] = useState("wapp");
+
+  useEffect(() => {
+    if (isDone[type] && !tech[type].length) {
+      pageEmpty.current.style.display = "block";
+    }
+
+    if (isDone[type] && tech[type].length) {
+      pageEmpty.current.style.display = "none";
+    }
+
+    if (!isDone[type]) {
+      pageEmpty.current.style.display = "none";
+    }
+  }, [isDone]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -53,6 +82,12 @@ function TabTech(props) {
             };
           });
           props.Count("wapp");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              wapp: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -77,6 +112,12 @@ function TabTech(props) {
             };
           });
           props.Count("netcraft");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              netcraft: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -102,6 +143,12 @@ function TabTech(props) {
             };
           });
           props.Count("largeio");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              largeio: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -126,6 +173,12 @@ function TabTech(props) {
             };
           });
           props.Count("whatweb");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              whatweb: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -151,6 +204,12 @@ function TabTech(props) {
             };
           });
           props.Count("webtech");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              webtech: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
     }
@@ -223,6 +282,11 @@ function TabTech(props) {
         </div>
       </div>
       <ul id="tab-detail">
+        <Loader
+          active={!isDone[type]}
+          inline="centered"
+          style={{ backgroundColor: "white" }}
+        />
         {Array.isArray(tech[type]) && tech[type]
           ? tech[type].map((data, index) => {
               return (
@@ -232,6 +296,12 @@ function TabTech(props) {
               );
             })
           : null}
+        <img
+          className="empty-page"
+          ref={pageEmpty}
+          src="images/empty_page.png"
+          alt="empty page"
+        />
       </ul>
     </div>
   );
@@ -242,6 +312,11 @@ function TabDomain(props) {
     whois: { empty: true },
     sublist3r: [],
   });
+  const [isDone, setIsDone] = useState({
+    whois: false,
+    sublist3r: false,
+  });
+  const pageEmpty = useRef(null);
   const [type, setType] = useState("whois");
   const _Component = {
     whois: (data) => <TabDomainWhois domain={data} />,
@@ -260,6 +335,12 @@ function TabDomain(props) {
             };
           });
           props.Count("whois");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              whois: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -274,12 +355,37 @@ function TabDomain(props) {
             };
           });
           props.Count("sublist3r");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              sublist3r: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
     }
     let options = createHTTPHeader(props.options);
     getData(options);
   }, []);
+
+  useEffect(() => {
+    let checkEmpty = !domain[type][0];
+    if (type !== "sublist3r") {
+      checkEmpty = domain[type].empty;
+    }
+
+    if (isDone[type] && checkEmpty) {
+      pageEmpty.current.style.display = "block";
+    }
+
+    if (isDone[type] && !checkEmpty) {
+      pageEmpty.current.style.display = "none";
+    }
+
+    if (!isDone[type]) {
+      pageEmpty.current.style.display = "none";
+    }
+  }, [isDone, type]);
 
   function handleDomain(e) {
     setType(e.target.id);
@@ -313,171 +419,188 @@ function TabDomain(props) {
           ) : null}
         </div>
       </div>
+      <Loader
+        active={!isDone[type]}
+        inline="centered"
+        style={{ backgroundColor: "white" }}
+      />
       {(() => {
         return _Component[type] && {}.toString.call(_Component[type])
           ? _Component[type](domain[type])
           : null;
       })()}
+      <img
+        className="empty-page"
+        ref={pageEmpty}
+        src="images/empty_page.png"
+        alt="empty page"
+      />
     </div>
   );
 }
 
 function TabDomainWhois(props) {
-  const domain = props.domain ? props.domain : {};
+  const check = props.domain ? props.domain : { empty: true };
+  const domain = check.empty ? {} : check;
+  console.log(domain);
   return (
     <div id="domain-whois">
-      <b>Domain name</b>:
-      {domain.domain_name != null ? (
-        domain.domain_name.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Creation date</b>:
-      {domain.creation_date != null ? (
-        domain.creation_date.map((ele, index) => {
-          return <p key={index}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Dnssec</b>:
-      {domain.dnssec != null ? (
-        domain.dnssec.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Email</b>:{" "}
-      {domain.email != null ? (
-        domain.email.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Expiration date</b>:
-      {domain.expiration_date != null ? (
-        domain.expiration_date.map((ele, index) => {
-          return <p key={index}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Name server</b>:{" "}
-      {domain.name_server != null ? (
-        domain.name_server.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Org</b>:
-      {domain.org != null ? (
-        domain.org.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Referral url</b>:
-      {domain.referral_url != null ? (
-        domain.referral_url.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Registrar</b>:
-      {domain.registrar != null ? (
-        domain.registrar.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>State</b>:
-      {domain.state != null ? (
-        domain.state.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Status</b>:{" "}
-      {domain.status != null ? (
-        domain.status.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Updated date</b>:{" "}
-      {domain.updated_date != null ? (
-        domain.updated_date.map((ele, index) => {
-          return <p key={index}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Whois server</b>:
-      {domain.whois_server != null ? (
-        domain.whois_server.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Address</b>:
-      {domain.address != null ? (
-        domain.address.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>City</b>:
-      {domain.city != null ? (
-        domain.city.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Country</b>:
-      {domain.country != null ? (
-        domain.country.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <br />
-      <b>Zipcode</b>:
-      {domain.zipcode != null ? (
-        domain.zipcode.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
+      {Object.keys(domain).length ? (
+        <>
+          <b>Domain name</b>:
+          {domain.domain_name != null ? (
+            domain.domain_name.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Creation date</b>:
+          {domain.creation_date != null ? (
+            domain.creation_date.map((ele, index) => {
+              return <p key={index}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Dnssec</b>:
+          {domain.dnssec != null ? (
+            domain.dnssec.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Email</b>:{" "}
+          {domain.email != null ? (
+            domain.email.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Expiration date</b>:
+          {domain.expiration_date != null ? (
+            domain.expiration_date.map((ele, index) => {
+              return <p key={index}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Name server</b>:{" "}
+          {domain.name_server != null ? (
+            domain.name_server.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Org</b>:
+          {domain.org != null ? (
+            domain.org.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Referral url</b>:
+          {domain.referral_url != null ? (
+            domain.referral_url.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Registrar</b>:
+          {domain.registrar != null ? (
+            domain.registrar.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>State</b>:
+          {domain.state != null ? (
+            domain.state.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Status</b>:{" "}
+          {domain.status != null ? (
+            domain.status.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Updated date</b>:{" "}
+          {domain.updated_date != null ? (
+            domain.updated_date.map((ele, index) => {
+              return <p key={index}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Whois server</b>:
+          {domain.whois_server != null ? (
+            domain.whois_server.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Address</b>:
+          {domain.address != null ? (
+            domain.address.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>City</b>:
+          {domain.city != null ? (
+            domain.city.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Country</b>:
+          {domain.country != null ? (
+            domain.country.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <br />
+          <b>Zipcode</b>:
+          {domain.zipcode != null ? (
+            domain.zipcode.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}{" "}
+        </>
+      ) : null}
     </div>
   );
 }
@@ -502,6 +625,31 @@ function TabDic(props) {
     wapp: {},
     gobuster: {},
   });
+  const [isDone, setIsDone] = useState({
+    wapp: false,
+    gobuster: false,
+  });
+  const pageWappEmpty = useRef(null);
+  const pageGoEmpty = useRef(null);
+
+  useEffect(() => {
+    function setStyle(type, typeRef) {
+      if (isDone[type] && !Object.keys(dic[type])) {
+        typeRef.current.style.display = "block";
+      }
+
+      if (isDone[type] && Object.keys(dic[type])) {
+        typeRef.current.style.display = "none";
+      }
+
+      if (!isDone[type]) {
+        typeRef.current.style.display = "none";
+      }
+    }
+
+    setStyle("wapp", pageWappEmpty);
+    setStyle("gobuster", pageGoEmpty);
+  }, [isDone]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -514,6 +662,12 @@ function TabDic(props) {
               wapp: JSON.parse(data.trees),
             };
           });
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              wapp: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -524,6 +678,12 @@ function TabDic(props) {
             return {
               ...prev,
               gobuster: data,
+            };
+          });
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              gobuster: true,
             };
           });
         })
@@ -572,11 +732,33 @@ function TabDic(props) {
     <div id="dic" className="card-body__">
       <div id="wappalyzer-link">
         <h3>Wappalyzer</h3>
+        <Loader
+          active={!isDone["wapp"]}
+          inline="centered"
+          style={{ backgroundColor: "white" }}
+        />
         <ul>{dic.wapp ? createTree(dic.wapp) : null}</ul>
+        <img
+          className="empty-page"
+          ref={pageWappEmpty}
+          src="images/empty_page.png"
+          alt="empty page"
+        />
       </div>
       <hr />
       <div id="gobuster">
         <h3>Gobuster</h3>
+        <Loader
+          active={!isDone["gobuster"]}
+          inline="centered"
+          style={{ backgroundColor: "white" }}
+        />
+        <img
+          className="empty-page"
+          ref={pageGoEmpty}
+          src="images/empty_page.png"
+          alt="empty page"
+        />
         <ul>
           {!Array.isArray(dic.gobuster.directories) ? (
             <p></p>
@@ -605,7 +787,7 @@ function TabDic(props) {
                 <li key={index}>
                   <Image
                     alt="file"
-                    src="//icons/website/sticky-note-regular.svg"
+                    src="/icons/website/sticky-note-regular.svg"
                     wrapped
                     className="img"
                   />
@@ -626,6 +808,11 @@ function TabDNS(props) {
     dig: { empty: true },
     fierce: "",
   });
+  const [isDone, setIsDone] = useState({
+    dig: false,
+    fierce: false,
+  });
+  const pageEmpty = useRef(null);
   const _Component = {
     dig: (data) => <TabDNSDig dns={data} />,
     fierce: (data) => <TabDNSFierce dns={data} />,
@@ -644,6 +831,12 @@ function TabDNS(props) {
             };
           });
           props.Count("dig");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              dig: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -657,6 +850,12 @@ function TabDNS(props) {
             };
           });
           props.Count("fierce");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              fierce: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
     }
@@ -664,6 +863,25 @@ function TabDNS(props) {
     let options = createHTTPHeader(props.options);
     getData(options);
   }, []);
+
+  useEffect(() => {
+    let checkEmpty = !dns[type];
+    if (type !== "fierce") {
+      checkEmpty = dns[type].empty;
+    }
+
+    if (isDone[type] && checkEmpty) {
+      pageEmpty.current.style.display = "block";
+    }
+
+    if (isDone[type] && !checkEmpty) {
+      pageEmpty.current.style.display = "none";
+    }
+
+    if (!isDone[type]) {
+      pageEmpty.current.style.display = "none";
+    }
+  }, [isDone, type]);
 
   function handleTool(e) {
     setType(e.target.id);
@@ -701,6 +919,17 @@ function TabDNS(props) {
         {_Component[type] && {}.toString.call(_Component[type])
           ? _Component[type](dns[type])
           : null}
+        <Loader
+          active={!isDone[type]}
+          inline="centered"
+          style={{ backgroundColor: "white" }}
+        />
+        <img
+          className="empty-page"
+          ref={pageEmpty}
+          src="images/empty_page.png"
+          alt="empty page"
+        />
       </div>
     </div>
   );
@@ -767,6 +996,22 @@ function TabDNSDig(props) {
 
 function TabServer(props) {
   const [nmap, setNmap] = useState("");
+  const [isDone, setIsDone] = useState(false);
+  const pageEmpty = useRef(null);
+
+  useEffect(() => {
+    if (isDone && !nmap.length) {
+      pageEmpty.current.style.display = "block";
+    }
+
+    if (isDone && nmap.length) {
+      pageEmpty.current.style.display = "none";
+    }
+
+    if (!isDone) {
+      pageEmpty.current.style.display = "none";
+    }
+  }, [isDone]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -781,6 +1026,7 @@ function TabServer(props) {
             };
           });
           props.Count("nmap");
+          setIsDone(true);
         })
         .catch((err) => console.error(err));
     }
@@ -790,6 +1036,17 @@ function TabServer(props) {
 
   return (
     <div id="server-network" className="card-body__">
+      <Loader
+        active={!isDone}
+        inline="centered"
+        style={{ backgroundColor: "white" }}
+      />
+      <img
+        className="empty-page"
+        ref={pageEmpty}
+        src="images/empty_page.png"
+        alt="empty page"
+      />
       {!nmap ? (
         <div></div>
       ) : (
@@ -805,6 +1062,22 @@ function TabServer(props) {
 
 function TabDetectWaf(props) {
   const [wafs, setWaf] = useState([]);
+  const [isDone, setIsDone] = useState(false);
+  const pageEmpty = useRef(null);
+
+  useEffect(() => {
+    if (isDone && !wafs.length) {
+      pageEmpty.current.style.display = "block";
+    }
+
+    if (isDone && wafs.length) {
+      pageEmpty.current.style.display = "none";
+    }
+
+    if (!isDone) {
+      pageEmpty.current.style.display = "none";
+    }
+  }, [isDone]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -813,6 +1086,7 @@ function TabDetectWaf(props) {
         .then((data) => {
           setWaf(Array.isArray(data.wafs) ? data.wafs : []);
           props.Count("wafw00f");
+          setIsDone(true);
         })
         .catch((err) => console.error(err));
     }
@@ -821,6 +1095,11 @@ function TabDetectWaf(props) {
   }, []);
   return (
     <div id="detect-firewall" className="card-body__">
+      <Loader
+        active={!isDone}
+        inline="centered"
+        style={{ backgroundColor: "white" }}
+      />
       {wafs
         ? wafs.map((ele, index) => {
             return (
@@ -834,6 +1113,12 @@ function TabDetectWaf(props) {
             );
           })
         : null}
+      <img
+        className="empty-page"
+        ref={pageEmpty}
+        src="images/empty_page.png"
+        alt="empty page"
+      />
     </div>
   );
 }
@@ -845,6 +1130,13 @@ function TabScan(props) {
     joomscan: "",
     nikto: { empty: true },
   });
+  const [isDone, setIsDone] = useState({
+    wpscan: false,
+    droopescan: false,
+    joomscan: false,
+    nikto: false,
+  });
+  const pageEmpty = useRef(null);
   const [type, setType] = useState("wpscan");
 
   useEffect(() => {
@@ -878,6 +1170,12 @@ function TabScan(props) {
             };
           });
           props.Count("nikto");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              nikto: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
 
@@ -901,6 +1199,12 @@ function TabScan(props) {
               };
             });
             props.Count("wpscan");
+            setIsDone((prev) => {
+              return {
+                ...prev,
+                wpscan: true,
+              };
+            });
           })
           .catch((err) => console.error(err));
         fetch(host + "/url_analyze/droopescan" + query, header)
@@ -920,6 +1224,12 @@ function TabScan(props) {
               };
             });
             props.Count("droope");
+            setIsDone((prev) => {
+              return {
+                ...prev,
+                droopescan: true,
+              };
+            });
           })
           .catch((err) => console.error(err));
         fetch(host + "/url_analyze/joomscan" + query, header)
@@ -932,6 +1242,7 @@ function TabScan(props) {
                 joomscan: data ? data : "",
               };
             });
+
             props.handleData((prev) => {
               return {
                 ...prev,
@@ -939,14 +1250,50 @@ function TabScan(props) {
               };
             });
             props.Count("joomscan");
+
+            setIsDone((prev) => {
+              return {
+                ...prev,
+                joomscan: true,
+              };
+            });
           })
           .catch((err) => console.error(err));
+
+        return;
       }
+      setIsDone((prev) => {
+        return {
+          ...prev,
+          droopescan: true,
+          joomscan: true,
+          wpscan: true,
+        };
+      });
       console.log("no cms");
     }
     let options = createHTTPHeader(props.options);
     getData(options);
   }, []);
+
+  useEffect(() => {
+    let checkEmpty = !scan[type];
+    if (type !== "joomscan") {
+      checkEmpty = scan[type].empty;
+    }
+
+    if (isDone[type] && checkEmpty) {
+      pageEmpty.current.style.display = "block";
+    }
+
+    if (isDone[type] && !checkEmpty) {
+      pageEmpty.current.style.display = "none";
+    }
+
+    if (!isDone[type]) {
+      pageEmpty.current.style.display = "none";
+    }
+  }, [isDone, type]);
 
   function handleScan(e) {
     setType(e.target.id);
@@ -1001,11 +1348,14 @@ function TabScan(props) {
         </div>
       </div>
       <div className="scan-content">
+        <Loader
+          active={!isDone[type]}
+          inline="centered"
+          style={{ backgroundColor: "white" }}
+        />
         {type === "joomscan" ? (
           <div>
-            {scan.joomscan === "" || typeof scan.joomscan !== "string" ? (
-              <div></div>
-            ) : (
+            {scan.joomscan && typeof scan.joomscan === "string" ? null : (
               <div>
                 {scan.joomscan.split("\n").map((ele) => {
                   return <p>{ele}</p>;
@@ -1016,6 +1366,12 @@ function TabScan(props) {
         ) : (
           <div>{!scan[type].empty ? json2htmlver2(scan[type]) : null}</div>
         )}
+        <img
+          className="empty-page"
+          ref={pageEmpty}
+          src="images/empty_page.png"
+          alt="empty page"
+        />
       </div>
     </div>
   );
@@ -1028,10 +1384,16 @@ function TabScan(props) {
 function TabVuln(props) {
   const [feature, setFeature] = useState("list");
   const [vulns, setVuln] = useState([]);
+  const [isDone, setIsDone] = useState(false);
 
   const _Component = {
     list: (handleData, options, data) => (
-      <TopVulnList vulns={data} setVuln={handleData} options={options} />
+      <TopVulnList
+        vulns={data}
+        setVuln={handleData}
+        options={options}
+        isDone={isDone}
+      />
     ),
     add: (handleData, options) => (
       <TopVulnAdd setVuln={handleData} options={options} />
@@ -1057,6 +1419,7 @@ function TabVuln(props) {
         .then((data) => {
           setVuln(Array.isArray(data.vulns) ? data.vulns : []);
           props.Count("vuln");
+          setIsDone(true);
         })
         .catch((err) => console.error(err));
     }
@@ -1081,9 +1444,11 @@ function TabVuln(props) {
           Add vuln
         </div>
       </div>
-      {_Component[feature] && {}.toString.call(_Component[feature])
-        ? _Component[feature](setVuln, props.options, vulns)
-        : null}
+      <div>
+        {_Component[feature] && {}.toString.call(_Component[feature])
+          ? _Component[feature](setVuln, props.options, vulns)
+          : null}
+      </div>
     </div>
   );
 }
@@ -1091,6 +1456,21 @@ function TabVuln(props) {
 function TopVulnList(props) {
   const vulns = Array.isArray(props.vulns) ? props.vulns : [];
   const options = props.options ? props.options : {};
+  const pageEmpty = useRef(null);
+
+  useEffect(() => {
+    if (props.isDone && !vulns.length) {
+      pageEmpty.current.style.display = "block";
+    }
+
+    if (props.isDone && vulns.length) {
+      pageEmpty.current.style.display = "none";
+    }
+
+    if (!props.isDone) {
+      pageEmpty.current.style.display = "none";
+    }
+  }, [props.isDone]);
 
   async function handleDeleteVuln(e) {
     let body = JSON.stringify({
@@ -1115,7 +1495,12 @@ function TopVulnList(props) {
   }
   return (
     <Card.Group>
-      {vulns.length
+      <Loader
+        active={!props.isDone}
+        inline="centered"
+        style={{ backgroundColor: "white" }}
+      />
+      {Array.isArray(vulns)
         ? vulns.map((element, index) => {
             return (
               <Card key={index} fluid>
@@ -1149,6 +1534,12 @@ function TopVulnList(props) {
             );
           })
         : null}
+      <img
+        className="empty-page"
+        ref={pageEmpty}
+        src="images/empty_page.png"
+        alt="empty page"
+      />
     </Card.Group>
   );
 }
