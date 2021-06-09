@@ -31,23 +31,6 @@ function AnalyzeResult(props) {
     nmap: [],
   });
 
-  // async function handleSubmit(e) {
-  //   e.preventDefault();
-  //   let { url, token } = props.location.state;
-
-  //   let body = JSON.stringify({ url: url, token: token });
-  //   let result = await fetch(host + "/create_report", {
-  //     method: "post",
-  //     mode: "cors",
-
-  //     headers: {
-  //       "content-type": "application/json",
-  //     },
-  //     body: body,
-  //   });
-  //   toast.success("Create report success");
-  // }
-
   return (
     <div id="report">
       <ToastContainer />
@@ -155,7 +138,7 @@ function ScreenShot(props) {
   const [option, setOption] = useState("");
   const feature = {
     url: props.options.url,
-    pic: getHostFromUrl(props.options.url)+'.png',
+    pic: getHostFromUrl(props.options.url) + ".png",
   };
 
   function handleOnLoad() {

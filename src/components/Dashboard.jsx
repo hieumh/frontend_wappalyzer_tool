@@ -107,7 +107,7 @@ function NumTech(props) {
 
   useEffect(() => {
     async function getData() {
-      fetch(host + "/dashboard/element?type=language &option=number", {
+      fetch(host + "/dashboard/element?type=language&option=number", {
         method: "get",
         mode: "cors",
         headers: {

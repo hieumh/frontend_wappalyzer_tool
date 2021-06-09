@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { Input } from "semantic-ui-react";
 import "../css/Search.css";
@@ -7,6 +7,11 @@ function Content() {
   const [location, setLocation] = useState({});
   const [link, setLink] = useState("");
   const [error, setError] = useState(false);
+  const linkRef = useRef(null)
+  
+  useEffect(()=>{
+    linkRef.current.focus()
+  },[])
 
   function handleChange(e) {
     const { value } = e.target;
@@ -38,7 +43,7 @@ function Content() {
   }
 
   function checkValidUrl(url) {
-    const checkProtocol = new RegExp("http(s?)://");
+    const checkProtocol = new RegExp("http(s?):\/\/.+");
     return checkProtocol.test(url);
   }
 
@@ -54,6 +59,7 @@ function Content() {
               <Input
                 label={{ icon: "asterisk" }}
                 error
+                ref={linkRef}
                 labelPosition="left corner"
                 placeholder="http://example.com"
                 onChange={handleChange}
@@ -63,6 +69,7 @@ function Content() {
             ) : (
               <Input
                 label={{ icon: "asterisk" }}
+                ref={linkRef}
                 labelPosition="left corner"
                 placeholder="http://example.com"
                 onChange={handleChange}

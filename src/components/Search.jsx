@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {Redirect} from 'react-router-dom'
 import { host } from "../lib_front";
 import { Card, Input, Checkbox, Form } from "semantic-ui-react";
@@ -13,6 +13,12 @@ function SearchDatabase() {
   const [result, setResult] = useState([]);
   const [hidden, setHidden] = useState({ visibility: "hidden" });
   const [location, setLocation] = useState({});
+  const searchRef = useRef(null)
+
+
+  useEffect(()=>{
+    searchRef.current.focus()
+  },[])
 
   function handleChangeSearch(e) {
     const { value } = e.target;
@@ -94,6 +100,7 @@ function SearchDatabase() {
             <Form.Field>
               <Input
                 fluid
+                ref={searchRef}
                 size="large"
                 icon="search"
                 placeholder="Search..."
