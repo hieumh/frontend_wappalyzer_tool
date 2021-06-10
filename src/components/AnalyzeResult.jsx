@@ -154,7 +154,6 @@ function ScreenShot(props) {
   }, []);
 
   useEffect(() => {
-    console.log("run screenshot");
     if (props.data.length) {
       setRun(true);
     }
@@ -180,6 +179,11 @@ function TableTab(props) {
 
 function ChildrenTab(props) {
   const [count, setCount] = useState({});
+  const locations = {
+    ...props.locations,
+    url:encodeURIComponent(props.locations['url'])
+  }
+  
 
   function Count(data) {
     setCount((prev) => {
@@ -220,7 +224,7 @@ function ChildrenTab(props) {
           <p className="card-category__">{props.description}</p>
         </div>
         {React.cloneElement(props.children, {
-          options: props.locations,
+          options: locations,
           Count: Count,
           handleData: props.handleData,
           data: props.data,

@@ -213,8 +213,10 @@ function TabTech(props) {
         })
         .catch((err) => console.error(err));
     }
+    console.log("this is in wapp:",props.options)
 
     let options = createHTTPHeader(props.options);
+    
     getData(options);
   }, []);
 
@@ -299,7 +301,7 @@ function TabTech(props) {
         <img
           className="empty-page"
           ref={pageEmpty}
-          src="images/empty_page.png"
+          src="images/nothing_found.png"
           alt="empty page"
         />
       </ul>
@@ -432,7 +434,7 @@ function TabDomain(props) {
       <img
         className="empty-page"
         ref={pageEmpty}
-        src="images/empty_page.png"
+        src="images/nothing_found.png"
         alt="empty page"
       />
     </div>
@@ -442,7 +444,7 @@ function TabDomain(props) {
 function TabDomainWhois(props) {
   const check = props.domain ? props.domain : { empty: true };
   const domain = check.empty ? {} : check;
-  console.log(domain);
+
   return (
     <div id="domain-whois">
       {Object.keys(domain).length ? (
@@ -741,7 +743,7 @@ function TabDic(props) {
         <img
           className="empty-page"
           ref={pageWappEmpty}
-          src="images/empty_page.png"
+          src="images/nothing_found.png"
           alt="empty page"
         />
       </div>
@@ -756,7 +758,7 @@ function TabDic(props) {
         <img
           className="empty-page"
           ref={pageGoEmpty}
-          src="images/empty_page.png"
+          src="images/nothing_found.png"
           alt="empty page"
         />
         <ul>
@@ -927,7 +929,7 @@ function TabDNS(props) {
         <img
           className="empty-page"
           ref={pageEmpty}
-          src="images/empty_page.png"
+          src="images/nothing_found.png"
           alt="empty page"
         />
       </div>
@@ -1044,7 +1046,7 @@ function TabServer(props) {
       <img
         className="empty-page"
         ref={pageEmpty}
-        src="images/empty_page.png"
+        src="images/nothing_found.png"
         alt="empty page"
       />
       {!nmap ? (
@@ -1116,7 +1118,7 @@ function TabDetectWaf(props) {
       <img
         className="empty-page"
         ref={pageEmpty}
-        src="images/empty_page.png"
+        src="images/nothing_found.png"
         alt="empty page"
       />
     </div>
@@ -1369,7 +1371,7 @@ function TabScan(props) {
         <img
           className="empty-page"
           ref={pageEmpty}
-          src="images/empty_page.png"
+          src="images/nothing_found.png"
           alt="empty page"
         />
       </div>
@@ -1537,7 +1539,7 @@ function TopVulnList(props) {
       <img
         className="empty-page"
         ref={pageEmpty}
-        src="images/empty_page.png"
+        src="images/nothing_found.png"
         alt="empty page"
       />
     </Card.Group>
