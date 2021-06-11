@@ -1,17 +1,18 @@
-import React, { useState,useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import { Input } from "semantic-ui-react";
+import { ToastContainer,toast } from "react-toastify";
+import { Input, Message } from "semantic-ui-react";
 import "../css/Search.css";
 
 function Content() {
   const [location, setLocation] = useState({});
   const [link, setLink] = useState("");
   const [error, setError] = useState(false);
-  const linkRef = useRef(null)
-  
-  useEffect(()=>{
-    linkRef.current.focus()
-  },[])
+  const linkRef = useRef(null);
+
+  useEffect(() => {
+    linkRef.current.focus();
+  }, []);
 
   function handleChange(e) {
     const { value } = e.target;
@@ -43,9 +44,14 @@ function Content() {
   }
 
   function checkValidUrl(url) {
-    const checkProtocol = new RegExp("^(https?:\/\/)[^\\\\\\\s\\\/#%^\\\[\\\]:<>?][\\S]*");
-    console.log(checkProtocol.test(url))
-    return checkProtocol.test(url);
+    try {
+      const check = new URL(url);
+      return check;
+    } catch (e) {
+      console.error(e);
+      toast.error("Invalid Url");
+      return false;
+    }
   }
 
   if (JSON.stringify(location) !== JSON.stringify({})) {
@@ -53,20 +59,23 @@ function Content() {
   } else {
     return (
       <div id="content">
+        <ToastContainer />
         <form method="post" action="">
           <div className="page">
             <h4>Enter Url</h4>
             {error ? (
-              <Input
-                label={{ icon: "asterisk" }}
-                error
-                ref={linkRef}
-                labelPosition="left corner"
-                placeholder="http://example.com"
-                onChange={handleChange}
-                className="i"
-                value={link}
-              />
+              <>
+                <Input
+                  label={{ icon: "asterisk" }}
+                  error
+                  ref={linkRef}
+                  labelPosition="left corner"
+                  placeholder="http://example.com"
+                  onChange={handleChange}
+                  className="i"
+                  value={link}
+                />
+              </>
             ) : (
               <Input
                 label={{ icon: "asterisk" }}
