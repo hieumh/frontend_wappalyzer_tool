@@ -852,7 +852,7 @@ function TabDNS(props) {
           setDns((prev) => {
             return {
               ...prev,
-              fierce: data.dns ? data.dns : "",
+              fierce: data.dns && data.dns !== "\"\"\n" ? data.dns : "",
             };
           });
           props.Count("fierce");

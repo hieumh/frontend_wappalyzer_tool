@@ -43,7 +43,7 @@ function Content() {
   }
 
   function checkValidUrl(url) {
-    const checkProtocol = new RegExp("^(https?:\/\/)[^\\\\\\\s\\\/#%^]+");
+    const checkProtocol = new RegExp("^(https?:\/\/)[^\\\\\\\s\\\/#%^\\\[\\\]:<>?].+");
     console.log(checkProtocol.test(url))
     return checkProtocol.test(url);
   }
