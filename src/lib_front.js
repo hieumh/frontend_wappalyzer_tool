@@ -195,8 +195,7 @@ function json2htmlver2(input) {
               <p className={"level-" + level}>{handleKey(key)}</p>
               <p className={"level-" + (level + 1)}>
                 {typeof input[key] === "boolean"
-                  ? input[key].toString()
-                  : input[key]}
+                  ? input[key].toString() : string2Html(input[key].toString())}
               </p>
             </div>
           );
@@ -204,6 +203,13 @@ function json2htmlver2(input) {
       });
     }
   }
+
+  function string2Html(input){
+    return input.split("\n").map((ele,index) => {
+      return <p key={index}>{ele}</p>;
+    })
+  }
+
   return js2HtmlCore(input, 1);
 }
 

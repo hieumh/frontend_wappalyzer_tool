@@ -62,7 +62,7 @@ function TabTech(props) {
     if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone]);
+  }, [isDone, type]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -213,10 +213,9 @@ function TabTech(props) {
         })
         .catch((err) => console.error(err));
     }
-    console.log("this is in wapp:",props.options)
 
     let options = createHTTPHeader(props.options);
-    
+
     getData(options);
   }, []);
 
@@ -333,7 +332,10 @@ function TabDomain(props) {
           setDomain((prev) => {
             return {
               ...prev,
-              whois: data.domains ? data.domains : { empty: true },
+              whois:
+                data.domains && JSON.stringify(data.domains) !== "{}"
+                  ? data.domains
+                  : { empty: true },
             };
           });
           props.Count("whois");
@@ -426,25 +428,28 @@ function TabDomain(props) {
         inline="centered"
         style={{ backgroundColor: "white" }}
       />
-      {(() => {
-        return _Component[type] && {}.toString.call(_Component[type])
-          ? _Component[type](domain[type])
-          : null;
-      })()}
       <img
         className="empty-page"
         ref={pageEmpty}
         src="images/nothing_found.png"
         alt="empty page"
       />
+      {(() => {
+        return _Component[type] && {}.toString.call(_Component[type])
+          ? _Component[type](domain[type])
+          : null;
+      })()}
     </div>
   );
 }
 
 function TabDomainWhois(props) {
   const check = props.domain ? props.domain : { empty: true };
-  const domain = check.empty ? {} : check;
+  const domain = check.empty ? {empty: true} : check;
 
+  if(domain.empty){
+    return null
+  }
   return (
     <div id="domain-whois">
       {Object.keys(domain).length ? (
@@ -611,13 +616,11 @@ function TabDomainSublist3r(props) {
   const domain = Array.isArray(props.domain) ? props.domain : [];
   return (
     <div id="domain-sublist3r">
-      {!domain ? (
-        <p></p>
-      ) : (
-        domain.map((ele, index) => {
-          return <p key={index}>{ele}</p>;
-        })
-      )}
+      {!domain
+        ? null
+        : domain.map((ele, index) => {
+            return <p key={index}>{ele}</p>;
+          })}
     </div>
   );
 }
@@ -810,6 +813,7 @@ function TabDNS(props) {
     dig: { empty: true },
     fierce: "",
   });
+  console.log(dns)
   const [isDone, setIsDone] = useState({
     dig: false,
     fierce: false,
@@ -867,6 +871,7 @@ function TabDNS(props) {
   }, []);
 
   useEffect(() => {
+    console.log(dns);
     let checkEmpty = !dns[type];
     if (type !== "fierce") {
       checkEmpty = dns[type].empty;
@@ -986,7 +991,7 @@ function TabDNSDig(props) {
         <button onClick={handleClick}>TXT</button>
       </div>
       <div className="code">
-        {dns[option]
+        {dns[option] && !Array.isArray(dns[option])
           ? dns[option].split("\n").map((ele, index) => {
               return <p key={index}>{ele === "" ? "\t" : ele}</p>;
             })
@@ -1129,7 +1134,7 @@ function TabScan(props) {
   const [scan, setScan] = useState({
     wpscan: { empty: true },
     droopescan: { empty: true },
-    joomscan: "",
+    joomscan: { empty: true },
     nikto: { empty: true },
   });
   const [isDone, setIsDone] = useState({
@@ -1162,7 +1167,10 @@ function TabScan(props) {
           setScan((prev) => {
             return {
               ...prev,
-              nikto: data.nikto ? JSON.parse(data.nikto) : { empty: true },
+              nikto:
+                data.nikto && data.nikto.slice(0, 2) !== "{}"
+                  ? JSON.parse(data.nikto)
+                  : { empty: true },
             };
           });
           props.handleData((prev) => {
@@ -1241,14 +1249,14 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                joomscan: data ? data : "",
+                joomscan: data ? data : { empty: true },
               };
             });
 
             props.handleData((prev) => {
               return {
                 ...prev,
-                joomscan: data ? data : "",
+                joomscan: data ? data : { empty: true },
               };
             });
             props.Count("joomscan");
@@ -1279,10 +1287,7 @@ function TabScan(props) {
   }, []);
 
   useEffect(() => {
-    let checkEmpty = !scan[type];
-    if (type !== "joomscan") {
-      checkEmpty = scan[type].empty;
-    }
+    let checkEmpty = scan[type].empty;
 
     if (isDone[type] && checkEmpty) {
       pageEmpty.current.style.display = "block";
@@ -1355,19 +1360,7 @@ function TabScan(props) {
           inline="centered"
           style={{ backgroundColor: "white" }}
         />
-        {type === "joomscan" ? (
-          <div>
-            {scan.joomscan && typeof scan.joomscan === "string" ? null : (
-              <div>
-                {scan.joomscan.split("\n").map((ele) => {
-                  return <p>{ele}</p>;
-                })}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div>{!scan[type].empty ? json2htmlver2(scan[type]) : null}</div>
-        )}
+        <div>{!scan[type].empty ? json2htmlver2(scan[type]) : null}</div>
         <img
           className="empty-page"
           ref={pageEmpty}
