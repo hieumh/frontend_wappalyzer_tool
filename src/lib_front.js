@@ -152,6 +152,7 @@ function json2htmlver2(input) {
       }
     } catch (err) {
       // key rỗng
+      console.error(err)
       return <></>;
     } finally {
       return keys.map((key) => {
@@ -165,10 +166,10 @@ function json2htmlver2(input) {
           );
         } else if (isArrayObject(input[key])) {
           return (
-            <div key={key} className={"block-level-" + level}>
+            <div key={key} className={`block-level-${level}`}>
               <p className={"level-" + level}>{handleKey(key)}</p>
               {input[key].map((ele) => {
-                return js2HtmlCore(ele, level + 1);
+                return <div className="__group">{js2HtmlCore(ele, level + 1)}</div>;
               })}
             </div>
           );

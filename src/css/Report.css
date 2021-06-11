@@ -61,7 +61,7 @@
 
 #tab-detail {
   overflow: scroll;
-  height: 80vh;
+  height: 100vh;
   padding-left: 10px;
 }
 .list-tools {
@@ -103,7 +103,7 @@
 
 #dic {
   overflow: scroll;
-  height: 80vh;
+  height: 100vh;
 }
 
 #dic > ul {
@@ -157,6 +157,11 @@
   background-color: rgb(250, 250, 250);
 }
 
+#dns-fierce {
+  height: 100vh;
+  overflow: scroll;
+}
+
 .code {
   background-color: #eae8f1;
   padding: 10px 20px;
@@ -178,7 +183,7 @@
 
 #domain-whois {
   overflow: scroll;
-  height: 80vh;
+  height: 100vh;
   width: 100%;
   display: inline-block;
 }
@@ -189,10 +194,10 @@
 
 #domain-sublist3r {
   overflow: scroll;
-  height: 80vh;
+  height: 100vh;
   display: inline-block;
   width: 100%;
-  margin: 35px 15px 10px 15px;
+  margin: 0;
 }
 
 #report {
@@ -216,14 +221,19 @@
   border-radius: 4px;
 }
 
+#server-network {
+  height: 100vh;
+  overflow: scroll;
+}
+
 #scans {
   display: flex;
   flex-direction: column;
 }
 
-#scan-content {
+.scan-content {
   overflow: scroll;
-  height: 80vh;
+  height: 100vh;
   padding-left: 10px;
 }
 
@@ -243,6 +253,13 @@ i {
 
 #screenshot {
   padding-top: 30px;
+  height: 100vh;
+  overflow: scroll;
+}
+
+#vulns-list {
+  height: 100vh;
+  overflow: scroll;
 }
 
 /* ////////////////////////////////////////// */
@@ -387,16 +404,19 @@ i {
 }
 
 .block-level-2 > .level-2 {
-  margin: 1em 0 0.5em 0;
+  margin:0 5px;
   padding-left: 20px;
   /* background-color: #626163; */
   /* color: white; */
   font-family: "Muli", sans-serif;
-  font-weight: normal;
+  font-weight: 600;
   /* border-radius: 0 10px 0 10px; */
-  border-bottom: #a9a7a7 0.05px solid;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 28px;
+}
+
+.block-level-2 > .level-3 {
+  padding-left: 35px;
 }
 
 .block-level-3 > .level-3 {
@@ -467,4 +487,15 @@ i {
   margin-left: auto;
   margin-right: auto;
   width: 280px;
+}
+
+.block-level-1 > .__group {
+  background-color: #efefef;
+  padding:0 10px;
+  margin:10px 0;
+  border-radius: 10px;
+}
+
+.block-level-1 > .__group > .block-level-2 {
+  border-bottom: 1px solid rgb(200, 200, 200);
 }

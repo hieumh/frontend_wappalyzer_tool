@@ -445,10 +445,10 @@ function TabDomain(props) {
 
 function TabDomainWhois(props) {
   const check = props.domain ? props.domain : { empty: true };
-  const domain = check.empty ? {empty: true} : check;
+  const domain = check.empty ? { empty: true } : check;
 
-  if(domain.empty){
-    return null
+  if (domain.empty) {
+    return null;
   }
   return (
     <div id="domain-whois">
@@ -813,7 +813,7 @@ function TabDNS(props) {
     dig: { empty: true },
     fierce: "",
   });
-  console.log(dns)
+  console.log(dns);
   const [isDone, setIsDone] = useState({
     dig: false,
     fierce: false,
@@ -852,7 +852,7 @@ function TabDNS(props) {
           setDns((prev) => {
             return {
               ...prev,
-              fierce: data.dns && data.dns !== "\"\"\n" ? data.dns : "",
+              fierce: data.dns && data.dns !== '""\n' ? data.dns : "",
             };
           });
           props.Count("fierce");
@@ -922,22 +922,20 @@ function TabDNS(props) {
           ) : null}
         </div>
       </div>
-      <div>
-        {_Component[type] && {}.toString.call(_Component[type])
-          ? _Component[type](dns[type])
-          : null}
-        <Loader
-          active={!isDone[type]}
-          inline="centered"
-          style={{ backgroundColor: "white" }}
-        />
-        <img
-          className="empty-page"
-          ref={pageEmpty}
-          src="images/nothing_found.png"
-          alt="empty page"
-        />
-      </div>
+      <Loader
+        active={!isDone[type]}
+        inline="centered"
+        style={{ backgroundColor: "white" }}
+      />
+      <img
+        className="empty-page"
+        ref={pageEmpty}
+        src="images/nothing_found.png"
+        alt="empty page"
+      />
+      {_Component[type] && {}.toString.call(_Component[type])
+        ? _Component[type](dns[type])
+        : null}
     </div>
   );
 }
@@ -1439,7 +1437,7 @@ function TabVuln(props) {
           Add vuln
         </div>
       </div>
-      <div>
+      <div id='vulns-list'>
         {_Component[feature] && {}.toString.call(_Component[feature])
           ? _Component[feature](setVuln, props.options, vulns)
           : null}
