@@ -224,7 +224,8 @@ function TabTech(props) {
     setType(e.target.id);
 
     if (e.target.childNodes[1]) {
-      e.target.childNodes[1].setAttribute("style", "display:none");
+      props.Count(e.target.id,'del');
+      e.target.childNodes[1].remove()
     }
   }
 
@@ -393,6 +394,7 @@ function TabDomain(props) {
 
   function handleDomain(e) {
     setType(e.target.id);
+    props.Count(e.target.id,'del');
 
     if (e.target.childNodes[1]) {
       e.target.childNodes[1].setAttribute("style", "display:none");
@@ -892,7 +894,7 @@ function TabDNS(props) {
 
   function handleTool(e) {
     setType(e.target.id);
-
+    props.Count(e.target.id,'del');
     if (e.target.childNodes[1]) {
       e.target.childNodes[1].setAttribute("style", "display:none");
     }
@@ -1302,6 +1304,7 @@ function TabScan(props) {
 
   function handleScan(e) {
     setType(e.target.id);
+    props.Count(e.target.id,'del');
 
     if (e.target.childNodes[1]) {
       e.target.childNodes[1].setAttribute("style", "display:none");
@@ -1437,7 +1440,7 @@ function TabVuln(props) {
           Add vuln
         </div>
       </div>
-      <div id='vulns-list'>
+      <div id="vulns-list">
         {_Component[feature] && {}.toString.call(_Component[feature])
           ? _Component[feature](setVuln, props.options, vulns)
           : null}

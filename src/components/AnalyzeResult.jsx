@@ -181,17 +181,23 @@ function ChildrenTab(props) {
   const [count, setCount] = useState({});
   const locations = {
     ...props.locations,
-    url:encodeURIComponent(props.locations['url'])
-  }
-  
+    url: encodeURIComponent(props.locations["url"]),
+  };
+  console.log("this is count:", count)
+  function Count(key, action) {
+    if (!action) {
+      setCount((prev) => {
+        return {
+          ...prev,
+          [key]: true,
+        };
+      });
+      return;
+    }
+    let temp = { ...count };
+    delete temp[key];
+    setCount(temp);
 
-  function Count(data) {
-    setCount((prev) => {
-      return {
-        ...prev,
-        [data]: "",
-      };
-    });
   }
 
   function handleNotify() {
@@ -213,8 +219,8 @@ function ChildrenTab(props) {
         id="countTech"
       >
         {props.title}
-        {Object.keys(count).length === 0 ? null : (
-          <span className="notification-tab">{Object.keys(count).length}</span>
+        {Object.keys(count).filter((key) => count[key]).length === 0 ? null : (
+          <span className="notification-tab">!</span>
         )}
       </label>
 

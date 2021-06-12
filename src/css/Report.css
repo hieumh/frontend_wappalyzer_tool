@@ -260,6 +260,8 @@ i {
 #vulns-list {
   height: 100vh;
   overflow: scroll;
+  padding-left: 5px;
+  padding-top: 5px;
 }
 
 /* ////////////////////////////////////////// */
