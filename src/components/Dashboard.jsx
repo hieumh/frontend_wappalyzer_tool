@@ -124,7 +124,7 @@ function NumTech(props) {
   }, []);
   return (
     <Statistic>
-      <Statistic.Label>Number of tech</Statistic.Label>
+      <Statistic.Label>Number of language</Statistic.Label>
       <Statistic.Value>{numTech}</Statistic.Value>
     </Statistic>
   );

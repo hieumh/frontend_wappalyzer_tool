@@ -67,7 +67,7 @@ function HistoryReport(){
         {
                             history.length !== 0 ? history.map((element, index)=>{
                                 return (<Table.Row id={element.token} key={index} onClick={handleClick}>
-                                    <Table.Cell>{element._id}</Table.Cell>
+                                    <Table.Cell>{index}</Table.Cell>
                                     <Table.Cell>{element.url.length > 35 ? element.url.slice(0,35) + "...":element.url}</Table.Cell>
                                     <Table.Cell>{element.time_create.slice(0,25)}</Table.Cell>
                                     <Table.Cell><Button id={index}onClick={handleSubmit}>Create HTML file</Button></Table.Cell>
