@@ -1027,15 +1027,15 @@ function TabServer(props) {
   }
 
   useEffect(() => {
-    let checkEmpty = server[type];
+    let checkEmpty = !server[type];
     if (type !== "nmap"){
-      checkEmpty = !checkEmpty.empty
+      checkEmpty = !server[type].empty
     }
-    if (isDone[type] && checkEmpty) {
+    if (isDone[type] && !checkEmpty) {
       pageEmpty.current.style.display = "block";
     }
 
-    if (isDone[type] && !checkEmpty) {
+    if (isDone[type] && checkEmpty) {
       pageEmpty.current.style.display = "none";
     }
 
@@ -1126,7 +1126,7 @@ function TabServer(props) {
         </div>
       </div>
 
-      <div>
+      <div id='server-network-content'>
         <Loader
           active={!isDone[type]}
           inline="centered"

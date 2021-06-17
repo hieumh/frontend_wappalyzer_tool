@@ -221,10 +221,13 @@
 }
 
 #server-network {
-  height: 100vh;
-  overflow: auto;
   display: flex;
   flex-direction: column;
+}
+
+#server-network-content {
+  height: 100vh;
+  overflow: auto;
 }
 
 #scans {
