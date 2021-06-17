@@ -95,7 +95,7 @@ function AnalyzeResult(props) {
 
         <ChildrenTab
           id="tab_7"
-          title="Server scanning"
+          title="Scan CMS"
           handleData={setVulns}
           description="Information about the server of target website"
           locations={props.location.state}
@@ -183,7 +183,6 @@ function ChildrenTab(props) {
     ...props.locations,
     url: encodeURIComponent(props.locations["url"]),
   };
-  console.log("this is count:", count)
   function Count(key, action) {
     if (!action) {
       setCount((prev) => {

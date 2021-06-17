@@ -224,8 +224,8 @@ function TabTech(props) {
     setType(e.target.id);
 
     if (e.target.childNodes[1]) {
-      props.Count(e.target.id,'del');
-      e.target.childNodes[1].remove()
+      props.Count(e.target.id, "del");
+      e.target.childNodes[1].remove();
     }
   }
 
@@ -394,7 +394,7 @@ function TabDomain(props) {
 
   function handleDomain(e) {
     setType(e.target.id);
-    props.Count(e.target.id,'del');
+    props.Count(e.target.id, "del");
 
     if (e.target.childNodes[1]) {
       e.target.childNodes[1].setAttribute("style", "display:none");
@@ -815,7 +815,6 @@ function TabDNS(props) {
     dig: { empty: true },
     fierce: "",
   });
-  console.log(dns);
   const [isDone, setIsDone] = useState({
     dig: false,
     fierce: false,
@@ -873,7 +872,6 @@ function TabDNS(props) {
   }, []);
 
   useEffect(() => {
-    console.log(dns);
     let checkEmpty = !dns[type];
     if (type !== "fierce") {
       checkEmpty = dns[type].empty;
@@ -894,7 +892,7 @@ function TabDNS(props) {
 
   function handleTool(e) {
     setType(e.target.id);
-    props.Count(e.target.id,'del');
+    props.Count(e.target.id, "del");
     if (e.target.childNodes[1]) {
       e.target.childNodes[1].setAttribute("style", "display:none");
     }
@@ -1002,30 +1000,89 @@ function TabDNSDig(props) {
 }
 
 function TabServer(props) {
-  const [nmap, setNmap] = useState("");
-  const [isDone, setIsDone] = useState(false);
+  const [server, setServer] = useState({
+    nmap: "",
+    nikto: { empty: true },
+  });
+  const [isDone, setIsDone] = useState({
+    nmap: false,
+    nikto: false,
+  });
+  console.log("this is server:",server)
+  console.log("this is isdone:",isDone)
   const pageEmpty = useRef(null);
+  const [type, setType] = useState("nikto");
+  const _Component = {
+    nikto: (data) => <TabServerNikto nikto={data} />,
+    nmap: (data) => <TabServerNmap nmap={data} />,
+  };
+
+  function handleServer(e) {
+    setType(e.target.id);
+    props.Count(e.target.id, "del");
+
+    if (e.target.childNodes[1]) {
+      e.target.childNodes[1].setAttribute("style", "display:none");
+    }
+  }
 
   useEffect(() => {
-    if (isDone && !nmap.length) {
+    let checkEmpty = server[type];
+    if (type !== "nmap"){
+      checkEmpty = !checkEmpty.empty
+    }
+    if (isDone[type] && checkEmpty) {
       pageEmpty.current.style.display = "block";
     }
 
-    if (isDone && nmap.length) {
+    if (isDone[type] && !checkEmpty) {
       pageEmpty.current.style.display = "none";
     }
 
-    if (!isDone) {
+    if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
   }, [isDone]);
 
   useEffect(() => {
     async function getData({ header, query }) {
+      fetch(host + "/url_analyze/nikto" + query, header)
+        .then((res) => res.json())
+        .then((data) => {
+          setServer((prev) => {
+            return {
+              ...prev,
+              nikto:
+                data.nikto && data.nikto.slice(0, 2) !== "{}"
+                  ? JSON.parse(data.nikto)
+                  : { empty: true },
+            };
+          });
+          props.handleData((prev) => {
+            return {
+              ...prev,
+              nikto: data,
+            };
+          });
+          props.Count("nikto");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              nikto: true,
+            };
+          });
+        })
+        .catch((err) => console.error(err));
+
       fetch(host + "/url_analyze/server" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          setNmap(data.nmap ? data.nmap : "");
+          setServer((prev) => {
+            return {
+              ...prev,
+              nmap: data.nmap ? data.nmap : "",
+            };
+          });
           props.handleData((prev) => {
             return {
               ...prev,
@@ -1033,7 +1090,12 @@ function TabServer(props) {
             };
           });
           props.Count("nmap");
-          setIsDone(true);
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              nmap: true,
+            };
+          });
         })
         .catch((err) => console.error(err));
     }
@@ -1043,26 +1105,66 @@ function TabServer(props) {
 
   return (
     <div id="server-network" className="card-body__">
-      <Loader
-        active={!isDone}
-        inline="centered"
-        style={{ backgroundColor: "white" }}
-      />
-      <img
-        className="empty-page"
-        ref={pageEmpty}
-        src="images/nothing_found.png"
-        alt="empty page"
-      />
-      {!nmap ? (
-        <div></div>
-      ) : (
-        <div className="code">
-          {nmap.split("\n").map((ele, index) => {
-            return <p key={index}>{ele}</p>;
-          })}
+      <div className="list-tools">
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleServer}
+          id="nikto"
+        >
+          Nikto
+          {!server.nikto.empty ? (
+            <span className="notification-button">!</span>
+          ) : null}
         </div>
-      )}
+        <div
+          className="btn btn-light button-tech"
+          onClick={handleServer}
+          id="nmap"
+        >
+          Nmap
+          {server.nmap ? <span className="notification-button">!</span> : null}
+        </div>
+      </div>
+
+      <div>
+        <Loader
+          active={!isDone[type]}
+          inline="centered"
+          style={{ backgroundColor: "white" }}
+        />
+        <img
+          className="empty-page"
+          ref={pageEmpty}
+          src="images/nothing_found.png"
+          alt="empty page"
+        />
+        {_Component[type] && {}.toString.call(_Component[type])
+          ? _Component[type](server[type])
+          : null}
+      </div>
+    </div>
+  );
+}
+
+function TabServerNmap(props) {
+  const nmap = props.nmap ? props.nmap : "";
+  if (!nmap) {
+    return null;
+  }
+  return (
+    <div className="code">
+      {nmap.split("\n").map((ele, index) => {
+        return <p key={index}>{ele}</p>;
+      })}
+    </div>
+  );
+}
+
+function TabServerNikto(props) {
+  const nikto = props.nikto ? props.nikto : { empty: true };
+  return (
+    <div>
+      <div>{!nikto.empty ? json2htmlver2(nikto) : null}</div>
     </div>
   );
 }
@@ -1160,34 +1262,6 @@ function TabScan(props) {
           token: props.options.token,
         }),
       });
-
-      fetch(host + "/url_analyze/nikto" + query, header)
-        .then((res) => res.json())
-        .then((data) => {
-          setScan((prev) => {
-            return {
-              ...prev,
-              nikto:
-                data.nikto && data.nikto.slice(0, 2) !== "{}"
-                  ? JSON.parse(data.nikto)
-                  : { empty: true },
-            };
-          });
-          props.handleData((prev) => {
-            return {
-              ...prev,
-              nikto: data,
-            };
-          });
-          props.Count("nikto");
-          setIsDone((prev) => {
-            return {
-              ...prev,
-              nikto: true,
-            };
-          });
-        })
-        .catch((err) => console.error(err));
 
       checkCms = await checkCms.json();
       if (checkCms.cms_name) {
@@ -1304,7 +1378,7 @@ function TabScan(props) {
 
   function handleScan(e) {
     setType(e.target.id);
-    props.Count(e.target.id,'del');
+    props.Count(e.target.id, "del");
 
     if (e.target.childNodes[1]) {
       e.target.childNodes[1].setAttribute("style", "display:none");
@@ -1341,16 +1415,6 @@ function TabScan(props) {
         >
           Joomscan
           {scan.joomscan.length ? (
-            <span className="notification-button">!</span>
-          ) : null}
-        </div>
-        <div
-          className="btn btn-light button-tech"
-          onClick={handleScan}
-          id="nikto"
-        >
-          Nikto
-          {!scan.nikto.empty ? (
             <span className="notification-button">!</span>
           ) : null}
         </div>
