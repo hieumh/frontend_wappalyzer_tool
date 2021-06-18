@@ -632,6 +632,7 @@ function TabDic(props) {
     wapp: {},
     gobuster: {},
   });
+  console.log(dic)
   const [isDone, setIsDone] = useState({
     wapp: false,
     gobuster: false,
@@ -684,7 +685,7 @@ function TabDic(props) {
           setDic((prev) => {
             return {
               ...prev,
-              gobuster: data,
+              gobuster: data ? data.gobuster : {},
             };
           });
           setIsDone((prev) => {
@@ -1027,7 +1028,7 @@ function TabServer(props) {
   }
 
   useEffect(() => {
-    let checkEmpty = !server[type];
+    let checkEmpty = server[type];
     if (type !== "nmap"){
       checkEmpty = !server[type].empty
     }
@@ -1042,7 +1043,7 @@ function TabServer(props) {
     if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone]);
+  }, [isDone,type]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -1193,7 +1194,7 @@ function TabDetectWaf(props) {
       fetch(host + "/url_analyze/wafw00f" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          setWaf(Array.isArray(data.wafs) ? data.wafs : []);
+          setWaf(Array.isArray(data.waf) ? data.waf : []);
           props.Count("wafw00f");
           setIsDone(true);
         })

@@ -9,6 +9,7 @@ import {
   Table,
   TableBody,
 } from "semantic-ui-react";
+import { json2htmlver2 } from "../lib_front";
 
 function Report(props) {
   const report = JSON.parse(localStorage.report);
@@ -79,6 +80,16 @@ function Report(props) {
       <Segment>
         <Header as="h2" content="Detect website application firewall" />
         <DetectWafSegment wafs={report.wafw00f} />
+      </Segment>
+
+      <Segment>
+        <Header as="h2" content="Server information" />
+        <ServerInformationSegment nmap={report.server} nikto={report.nikto} />
+      </Segment>
+
+      <Segment>
+        <Header as="h2" content="CMS scan" />
+        <CMSScanSegment wpscan={report.wpscan} droopescan={report.droopescan} joomscan={report.joomscan} />
       </Segment>
 
       <Segment>
@@ -476,4 +487,69 @@ function VulnerabiltiesSegment(props) {
       </Table.Body>
     </Table>
   );
+}
+
+function ServerInformationSegment(props) {
+  const temp1 = props.nmap ? props.nmap : {};
+  const nmap = temp1.server ? temp1.server : "";
+  const temp2 = props.nikto ? props.nikto : {};
+  const nikto = temp2.nikto ? JSON.parse(temp2.nikto) : {};
+
+  return (
+    <>
+      <div>
+        <h3 style={{fontSize: "1.28571429rem"}}>Nmap</h3>
+        {nmap.split("\n").map((element, index) => (
+          <code key={index}>
+            {element === "\n" || !element ? null : element}
+            <br />
+          </code>
+        ))}
+      </div>
+      <hr />
+      <div>
+        <h3 style={{fontSize: "1.28571429rem"}}>Nikto</h3>
+        {json2htmlver2(nikto)}
+      </div>
+    </>
+  );
+}
+
+function CMSScanSegment(props){
+  const result = {
+    wpscan:props.wpscan ? props.wpscan : {},
+    droopescan:props.droopescan ? props.droopescan : {},
+    joomscan:props.joomscan ? props.joomscan : {},
+  }
+
+  const wpscan = result.wpscan.wp ? result.wpscan.wp : []
+  const droopescan = result.droopescan.droop ? result.droopescan.droop : []
+  const joomscan = result.joomscan.jooomscan ? result.joomscan.joomscan : ""
+  console.log(props)
+  return (<>
+    <div>
+      <h3>Wpscan</h3>
+      {
+        json2htmlver2(wpscan)
+      }
+    </div>
+    <hr /> 
+    <div>
+      <h3>Droopescan</h3>
+      {
+        json2htmlver2(droopescan)
+      }
+    </div>
+    <hr /> 
+    <div>
+      <h3>Joomscan</h3>
+      {
+        joomscan.split('\n').map((element,index)=>{
+          return (<code key={index}>
+            {element}
+          </code>)
+        })
+      }
+    </div>
+  </>)
 }
