@@ -9,7 +9,6 @@ import {
   TabScan,
   TabVuln,
 } from "./Tabs";
-import { getHostFromUrl } from "../lib_front";
 import { ToastContainer } from "react-toastify";
 import { Image } from "semantic-ui-react";
 import "react-toastify/dist/ReactToastify.css";
@@ -138,7 +137,7 @@ function ScreenShot(props) {
   const [option, setOption] = useState("");
   const feature = {
     url: props.options.url,
-    pic: getHostFromUrl(props.options.url) + ".png",
+    pic: props.options.token + ".png",
   };
 
   function handleOnLoad() {

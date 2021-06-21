@@ -52,11 +52,11 @@ function Report(props) {
         <p>All technologies that tool collected:</p>
         <TechnologiesSegments
           list={[
-            report.wapp.technologies,
-            report.netcraft.technologies,
-            report.largeio.technologies,
-            report.whatweb.technologies,
-            report.webtech.technologies,
+            report.wapp ? report.wapp.technologies : [],
+            report.netcraft ? report.netcraft.technologies : [],
+            report.largeio ? report.largeio.technologies : [],
+            report.whatweb ? report.whatweb.technologies : [],
+            report.webtech ? report.webtech.technologies : [],
           ]}
         />
       </Segment>
@@ -122,9 +122,13 @@ function TechnologiesSegments(props) {
   }
 
   function CreateTableContent(props) {
-    let list = props.list ? props.list : [];
+    let list = Array.isArray(props.list) ? props.list : [];
+    console.log(list)
     list = list.map((element) => {
-      return element.sort(compareFunc);
+      if(Array.isArray(element)){
+        return element.sort(compareFunc);
+      }
+      return []
     });
 
     let listLongest = list.reduce((total, element) => {

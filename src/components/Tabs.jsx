@@ -632,7 +632,6 @@ function TabDic(props) {
     wapp: {},
     gobuster: {},
   });
-  console.log(dic)
   const [isDone, setIsDone] = useState({
     wapp: false,
     gobuster: false,
@@ -1009,8 +1008,6 @@ function TabServer(props) {
     nmap: false,
     nikto: false,
   });
-  console.log("this is server:",server)
-  console.log("this is isdone:",isDone)
   const pageEmpty = useRef(null);
   const [type, setType] = useState("nikto");
   const _Component = {
@@ -1075,7 +1072,7 @@ function TabServer(props) {
         })
         .catch((err) => console.error(err));
 
-      fetch(host + "/url_analyze/server" + query, header)
+      fetch(host + "/url_analyze/nmap" + query, header)
         .then((res) => res.json())
         .then((data) => {
           setServer((prev) => {
@@ -1174,6 +1171,7 @@ function TabDetectWaf(props) {
   const [wafs, setWaf] = useState([]);
   const [isDone, setIsDone] = useState(false);
   const pageEmpty = useRef(null);
+  console.log("this wafw00f", wafs)
 
   useEffect(() => {
     if (isDone && !wafs.length) {
@@ -1194,6 +1192,7 @@ function TabDetectWaf(props) {
       fetch(host + "/url_analyze/wafw00f" + query, header)
         .then((res) => res.json())
         .then((data) => {
+          console.log("data wafs recv:",data)
           setWaf(Array.isArray(data.waf) ? data.waf : []);
           props.Count("wafw00f");
           setIsDone(true);
@@ -1274,13 +1273,13 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                wpscan: data ? data : { empty: true },
+                wpscan: data ? JSON.parse(data.wp) : { empty: true },
               };
             });
             props.handleData((prev) => {
               return {
                 ...prev,
-                wpscan: data ? data : { empty: true },
+                wpscan: data ? JSON.parse(data.wp) : { empty: true },
               };
             });
             props.Count("wpscan");
@@ -1299,13 +1298,13 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                droopescan: data ? data : { empty: true },
+                droopescan: data ? JSON.parse(data.droope) : { empty: true },
               };
             });
             props.handleData((prev) => {
               return {
                 ...prev,
-                droopescan: data ? data : { empty: true },
+                droopescan: data ? JSON.parse(data.droope) : { empty: true },
               };
             });
             props.Count("droope");
@@ -1324,14 +1323,14 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                joomscan: data ? data : { empty: true },
+                joomscan: data ? JSON.parse(data.joomscan) : { empty: true },
               };
             });
 
             props.handleData((prev) => {
               return {
                 ...prev,
-                joomscan: data ? data : { empty: true },
+                joomscan: data ? JSON.parse(data.joomscan) : { empty: true },
               };
             });
             props.Count("joomscan");
@@ -1531,7 +1530,7 @@ function TopVulnList(props) {
     if (!props.isDone) {
       pageEmpty.current.style.display = "none";
     }
-  }, [props.isDone]);
+  }, [props.isDone, vulns]);
 
   async function handleDeleteVuln(e) {
     let body = JSON.stringify({

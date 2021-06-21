@@ -21,12 +21,13 @@ function Content() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!checkValidUrl(link)) {
+    let check = checkValidUrl(link)
+    if (!check) {
       setError(true);
       return;
     }
+    setLink(check.href)
     setError(false);
-    console.log("This is submit");
     e.preventDefault();
 
     // Get token
@@ -36,7 +37,7 @@ function Content() {
     setLocation({
       pathname: "/analyze_result",
       state: {
-        url: link,
+        url: check.href,
         token: token,
         isAnalyze: true,
       },
