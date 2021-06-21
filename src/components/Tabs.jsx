@@ -220,6 +220,9 @@ function TabTech(props) {
   }, []);
 
   function handleTech(e) {
+    if(!e.target.id){
+      return
+    }
     e.preventDefault();
     setType(e.target.id);
 
@@ -393,6 +396,9 @@ function TabDomain(props) {
   }, [isDone, type]);
 
   function handleDomain(e) {
+    if(!e.target.id){
+      return
+    }
     setType(e.target.id);
     props.Count(e.target.id, "del");
 
@@ -891,6 +897,9 @@ function TabDNS(props) {
   }, [isDone, type]);
 
   function handleTool(e) {
+    if(!e.target.id){
+      return
+    }
     setType(e.target.id);
     props.Count(e.target.id, "del");
     if (e.target.childNodes[1]) {
@@ -1016,6 +1025,9 @@ function TabServer(props) {
   };
 
   function handleServer(e) {
+    if(!e.target.id){
+      return
+    }
     setType(e.target.id);
     props.Count(e.target.id, "del");
 
@@ -1171,7 +1183,6 @@ function TabDetectWaf(props) {
   const [wafs, setWaf] = useState([]);
   const [isDone, setIsDone] = useState(false);
   const pageEmpty = useRef(null);
-  console.log("this wafw00f", wafs)
 
   useEffect(() => {
     if (isDone && !wafs.length) {
@@ -1192,7 +1203,6 @@ function TabDetectWaf(props) {
       fetch(host + "/url_analyze/wafw00f" + query, header)
         .then((res) => res.json())
         .then((data) => {
-          console.log("data wafs recv:",data)
           setWaf(Array.isArray(data.waf) ? data.waf : []);
           props.Count("wafw00f");
           setIsDone(true);
@@ -1377,6 +1387,9 @@ function TabScan(props) {
   }, [isDone, type]);
 
   function handleScan(e) {
+    if(!e.target.id){
+      return
+    }
     setType(e.target.id);
     props.Count(e.target.id, "del");
 

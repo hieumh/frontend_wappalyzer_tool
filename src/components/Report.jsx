@@ -164,7 +164,6 @@ function TechnologiesSegments(props) {
 
   function CreateTableContent(props) {
     let list = Array.isArray(props.list) ? props.list : [];
-    console.log(list)
     list = list.map((element) => {
       if(Array.isArray(element)){
         return element.sort(compareFunc);
@@ -604,7 +603,6 @@ function CMSScanSegment(props){
   const wpscan = result.wpscan.wp ? result.wpscan.wp : []
   const droopescan = result.droopescan.droop ? result.droopescan.droop : []
   const joomscan = result.joomscan.jooomscan ? result.joomscan.joomscan : ""
-  console.log(props)
   return (<>
     <div>
       <h3>Wpscan</h3>
