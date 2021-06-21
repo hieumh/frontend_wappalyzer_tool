@@ -292,7 +292,7 @@ function TabTech(props) {
         {Array.isArray(tech[type]) && tech[type]
           ? tech[type].map((data, index) => {
               return (
-                <li key={data.name}>
+                <li key={index}>
                   <TechDetail key={index} data={data} />
                 </li>
               );

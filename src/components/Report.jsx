@@ -49,7 +49,15 @@ function Report(props) {
       </Segment>
       <Segment>
         <Header as="h2" content="Technologies" />
-        <p>All technologies that tool collected:</p>
+        <h3>Runtime:</h3>
+        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+          <li>Wappalyzer: {report.wapp ? report.wapp.runtime : "unknown"}</li>
+          <li>Netcraft: {report.netcraft ? report.netcraft.runtime : "unknown"}</li>
+          <li>Largeio: {report.largeio ? report.largeio.runtime : "unknown"}</li>
+          <li>Webtech: {report.webtech ? report.webtech.runtime : "unknown"}</li>
+          <li>Whatweb: {report.whatweb ? report.whatweb.runtime : "unknown"}</li>
+        </ul>
+        <h3>All technologies that tool collected:</h3>
         <TechnologiesSegments
           list={[
             report.wapp ? report.wapp.technologies : [],
@@ -62,10 +70,21 @@ function Report(props) {
       </Segment>
       <Segment>
         <Header as="h2" content="Domain" />
+        <h3>Runtime:</h3>
+        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+          <li>whois: {report.whois ? report.whois.runtime : "unknown"}</li>
+          <li>sublist3r: {report.sublist3r ? report.sublist3r.runtime : "unknown"}</li>
+        </ul>
         <DomainWhoisSegment whois={report.whois} />
+        <hr />
+        <DomainSublist3rSegment sublist3r={report.sublist3r} />
       </Segment>
       <Segment>
         <Header as="h2" content="Directories" />
+        <h3>Runtime:</h3>
+        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+          <li>gobuster: {report.gobuster ? report.gobuster.runtime : "unknown"}</li>
+        </ul>
         <Header as="h3" content="Wappalyzer tree" />
         <p>This information extract from wappalyzer result analyze.</p>
         <DirectoriesDicSegment dic={report.dic} />
@@ -74,21 +93,43 @@ function Report(props) {
         <DirectoriesGobusterSegment gobuster={report.gobuster} />
       </Segment>
       <Segment>
-        <Header as="h2" content="DNS" />
+      <Header as="h2" content="DNS" />
+      <h3>Runtime:</h3>
+        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+          <li>Dig: {report.dig ? report.dig.runtime : "unknown"}</li>
+          <li>Fierce: {report.fierce ? report.fierce.runtime : "unknown"}</li>
+        </ul>
         <DnsDigSegment dig={report.dig} />
+        <hr />
+        <DnsFierceSegment fierce={report.fierce} />
       </Segment>
       <Segment>
-        <Header as="h2" content="Detect website application firewall" />
+      <Header as="h2" content="Detect website application firewall" />
+      <h3>Runtime:</h3>
+        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+          <li>Wafw00f: {report.wafw00f ? report.wafw00f.runtime : "unknown"}</li>
+        </ul>
         <DetectWafSegment wafs={report.wafw00f} />
       </Segment>
 
       <Segment>
         <Header as="h2" content="Server information" />
-        <ServerInformationSegment nmap={report.server} nikto={report.nikto} />
+        <h3>Runtime:</h3>
+        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+          <li>Nmap: {report.nmap ? report.nmap.runtime : "unknown"}</li>
+          <li>Nikto: {report.nikto ? report.nikto.runtime : "unknown"}</li>
+        </ul>
+        <ServerInformationSegment nmap={report.nmap} nikto={report.nikto} />
       </Segment>
 
       <Segment>
         <Header as="h2" content="CMS scan" />
+        <h3>Runtime:</h3>
+        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+          <li>Wpscan: {report.wpscan ? report.wpscan.runtime : "unknown"}</li>
+          <li>Droopescan: {report.droopescan ? report.droopescan.runtime : "unknown"}</li>
+          <li>Joomscan: {report.joomscan ? report.joomscan.runtime : "unknown"}</li>
+        </ul>
         <CMSScanSegment wpscan={report.wpscan} droopescan={report.droopescan} joomscan={report.joomscan} />
       </Segment>
 
@@ -168,11 +209,27 @@ function TechnologiesSegments(props) {
   );
 }
 
+function DomainSublist3rSegment(props){
+  const sublist3r = props.sublist3r ? props.sublist3r : {}
+  const domains = Array.isArray(sublist3r.domains) ? sublist3r.domains : []
+  return(<>
+    <h3>Sublist3r</h3>
+    <div style={{height:"30vh",overflow:"auto"}}>{
+      domains.map((element,index)=>{
+        return <p key={index}>{element}</p>
+      })
+    }
+    </div>
+    
+  </>)
+}
+
 function DomainWhoisSegment(props) {
   const whois = props.whois ? props.whois : {};
   const domains = whois.domains ? whois.domains : {};
   return (
     <div>
+      <h3>Whois</h3>
       <b>Domain name</b>:
       {domains.domain_name ? (
         domains.domain_name.map((ele) => {
@@ -434,6 +491,24 @@ function DnsDigSegment(props) {
   );
 }
 
+function DnsFierceSegment(props){
+  const temp = props.fierce ? props.fierce : {}
+  let fierce = temp.dns ? temp.dns : ""
+  let output = fierce.replaceAll('"', "").replace(/\\n|\\t/g, "|");
+  output = output.split("|");
+  output = output.filter((element) => element.length);
+
+  return(<div>
+    <h3 style={{fontSize: "1.28571429rem"}}>Fierce</h3>
+    {output.map((element, index) => (
+      <code key={index}>
+        {element === "\n" || !element ? null : element}
+        <br />
+      </code>
+    ))}
+  </div>)
+}
+
 function DetectWafSegment(props) {
   const wafw00f = props.wafw00f ? props.wafw00f : {};
   const wafs = wafw00f.waf ? wafw00f.waf : [];
@@ -495,7 +570,7 @@ function VulnerabiltiesSegment(props) {
 
 function ServerInformationSegment(props) {
   const temp1 = props.nmap ? props.nmap : {};
-  const nmap = temp1.server ? temp1.server : "";
+  const nmap = temp1.nmap ? temp1.nmap : "";
   const temp2 = props.nikto ? props.nikto : {};
   const nikto = temp2.nikto ? JSON.parse(temp2.nikto) : {};
 
