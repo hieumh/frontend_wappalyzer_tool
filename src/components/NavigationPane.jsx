@@ -6,12 +6,12 @@ function NavigationPane(){
     <div id="navigation" >
         <div className="layer">
             <h3><b>Enumtool</b></h3>
-            <a href='/'><img src="/icons/website/house-user-solid.svg" />Home</a>
-            <a href='/analyze_page'><img src="/icons/website/terminal-solid.svg"/>Analyze page</a>
-            <a href='/search'><img src="/icons/website/search-solid_1.svg" />Search</a>
-            <a href='/history'><img src="/icons/website/history-solid.svg" />History Report</a>
-            <a href='/contact'><img src="/icons/website/id-card-regular.svg" />Contact</a>
-            <a href='/about'><img src="/icons/website/envelope-open-text-solid.svg" />About us</a>
+            <a href='/'><img src="/icons/website/house-user-solid.svg" alt="home"/>Home</a>
+            <a href='/analyze_page'><img src="/icons/website/terminal-solid.svg" alt="analyze"/>Analyze page</a>
+            <a href='/search'><img src="/icons/website/search-solid_1.svg" alt="search"/>Search</a>
+            <a href='/history'><img src="/icons/website/history-solid.svg" alt="history"/>History Report</a>
+            <a href='/contact'><img src="/icons/website/id-card-regular.svg" alt="contact"/>Contact</a>
+            <a href='/about'><img src="/icons/website/envelope-open-text-solid.svg" alt="about"/>About us</a>
         </div> 
     </div>)
 }

@@ -1,7 +1,7 @@
 const host = "http://localhost:3000";
 
 function getHostFromUrl(url){
-  if(url.split('//').length == 2){
+  if(url.split('//').length === 2){
       return url.split('//')[1].split('.')[0]
   }
   return url.split('.')[0]
@@ -20,135 +20,13 @@ function isObject(input) {
   return typeof input === "object" && !Array.isArray(input) && input !== null;
 }
 
-function json2html(input, level) {
-  let keys = Object.keys(input);
-
-  return keys.map((key) => {
-    if (isObject(input[key])) {
-      switch (level) {
-        case 1:
-          return (
-            <div key={key}>
-              <h3>{handleKey(key)}</h3>
-              {json2html(input[key], level + 1)}
-              <hr />
-            </div>
-          );
-        case 2:
-          return (
-            <div key={key}>
-              <p>
-                <b>{handleKey(key)}</b>:
-              </p>
-              {json2html(input[key], level + 1)}
-            </div>
-          );
-      }
-    } else if (isArrayObject(input[key])) {
-      switch (level) {
-        case 1:
-          return (
-            <div key={key}>
-              <h3>{handleKey(key)}</h3>
-              {input[key].map((ele) => {
-                return json2html(ele, level + 1);
-              })}
-              <hr />
-            </div>
-          );
-        case 2:
-          return (
-            <div key={key}>
-              <p>
-                <b>{handleKey(key)}</b>:
-              </p>
-              {input[key].map((ele) => {
-                return json2html(ele, level + 1);
-              })}
-            </div>
-          );
-      }
-    } else if (Array.isArray(input[key])) {
-      switch (level) {
-        case 1:
-          return (
-            <div key={key}>
-              <h3>{handleKey(key)}</h3>
-              {input[key].map((ele, index) => {
-                return (
-                  <div key={index}>
-                    <i>{ele}</i>
-                  </div>
-                );
-              })}
-              <hr />
-            </div>
-          );
-        case 2:
-          return (
-            <div key={key}>
-              <b>{handleKey(key)}</b>:
-              {input[key].map((ele, index) => {
-                return (
-                  <div key={index}>
-                    <i>{ele}</i>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        case 3:
-          return (
-            <div key={key}>
-              <p>{handleKey(key)}</p>
-              {input[key].map((ele, index) => {
-                return (
-                  <div key={index}>
-                    <i>{ele}</i>
-                  </div>
-                );
-              })}
-            </div>
-          );
-      }
-    } else if (typeof input[key] === "string") {
-      switch (level) {
-        case 1:
-          return (
-            <div key={key}>
-              <h3>{handleKey(key)}</h3>
-              <i>{input[key]}</i>
-              <hr />
-            </div>
-          );
-        case 2:
-          return (
-            <div key={key}>
-              <p>
-                <b>{handleKey(key)}</b>:
-              </p>
-              <i>{input[key]}</i>
-            </div>
-          );
-        case 3:
-          return (
-            <div key={key}>
-              <p>{handleKey(key)}</p>
-              <i>{input[key]}</i>
-            </div>
-          );
-      }
-    }
-  });
-}
-
 function json2htmlver2(input) {
   function js2HtmlCore(input, level) {
     let keys;
     try {
       keys = Object.keys(input);
       if (!keys) {
-        throw "Error keys";
+        throw {name:"Error keys"};
       }
     } catch (err) {
       // key rỗng
@@ -246,4 +124,4 @@ function createHTTPHeader({ url, token, isAnalyze }) {
   return {header:header, query:options.query}
 }
 
-export { host, json2html, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey };
+export { host, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey };

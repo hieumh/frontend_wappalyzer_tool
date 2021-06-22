@@ -27,6 +27,7 @@ function Report(props) {
         <a
           href="https://www.npmjs.com/package/pure-react-carousel"
           target="_blank"
+          rel="noreferrer"
         >
           <code>pure-react-carousel</code>
         </a>
@@ -40,7 +41,6 @@ function Report(props) {
         </List>
         <Image
           src={linkImg}
-          alt="screenshot image"
           alt={report.pic}
           size="big"
           centered
@@ -509,10 +509,12 @@ function DnsFierceSegment(props){
 }
 
 function DetectWafSegment(props) {
-  const wafw00f = props.wafw00f ? props.wafw00f : {};
+  const wafw00f = props.wafs ? props.wafs : {};
   const wafs = wafw00f.waf ? wafw00f.waf : [];
+
   return (
     <div>
+      <h3>Wafw00f</h3>
       {wafs.map((ele, index) => {
         return (
           <div key={index}>
@@ -552,7 +554,7 @@ function VulnerabiltiesSegment(props) {
               <Table.Cell>{vuln["Date"]}</Table.Cell>
               <Table.Cell>{vuln["EDB-ID"]}</Table.Cell>
               <Table.Cell>
-                <a href={vuln["Path"]} target="_blank">
+                <a href={vuln["Path"]} target="_blank" rel="noreferrer">
                   {vuln["Path"]}
                 </a>
               </Table.Cell>
@@ -599,9 +601,10 @@ function CMSScanSegment(props){
     droopescan:props.droopescan ? props.droopescan : {},
     joomscan:props.joomscan ? props.joomscan : {},
   }
+  console.log(props)
 
-  const wpscan = result.wpscan.wp ? result.wpscan.wp : []
-  const droopescan = result.droopescan.droop ? result.droopescan.droop : []
+  const wpscan = result.wpscan.wp ? result.wpscan.wp : {}
+  const droopescan = result.droopescan.droop ? result.droopescan.droop : {}
   const joomscan = result.joomscan.jooomscan ? result.joomscan.joomscan : ""
   return (<>
     <div>

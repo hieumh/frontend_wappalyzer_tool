@@ -26,7 +26,6 @@ function TechDetail(props) {
             );
           });
         })()}
-        {/* {json2htmlver2(data)} */}
       </div>
     </div>
   );
@@ -62,7 +61,7 @@ function TabTech(props) {
     if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone, type]);
+  }, [isDone, type, tech]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -220,7 +219,7 @@ function TabTech(props) {
   }, []);
 
   function handleTech(e) {
-    if(!e.target.id){
+    if (!e.target.id) {
       return
     }
     e.preventDefault();
@@ -294,12 +293,12 @@ function TabTech(props) {
         />
         {Array.isArray(tech[type]) && tech[type]
           ? tech[type].map((data, index) => {
-              return (
-                <li key={index}>
-                  <TechDetail key={index} data={data} />
-                </li>
-              );
-            })
+            return (
+              <li key={index}>
+                <TechDetail key={index} data={data} />
+              </li>
+            );
+          })
           : null}
         <img
           className="empty-page"
@@ -393,10 +392,10 @@ function TabDomain(props) {
     if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone, type]);
+  }, [isDone, type, domain]);
 
   function handleDomain(e) {
-    if(!e.target.id){
+    if (!e.target.id) {
       return
     }
     setType(e.target.id);
@@ -627,8 +626,8 @@ function TabDomainSublist3r(props) {
       {!domain
         ? null
         : domain.map((ele, index) => {
-            return <p key={index}>{ele}</p>;
-          })}
+          return <p key={index}>{ele}</p>;
+        })}
     </div>
   );
 }
@@ -662,7 +661,7 @@ function TabDic(props) {
 
     setStyle("wapp", pageWappEmpty);
     setStyle("gobuster", pageGoEmpty);
-  }, [isDone]);
+  }, [isDone, dic]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -707,7 +706,7 @@ function TabDic(props) {
     }
     let options = createHTTPHeader(props.options);
     getData(options);
-  }, [props.data]);
+  }, [props.data, props.options]);
   function createTree(dic) {
     let keys = Object.keys(dic);
 
@@ -894,10 +893,10 @@ function TabDNS(props) {
     if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone, type]);
+  }, [isDone, type, dns]);
 
   function handleTool(e) {
-    if(!e.target.id){
+    if (!e.target.id) {
       return
     }
     setType(e.target.id);
@@ -931,6 +930,10 @@ function TabDNS(props) {
           ) : null}
         </div>
       </div>
+
+      {_Component[type] && {}.toString.call(_Component[type])
+        ? _Component[type](dns[type])
+        : null}
       <Loader
         active={!isDone[type]}
         inline="centered"
@@ -942,9 +945,6 @@ function TabDNS(props) {
         src="images/nothing_found.png"
         alt="empty page"
       />
-      {_Component[type] && {}.toString.call(_Component[type])
-        ? _Component[type](dns[type])
-        : null}
     </div>
   );
 }
@@ -1000,8 +1000,8 @@ function TabDNSDig(props) {
       <div className="code">
         {dns[option] && !Array.isArray(dns[option])
           ? dns[option].split("\n").map((ele, index) => {
-              return <p key={index}>{ele === "" ? "\t" : ele}</p>;
-            })
+            return <p key={index}>{ele === "" ? "\t" : ele}</p>;
+          })
           : null}
       </div>
     </div>
@@ -1025,7 +1025,7 @@ function TabServer(props) {
   };
 
   function handleServer(e) {
-    if(!e.target.id){
+    if (!e.target.id) {
       return
     }
     setType(e.target.id);
@@ -1038,7 +1038,7 @@ function TabServer(props) {
 
   useEffect(() => {
     let checkEmpty = server[type];
-    if (type !== "nmap"){
+    if (type !== "nmap") {
       checkEmpty = !server[type].empty
     }
     if (isDone[type] && !checkEmpty) {
@@ -1052,7 +1052,7 @@ function TabServer(props) {
     if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone,type]);
+  }, [isDone, type, server]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -1221,16 +1221,16 @@ function TabDetectWaf(props) {
       />
       {wafs
         ? wafs.map((ele, index) => {
-            return (
-              <div key={index}>
-                <b>Firewall:</b>
-                <p>{ele.firewall}</p>
-                <b>Manufacturer:</b>
-                <p>{ele.manufacturer}</p>
-                <hr />
-              </div>
-            );
-          })
+          return (
+            <div key={index}>
+              <b>Firewall:</b>
+              <p>{ele.firewall}</p>
+              <b>Manufacturer:</b>
+              <p>{ele.manufacturer}</p>
+              <hr />
+            </div>
+          );
+        })
         : null}
       <img
         className="empty-page"
@@ -1283,13 +1283,13 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                wpscan: data ? JSON.parse(data.wp) : { empty: true },
+                wpscan: data ? data.wp : { empty: true },
               };
             });
             props.handleData((prev) => {
               return {
                 ...prev,
-                wpscan: data ? JSON.parse(data.wp) : { empty: true },
+                wpscan: data ? data.wp : { empty: true },
               };
             });
             props.Count("wpscan");
@@ -1308,13 +1308,13 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                droopescan: data ? JSON.parse(data.droope) : { empty: true },
+                droopescan: data ? data.droope : { empty: true },
               };
             });
             props.handleData((prev) => {
               return {
                 ...prev,
-                droopescan: data ? JSON.parse(data.droope) : { empty: true },
+                droopescan: data ? data.droope : { empty: true },
               };
             });
             props.Count("droope");
@@ -1333,14 +1333,14 @@ function TabScan(props) {
             setScan((prev) => {
               return {
                 ...prev,
-                joomscan: data ? JSON.parse(data.joomscan) : { empty: true },
+                joomscan: data ? data.joomscan : { empty: true },
               };
             });
 
             props.handleData((prev) => {
               return {
                 ...prev,
-                joomscan: data ? JSON.parse(data.joomscan) : { empty: true },
+                joomscan: data ? data.joomscan : { empty: true },
               };
             });
             props.Count("joomscan");
@@ -1384,10 +1384,10 @@ function TabScan(props) {
     if (!isDone[type]) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone, type]);
+  }, [isDone, type, scan]);
 
   function handleScan(e) {
-    if(!e.target.id){
+    if (!e.target.id) {
       return
     }
     setType(e.target.id);
@@ -1427,7 +1427,7 @@ function TabScan(props) {
           id="joomscan"
         >
           Joomscan
-          {scan.joomscan.length ? (
+          {!scan.joomscan.empty ? (
             <span className="notification-button">!</span>
           ) : null}
         </div>
@@ -1575,37 +1575,37 @@ function TopVulnList(props) {
       />
       {Array.isArray(vulns)
         ? vulns.map((element, index) => {
-            return (
-              <Card key={index} fluid>
-                <Card.Content>
-                  <Icon
-                    id={index}
-                    className="close"
-                    onClick={handleDeleteVuln}
-                    size="big"
-                    style={{ float: "right" }}
-                  />
+          return (
+            <Card key={index} fluid>
+              <Card.Content>
+                <Icon
+                  id={index}
+                  className="close"
+                  onClick={handleDeleteVuln}
+                  size="big"
+                  style={{ float: "right" }}
+                />
 
-                  <Card.Header>
-                    {element.Platform}
-                    <Icon className={element.Platform} size="big" />
-                  </Card.Header>
-                  <Card.Meta>{element.Author}</Card.Meta>
-                  <Card.Description>
-                    <p>Type: {element.Type}</p>
-                    <p>Description: {element.Title}</p>
-                    <p>
-                      Link report:{" "}
-                      <a target="_blank" href={element.Path}>
-                        {element.Path}
-                      </a>
-                    </p>
-                  </Card.Description>
-                </Card.Content>
-                <Card.Content extra>{element.Date}</Card.Content>
-              </Card>
-            );
-          })
+                <Card.Header>
+                  {element.Platform}
+                  <Icon className={element.Platform} size="big" />
+                </Card.Header>
+                <Card.Meta>{element.Author}</Card.Meta>
+                <Card.Description>
+                  <p>Type: {element.Type}</p>
+                  <p>Description: {element.Title}</p>
+                  <p>
+                    Link report:{" "}
+                    <a target="_blank" href={element.Path} rel="noreferrer">
+                      {element.Path}
+                    </a>
+                  </p>
+                </Card.Description>
+              </Card.Content>
+              <Card.Content extra>{element.Date}</Card.Content>
+            </Card>
+          );
+        })
         : null}
       <img
         className="empty-page"

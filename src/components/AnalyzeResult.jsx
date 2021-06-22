@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Children } from "react";
+import React, { useState, useEffect} from "react";
 import {
   TabDic,
   TabServer,
@@ -128,10 +128,6 @@ function AnalyzeResult(props) {
 
 export default AnalyzeResult;
 
-{
-  /* <div className="lds-roller" style={hidden}><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> */
-}
-
 function ScreenShot(props) {
   const [isRun, setRun] = useState(false);
   const [option, setOption] = useState("");
@@ -150,7 +146,7 @@ function ScreenShot(props) {
       return;
     }
     setOption("pic");
-  }, []);
+  }, [props.options.isAnalyze]);
 
   useEffect(() => {
     if (props.data.length) {

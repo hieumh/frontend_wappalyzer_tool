@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify";
-import { Input, Message } from "semantic-ui-react";
+import { Input } from "semantic-ui-react";
 import "../css/Search.css";
 
 function Content() {
