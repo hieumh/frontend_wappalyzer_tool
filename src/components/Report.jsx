@@ -601,7 +601,6 @@ function CMSScanSegment(props){
     droopescan:props.droopescan ? props.droopescan : {},
     joomscan:props.joomscan ? props.joomscan : {},
   }
-  console.log(props)
 
   const wpscan = result.wpscan.wp ? result.wpscan.wp : {}
   const droopescan = result.droopescan.droope ? result.droopescan.droope : {}

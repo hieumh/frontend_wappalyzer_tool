@@ -16,7 +16,6 @@ function HistoryReport(){
             headers:{
             'content-type': 'application/json'
         }}).then(data=>data.json()).then(data =>{
-            console.log(data);
             setHistory(data)
         })
     },[])
@@ -38,7 +37,6 @@ function HistoryReport(){
 
     // create html file
     function handleSubmit(e){
-        console.log("handle submit")
         localStorage.setItem("report", JSON.stringify(history[e.target.id]))
         window.open("http://localhost:3001/report", "_blank") //to open new page
     }

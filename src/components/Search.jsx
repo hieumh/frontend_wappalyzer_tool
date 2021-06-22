@@ -36,7 +36,6 @@ function SearchDatabase() {
 
     let link =
       host + "/search_database?pattern=" + search + "&option=" + option;
-      console.log("link:",link)
     setHidden({});
     setSearch("");
 
@@ -53,19 +52,15 @@ function SearchDatabase() {
         for (const index in data) {
           result.push(data[index]);
         }
-        console.log("data received:", result)
         setResult(result);
       });
   }
 
   function handleAnalyze(e) {
-    // console.log(e.target.id, result[e.target.id].token, result[e.target.id].url)
-    console.log(e.target.parentNode.parentNode, e.target);
     let target = e.target.parentNode;
     if (target.nodeName === "DIV") {
       target = target.parentNode;
     }
-    console.log("right result:", target);
     if (target.id) {
       setLocation({
         pathname: "/analyze_result",

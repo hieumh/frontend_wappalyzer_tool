@@ -86,7 +86,6 @@ function NumFrame(props) {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data )
           setFramework(data);
         })
         .catch((error) => console.error(error));
@@ -116,7 +115,6 @@ function NumTech(props) {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data)
           setTech(data)})
         .catch((error) => console.error(error));
     }
