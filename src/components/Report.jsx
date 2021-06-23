@@ -601,10 +601,13 @@ function CMSScanSegment(props){
     droopescan:props.droopescan ? props.droopescan : {},
     joomscan:props.joomscan ? props.joomscan : {},
   }
+  
 
   const wpscan = result.wpscan.wp ? result.wpscan.wp : {}
   const droopescan = result.droopescan.droope ? result.droopescan.droope : {}
-  const joomscan = result.joomscan.joomscan ? result.joomscan.joomscan : ""
+  const joomscan = result.joomscan.joomscan ? result.joomscan.joomscan : {}
+
+  console.log('this is scan',joomscan)
   return (<>
     <div>
       <h3>Wpscan</h3>
@@ -623,11 +626,13 @@ function CMSScanSegment(props){
     <div>
       <h3>Joomscan</h3>
       {
-        joomscan.split('\n').map((element,index)=>{
-          return (<code key={index}>
+        joomscan ? joomscan.joomscan.split('\n').map((element,index)=>{
+          return (<>
+          <code key={index}>
             {element}
-          </code>)
-        })
+          </code><br />
+          </>)
+        }) : "" 
       }
     </div>
   </>)

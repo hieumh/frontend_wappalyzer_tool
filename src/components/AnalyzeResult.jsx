@@ -18,16 +18,15 @@ import "../css/Card.css";
 function AnalyzeResult(props) {
   // this variable use for logic of directory of wapp
   const [vulns, setVulns] = useState({
-    wapp: [],
-    netcraft: [],
-    whatweb: [],
-    largeio: [],
-    webtech: [],
-    wpscan: [],
-    droopescan: [],
-    joomscan: [],
-    nikto: [],
-    nmap: [],
+    wapp: false,
+    netcraft: false,
+    whatweb: false,
+    largeio: false,
+    webtech: false,
+    wpscan: false,
+    droopescan: false,
+    joomscan: false,
+    nmap: false,
   });
 
   return (
@@ -115,7 +114,6 @@ function AnalyzeResult(props) {
         <ChildrenTab
           id="tab_9"
           title="Screenshot"
-          data={vulns.wapp}
           description="Screenshot of target website"
           locations={props.location.state}
         >
@@ -129,7 +127,6 @@ function AnalyzeResult(props) {
 export default AnalyzeResult;
 
 function ScreenShot(props) {
-  const [isRun, setRun] = useState(false);
   const [option, setOption] = useState("");
   const feature = {
     url: props.options.url,
@@ -146,24 +143,17 @@ function ScreenShot(props) {
       return;
     }
     setOption("pic");
-  }, [props.options.isAnalyze]);
+  }, []);
 
-  useEffect(() => {
-    if (props.data.length) {
-      setRun(true);
-    }
-  }, [props.data]);
   return (
     <div id="screenshot">
-      {isRun ? (
-        <Image
+        {option ? <Image
           src={`http://localhost:3000/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
           as="a"
           fluid
           onLoad={handleOnLoad}
           bordered
-        />
-      ) : null}
+        /> : null}
     </div>
   );
 }

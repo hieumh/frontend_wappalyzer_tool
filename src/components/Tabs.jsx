@@ -77,7 +77,7 @@ function TabTech(props) {
           props.handleData((prev) => {
             return {
               ...prev,
-              wapp: Array.isArray(data.technologies) ? data.technologies : [],
+              wapp: true,
             };
           });
           props.Count("wapp");
@@ -88,7 +88,16 @@ function TabTech(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("wapp");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              wapp: true,
+            };
+          });
+          console.error(err)
+        });
 
       // netcrafts
       fetch(host + "/url_analyze/netcraft" + query, header)
@@ -105,9 +114,7 @@ function TabTech(props) {
           props.handleData((prev) => {
             return {
               ...prev,
-              netcraft: Array.isArray(data.technologies)
-                ? data.technologies
-                : [],
+              netcraft: true,
             };
           });
           props.Count("netcraft");
@@ -118,7 +125,16 @@ function TabTech(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("netcraft");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              netcraft: true,
+            };
+          });
+          console.error(err)
+        });
 
       // largeio
       fetch(host + "/url_analyze/largeio" + query, header)
@@ -136,9 +152,7 @@ function TabTech(props) {
           props.handleData((prev) => {
             return {
               ...prev,
-              largeio: Array.isArray(data.technologies)
-                ? data.technologies
-                : [],
+              largeio: true
             };
           });
           props.Count("largeio");
@@ -149,7 +163,16 @@ function TabTech(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("largeio");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              largeio: true,
+            };
+          });
+          console.error(err)
+        });
 
       // Whatwebb
       fetch(host + "/url_analyze/whatweb" + query, header)
@@ -166,9 +189,7 @@ function TabTech(props) {
           props.handleData((prev) => {
             return {
               ...prev,
-              whatweb: Array.isArray(data.technologies)
-                ? data.technologies
-                : [],
+              whatweb: true,
             };
           });
           props.Count("whatweb");
@@ -179,7 +200,16 @@ function TabTech(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("whatweb");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              whatweb: true,
+            };
+          });
+          console.error(err)
+        });
 
       // Webtech
       fetch(host + "/url_analyze/webtech" + query, header)
@@ -197,9 +227,7 @@ function TabTech(props) {
           props.handleData((prev) => {
             return {
               ...prev,
-              webtech: Array.isArray(data.technologies)
-                ? data.technologies
-                : [],
+              webtech: true,
             };
           });
           props.Count("webtech");
@@ -210,7 +238,16 @@ function TabTech(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("webtech");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              webtech: true,
+            };
+          });
+          console.error(err)
+        });
     }
 
     let options = createHTTPHeader(props.options);
@@ -349,7 +386,16 @@ function TabDomain(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("whois");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              whois: true,
+            };
+          });
+          console.error(err)
+        });
 
       fetch(host + "/url_analyze/sublist3r" + query, header)
         .then((res) => res.json())
@@ -369,7 +415,16 @@ function TabDomain(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("sublist3r");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              sublist3r: true,
+            };
+          });
+          console.error(err)
+        });
     }
     let options = createHTTPHeader(props.options);
     getData(options);
@@ -681,10 +736,18 @@ function TabDic(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              wapp: true,
+            };
+          });
+          console.error(err)
+        });
 
     }
-    if (!props.data.length) {
+    if (!props.data) {
       return;
     }
     let options = createHTTPHeader(props.options);
@@ -709,7 +772,15 @@ function TabDic(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              gobuster: true,
+            };
+          });
+          console.error(err)
+        });
     }
 
     let options = createHTTPHeader(props.options);
@@ -836,7 +907,7 @@ function TabDNS(props) {
   const pageEmpty = useRef(null);
   const _Component = {
     dig: (data) => <TabDNSDig dns={data} />,
-    fierce: (data) => <TabDNSFierce dns={data} />,
+    fierce: (data) => { return data ? <TabDNSFierce dns={data} /> : null },
   };
 
   useEffect(() => {
@@ -859,7 +930,16 @@ function TabDNS(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("dig");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              dig: true,
+            };
+          });
+          console.error(err)
+        });
 
       fetch(host + "/url_analyze/fierce" + query, header)
         .then((res) => res.json())
@@ -878,7 +958,16 @@ function TabDNS(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("fierce");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              fierce: true,
+            };
+          });
+          console.error(err)
+        });
     }
 
     let options = createHTTPHeader(props.options);
@@ -1006,13 +1095,13 @@ function TabDNSDig(props) {
         <button onClick={handleClick}>SRV</button>
         <button onClick={handleClick}>TXT</button>
       </div>
-      <div className="code">
-        {dns[option] && !Array.isArray(dns[option])
-          ? dns[option].split("\n").map((ele, index) => {
-            return <p key={index}>{ele === "" ? "\t" : ele}</p>;
-          })
-          : null}
-      </div>
+
+      {dns[option] && !Array.isArray(dns[option])
+        ? <div className="code">{dns[option].split("\n").map((ele, index) => {
+          return <p key={index}>{ele === "" ? "\t" : ele}</p>;
+        })}</div>
+        : null}
+
     </div>
   );
 }
@@ -1077,12 +1166,6 @@ function TabServer(props) {
                   : { empty: true },
             };
           });
-          props.handleData((prev) => {
-            return {
-              ...prev,
-              nikto: data,
-            };
-          });
           props.Count("nikto");
           setIsDone((prev) => {
             return {
@@ -1091,7 +1174,16 @@ function TabServer(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("nikto");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              nikto: true,
+            };
+          });
+          console.error(err)
+        });
 
       fetch(host + "/url_analyze/nmap" + query, header)
         .then((res) => res.json())
@@ -1105,7 +1197,7 @@ function TabServer(props) {
           props.handleData((prev) => {
             return {
               ...prev,
-              nmap: data.nmap ? data.nmap : "",
+              nmap: true,
             };
           });
           props.Count("nmap");
@@ -1116,7 +1208,16 @@ function TabServer(props) {
             };
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("nmap");
+          setIsDone((prev) => {
+            return {
+              ...prev,
+              nmap: true,
+            };
+          });
+          console.error(err)
+        });
     }
     let options = createHTTPHeader(props.options);
     getData(options);
@@ -1216,7 +1317,11 @@ function TabDetectWaf(props) {
           props.Count("wafw00f");
           setIsDone(true);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("wafw00f");
+          setIsDone(true);
+          console.error(err)
+        });
     }
     let options = createHTTPHeader(props.options);
     getData(options);
@@ -1270,19 +1375,23 @@ function TabScan(props) {
   useEffect(() => {
     // set type scan-content when loading
     async function getData({ header, query }) {
-      let checkCms = await fetch(host + "/url_analyze/cmseek", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          url: props.options.url,
-          token: props.options.token,
-        }),
-      });
+      let checkCms = { cms_name: "default" }
+      if (header.method.toLowerCase() === 'post') {
+        checkCms = await fetch(host + "/url_analyze/cmseek", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            url: props.options.url,
+            token: props.options.token,
+          }),
+        });
 
-      checkCms = await checkCms.json();
+        checkCms = await checkCms.json();
+      }
+
       if (checkCms.cms_name) {
         // fetch for scanning website
         console.log("have cms");
@@ -1298,7 +1407,7 @@ function TabScan(props) {
             props.handleData((prev) => {
               return {
                 ...prev,
-                wpscan: data ? data.wp : { empty: true },
+                wpscan: true,
               };
             });
             props.Count("wpscan");
@@ -1309,7 +1418,16 @@ function TabScan(props) {
               };
             });
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            props.Count("wpscan");
+            setIsDone((prev) => {
+              return {
+                ...prev,
+                wpscan: true,
+              };
+            });
+            console.error(err)
+          });
         fetch(host + "/url_analyze/droopescan" + query, header)
           .then((res) => res.json())
           .then((data) => {
@@ -1323,7 +1441,7 @@ function TabScan(props) {
             props.handleData((prev) => {
               return {
                 ...prev,
-                droopescan: data ? data.droope : { empty: true },
+                droopescan: true,
               };
             });
             props.Count("droope");
@@ -1334,7 +1452,16 @@ function TabScan(props) {
               };
             });
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            props.Count("droope");
+            setIsDone((prev) => {
+              return {
+                ...prev,
+                droopescan: true,
+              };
+            });
+            console.error(err)
+          });
         fetch(host + "/url_analyze/joomscan" + query, header)
           .then((res) => res.json())
           .then((data) => {
@@ -1349,7 +1476,7 @@ function TabScan(props) {
             props.handleData((prev) => {
               return {
                 ...prev,
-                joomscan: data ? data.joomscan : { empty: true },
+                joomscan: true,
               };
             });
             props.Count("joomscan");
@@ -1361,7 +1488,17 @@ function TabScan(props) {
               };
             });
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            props.Count("joomscan");
+
+            setIsDone((prev) => {
+              return {
+                ...prev,
+                joomscan: true,
+              };
+            });
+            console.error(err)
+          });
 
         return;
       }
@@ -1467,6 +1604,7 @@ function TabVuln(props) {
   const [feature, setFeature] = useState("list");
   const [vulns, setVuln] = useState([]);
   const [isDone, setIsDone] = useState(false);
+  
 
   const _Component = {
     list: (handleData, options, data) => (
@@ -1503,10 +1641,22 @@ function TabVuln(props) {
           props.Count("vuln");
           setIsDone(true);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          props.Count("vuln");
+          setIsDone(true);
+          console.error(err)
+        });
     }
-    getData();
+    if (!props.options.isAnalyze && !isDone){
+      setIsDone(true)
+      getData();
+    }
+    if (props.options.isAnalyze){
+      getData();
+    }
   }, [props.data]);
+
+  
 
   return (
     <div id="tab-vuln" className="card-body__">
