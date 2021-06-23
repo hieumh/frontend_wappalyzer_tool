@@ -683,6 +683,16 @@ function TabDic(props) {
         })
         .catch((err) => console.error(err));
 
+    }
+    if (!props.data.length) {
+      return;
+    }
+    let options = createHTTPHeader(props.options);
+    getData(options);
+  }, [props.data, props.options]);
+
+  useEffect(() => {
+    async function getData({ header, query }) {
       fetch(host + "/url_analyze/gobuster" + query, header)
         .then((res) => res.json())
         .then((data) => {
@@ -701,13 +711,10 @@ function TabDic(props) {
         })
         .catch((err) => console.error(err));
     }
-    if (!props.data.length) {
-      return;
-    }
+
     let options = createHTTPHeader(props.options);
     getData(options);
   }, []);
-
 
   function createTree(dic) {
     let keys = Object.keys(dic);
@@ -1499,7 +1506,7 @@ function TabVuln(props) {
         .catch((err) => console.error(err));
     }
     getData();
-  }, []);
+  }, [props.data]);
 
   return (
     <div id="tab-vuln" className="card-body__">
