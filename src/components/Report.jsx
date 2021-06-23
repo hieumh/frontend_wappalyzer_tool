@@ -607,7 +607,6 @@ function CMSScanSegment(props){
   const droopescan = result.droopescan.droope ? result.droopescan.droope : {}
   const joomscan = result.joomscan.joomscan ? result.joomscan.joomscan : {}
 
-  console.log('this is scan',joomscan)
   return (<>
     <div>
       <h3>Wpscan</h3>
@@ -626,7 +625,7 @@ function CMSScanSegment(props){
     <div>
       <h3>Joomscan</h3>
       {
-        joomscan ? joomscan.joomscan.split('\n').map((element,index)=>{
+        joomscan.joomscan ? joomscan.joomscan.split('\n').map((element,index)=>{
           return (<>
           <code key={index}>
             {element}
