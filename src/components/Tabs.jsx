@@ -689,7 +689,7 @@ function TabDic(props) {
     }
     let options = createHTTPHeader(props.options);
     getData(options);
-  }, [props.data, props.options]);
+  }, [props.data]);
 
   useEffect(() => {
     async function getData({ header, query }) {
