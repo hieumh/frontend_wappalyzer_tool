@@ -505,3 +505,28 @@ i {
 .block-level-1 > .__group > .block-level-2 {
   border-bottom: 1px solid rgb(200, 200, 200);
 }
+
+.container article{
+    
+  background: #e6e6e6;
+  margin-top: -1px;
+  overflow: hidden;
+  height: 0px;
+  position: relative;
+  z-index: 10;
+  -webkit-transition: height 0.3s ease-in-out;
+  -moz-transition: height 0.3s ease-in-out;
+  -o-transition: height 0.3s ease-in-out;
+  -ms-transition: height 0.3s ease-in-out;
+  transition: height 0.3s ease-in-out;
+}
+.container input:checked ~ article{
+  -webkit-transition: height 0.5s ease-in-out;
+  -moz-transition: height 0.5s ease-in-out;
+  -o-transition: height 0.5s ease-in-out;
+  -ms-transition: height 0.5s ease-in-out;
+  transition: height 0.5s ease-in-out;
+}
+.container input:checked ~ article.small{
+  height: 140px;
+}

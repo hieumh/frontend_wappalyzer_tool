@@ -5,21 +5,38 @@ import { Pie, Bar } from "react-chartjs-2";
 import { host } from "../lib_front";
 
 function Dashboard(props) {
+  const [dashboard, setDashboard] = useState({})
+
+  useEffect(()=>{
+    fetch(host + "/dashboard", {
+      method: "get",
+      mode: "cors",
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setDashboard(data);
+      })
+      .catch((error) => console.error(error));
+  },[])
+
   return (
     <div id="home">
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
-            <NumTech />
+            <NumTech number_of_lang={dashboard.number_of_lang}/>
           </Grid.Column>
           <Grid.Column width={4}>
-            <NumFrame />
+            <NumFrame number_of_frame={dashboard.number_of_frame}/>
           </Grid.Column>
           <Grid.Column width={4}>
-            <NumVuln />
+            <NumVuln number_of_vuln={dashboard.number_of_vuln}/>
           </Grid.Column>
           <Grid.Column width={4}>
-            <NumReport />
+            <NumReport number_of_report={dashboard.number_of_report}/>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
@@ -27,7 +44,7 @@ function Dashboard(props) {
             <Card>
               <Card.Content>
                 <Card.Header>Programing language ratio</Card.Header>
-                <LanguageChart />
+                <LanguageChart lang_ratio={dashboard.lang_ratio}/>
               </Card.Content>
             </Card>
           </Grid.Column>
@@ -35,7 +52,7 @@ function Dashboard(props) {
             <Card fluid>
               <Card.Content>
                 <Card.Header>Framework ratio</Card.Header>
-                <FameworkChart />
+                <FameworkChart frame_ratio={dashboard.frame_ratio}/>
               </Card.Content>
             </Card>
           </Grid.Column>
@@ -43,7 +60,7 @@ function Dashboard(props) {
             <Card fluid>
               <Card.Content>
                 <Card.Header>URL</Card.Header>
-                <ListUrl />
+                <ListUrl top_url={dashboard.top_url}/>
               </Card.Content>
             </Card>
           </Grid.Column>
@@ -54,7 +71,7 @@ function Dashboard(props) {
             <Card fluid>
               <Card.Content>
                 <Card.Header>Top waf detect</Card.Header>
-                <ListWaf />
+                <ListWaf top_waf={dashboard.top_waf}/>
               </Card.Content>
             </Card>
           </Grid.Column>
@@ -62,7 +79,7 @@ function Dashboard(props) {
             <Card fluid>
               <Card.Content>
                 <Card.Header>Top Vulnerability</Card.Header>
-                <ListVuln />
+                <ListVuln top_vuln={dashboard.top_vuln}/>
               </Card.Content>
             </Card>
           </Grid.Column>
@@ -73,143 +90,55 @@ function Dashboard(props) {
 }
 
 function NumFrame(props) {
-  const [numFramework, setFramework] = useState("");
-
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/element?type=framework&option=number", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setFramework(data);
-        })
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
-
+  const number_of_frame = props.number_of_frame ? props.number_of_frame : 0
   return (
     <Statistic>
       <Statistic.Label>Number of Framework</Statistic.Label>
-      <Statistic.Value>{numFramework}</Statistic.Value>
+      <Statistic.Value>{number_of_frame}</Statistic.Value>
     </Statistic>
   );
 }
 
 function NumTech(props) {
-  const [numTech, setTech] = useState("");
+  const number_of_lang = props.number_of_lang ? props.number_of_lang : 0
 
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/element?type=language&option=number", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setTech(data)})
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
   return (
     <Statistic>
       <Statistic.Label>Number of language</Statistic.Label>
-      <Statistic.Value>{numTech}</Statistic.Value>
+      <Statistic.Value>{number_of_lang}</Statistic.Value>
     </Statistic>
   );
 }
 
 function NumVuln(props) {
-  const [numVuln, setVuln] = useState([]);
-
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/num_vuln", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => setVuln(data))
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
-
+  const number_of_vuln = props.number_of_vuln ? props.number_of_vuln : 0
   return (
     <Statistic>
       <Statistic.Label>Number of Vuln</Statistic.Label>
-      <Statistic.Value>{numVuln}</Statistic.Value>
+      <Statistic.Value>{number_of_vuln}</Statistic.Value>
     </Statistic>
   );
 }
 
 function NumReport(props) {
-  const [numReport, setReport] = useState("");
-
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/num_report", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => setReport(data))
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
+  const number_of_report = props.number_of_report ? props.number_of_report : 0
   return (
     <Statistic>
       <Statistic.Label>Number of report</Statistic.Label>
-      <Statistic.Value>{numReport}</Statistic.Value>
+      <Statistic.Value>{number_of_report}</Statistic.Value>
     </Statistic>
   );
 }
 
 function LanguageChart(props) {
-  const [programRatio, setProgramRatio] = useState({
-    label: [],
-    data: [],
-  });
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/element?type=language&option=ratio", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) =>
-          setProgramRatio({
-            label: data.map((element) => element["programing_language"]),
-            data: data.map((element) => element["count"]),
-          })
-        )
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
+  const lang_ratio = {
+    label: Array.isArray(props.lang_ratio) ? props.lang_ratio.map((element) => element["programing_language"]) : [],
+    data: Array.isArray(props.lang_ratio) ? props.lang_ratio.map((element) => element["count"]) : [],
+  };
   return (
     <Pie
       data={{
-        labels: programRatio.label,
+        labels: lang_ratio.label,
         datasets: [
           {
             label: "Rainfall",
@@ -227,7 +156,7 @@ function LanguageChart(props) {
               "#35014F",
               "#501800",
             ],
-            data: programRatio.data,
+            data: lang_ratio.data,
           },
         ],
       }}
@@ -249,10 +178,10 @@ function LanguageChart(props) {
 }
 
 function FameworkChart(props) {
-  const [frameworkRatio, setFrameworkRatio] = useState({
-    label: [],
-    data: [],
-  });
+  const frame_ratio = {
+    label: Array.isArray(props.frame_ratio) ? props.frame_ratio.map((element) => element["framework"]) : [],
+    data: Array.isArray(props.frame_ratio) ? props.frame_ratio.map((element) => element["count"]) : []
+  };
   const options = {
     plugins: {
       legend: {
@@ -261,31 +190,10 @@ function FameworkChart(props) {
     },
   };
 
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/element?type=framework&option=ratio", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) =>
-          setFrameworkRatio({
-            label: data.map((element) => element["framework"]),
-            data: data.map((element) => element["count"]),
-          })
-        )
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
-
   return (
     <Bar
       data={{
-        labels: frameworkRatio.label,
+        labels: frame_ratio.label,
         datasets: [
           {
             backgroundColor: [
@@ -302,7 +210,7 @@ function FameworkChart(props) {
               "#35014F",
               "#501800",
             ],
-            data: frameworkRatio.data,
+            data: frame_ratio.data,
           },
         ],
       }}
@@ -314,23 +222,7 @@ function FameworkChart(props) {
 }
 
 function ListWaf(props) {
-  const [listTopWaf, setListTopWaf] = useState([]);
-
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/get_five_most_common?type=waf", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => setListTopWaf(data))
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
+  const top_waf = Array.isArray(props.top_waf) ? props.top_waf : []
 
   return (
     <Table singleLine>
@@ -342,16 +234,16 @@ function ListWaf(props) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {listTopWaf
-          ? listTopWaf.map((element, index) => {
-              return (
-                <Table.Row key={index}>
-                  <Table.Cell>{element.waf.firewall}</Table.Cell>
-                  <Table.Cell>{element.waf.manufacturer}</Table.Cell>
-                  <Table.Cell>{element.count}</Table.Cell>
-                </Table.Row>
-              );
-            })
+        {top_waf.length
+          ? top_waf.map((element, index) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>{element.waf.firewall}</Table.Cell>
+                <Table.Cell>{element.waf.manufacturer}</Table.Cell>
+                <Table.Cell>{element.count}</Table.Cell>
+              </Table.Row>
+            );
+          })
           : null}
       </Table.Body>
     </Table>
@@ -359,23 +251,7 @@ function ListWaf(props) {
 }
 
 function ListVuln(props) {
-  const [listTopVuln, setListTopVuln] = useState([]);
-
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/get_five_most_common?type=vuln", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => setListTopVuln(data))
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
+  const top_vuln = Array.isArray(props.top_vuln) ? props.top_vuln : [];
 
   return (
     <Table singleLine>
@@ -387,20 +263,20 @@ function ListVuln(props) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {listTopVuln
-          ? listTopVuln.map((element, index) => {
-              return (
-                <Table.Row key={index}>
-                  <Table.Cell>{element.vuln.Platform}</Table.Cell>
-                  <Table.Cell>
-                    {element.vuln.Title.length >= 50
-                      ? element.vuln.Title.slice(0, 50) + "..."
-                      : element.vuln.Title}
-                  </Table.Cell>
-                  <Table.Cell>{element.count}</Table.Cell>
-                </Table.Row>
-              );
-            })
+        {top_vuln.length
+          ? top_vuln.map((element, index) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>{element.vuln.Platform}</Table.Cell>
+                <Table.Cell>
+                  {element.vuln.Title.length >= 50
+                    ? element.vuln.Title.slice(0, 50) + "..."
+                    : element.vuln.Title}
+                </Table.Cell>
+                <Table.Cell>{element.count}</Table.Cell>
+              </Table.Row>
+            );
+          })
           : null}
       </Table.Body>
     </Table>
@@ -408,23 +284,7 @@ function ListVuln(props) {
 }
 
 function ListUrl(props) {
-  const [urlList, setUrlList] = useState([]);
-
-  useEffect(() => {
-    async function getData() {
-      fetch(host + "/dashboard/get_five_most_common?type=url", {
-        method: "get",
-        mode: "cors",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => setUrlList(data))
-        .catch((error) => console.error(error));
-    }
-    getData();
-  }, []);
+  const top_url = Array.isArray(props.top_url) ? props.top_url : [];
 
   return (
     <Table singleLine size="small">
@@ -435,19 +295,19 @@ function ListUrl(props) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {urlList
-          ? urlList.map((element, index) => {
-              return (
-                <Table.Row key={index}>
-                  <Table.Cell>
-                    {element.url.length >= 15
-                      ? element.url.slice(0, 15) + "..."
-                      : element.url}
-                  </Table.Cell>
-                  <Table.Cell>{element.count}</Table.Cell>
-                </Table.Row>
-              );
-            })
+        {top_url.length
+          ? top_url.map((element, index) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>
+                  {element.url.length >= 15
+                    ? element.url.slice(0, 15) + "..."
+                    : element.url}
+                </Table.Cell>
+                <Table.Cell>{element.count}</Table.Cell>
+              </Table.Row>
+            );
+          })
           : null}
       </Table.Body>
     </Table>
