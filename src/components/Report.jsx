@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Header,
@@ -8,13 +8,15 @@ import {
   List,
   Table,
   TableBody,
+  Accordion,
+  Icon,
+  AccordionContent
 } from "semantic-ui-react";
 import { json2htmlver2 } from "../lib_front";
 
 function Report(props) {
   const report = JSON.parse(localStorage.report);
   const linkImg = `http://localhost:3000/analyze_result/screenshot?pic=${report.pic}`;
-  // return <div>{json2htmlver2(JSON.parse(localStorage.report))}</div>
   return (
     <Container style={{ margin: 20 }}>
       <Header as="h1" dividing>
@@ -50,7 +52,7 @@ function Report(props) {
       <Segment>
         <Header as="h2" content="Technologies" />
         <h3>Runtime:</h3>
-        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+        <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
           <li>Wappalyzer: {report.wapp ? report.wapp.runtime : "unknown"}</li>
           <li>Netcraft: {report.netcraft ? report.netcraft.runtime : "unknown"}</li>
           <li>Largeio: {report.largeio ? report.largeio.runtime : "unknown"}</li>
@@ -71,10 +73,11 @@ function Report(props) {
       <Segment>
         <Header as="h2" content="Domain" />
         <h3>Runtime:</h3>
-        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+        <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
           <li>whois: {report.whois ? report.whois.runtime : "unknown"}</li>
           <li>sublist3r: {report.sublist3r ? report.sublist3r.runtime : "unknown"}</li>
         </ul>
+        <hr />
         <DomainWhoisSegment whois={report.whois} />
         <hr />
         <DomainSublist3rSegment sublist3r={report.sublist3r} />
@@ -82,59 +85,62 @@ function Report(props) {
       <Segment>
         <Header as="h2" content="Directories" />
         <h3>Runtime:</h3>
-        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+        <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
           <li>gobuster: {report.gobuster ? report.gobuster.runtime : "unknown"}</li>
         </ul>
-        <Header as="h3" content="Wappalyzer tree" />
-        <p>This information extract from wappalyzer result analyze.</p>
+        <hr />
         <DirectoriesDicSegment dic={report.dic} />
         <hr />
-        <Header as="h3" content="Gobuster tree" />
         <DirectoriesGobusterSegment gobuster={report.gobuster} />
       </Segment>
       <Segment>
-      <Header as="h2" content="DNS" />
-      <h3>Runtime:</h3>
-        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+        <Header as="h2" content="DNS" />
+        <h3>Runtime:</h3>
+        <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
           <li>Dig: {report.dig ? report.dig.runtime : "unknown"}</li>
           <li>Fierce: {report.fierce ? report.fierce.runtime : "unknown"}</li>
         </ul>
+        <hr />
         <DnsDigSegment dig={report.dig} />
         <hr />
         <DnsFierceSegment fierce={report.fierce} />
       </Segment>
       <Segment>
-      <Header as="h2" content="Detect website application firewall" />
-      <h3>Runtime:</h3>
-        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+        <Header as="h2" content="Detect website application firewall" />
+        <h3>Runtime:</h3>
+        <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
           <li>Wafw00f: {report.wafw00f ? report.wafw00f.runtime : "unknown"}</li>
         </ul>
+        <hr />
         <DetectWafSegment wafs={report.wafw00f} />
       </Segment>
 
       <Segment>
         <Header as="h2" content="Server information" />
         <h3>Runtime:</h3>
-        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+        <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
           <li>Nmap: {report.nmap ? report.nmap.runtime : "unknown"}</li>
           <li>Nikto: {report.nikto ? report.nikto.runtime : "unknown"}</li>
         </ul>
+        <hr />
         <ServerInformationSegment nmap={report.nmap} nikto={report.nikto} />
       </Segment>
 
       <Segment>
         <Header as="h2" content="CMS scan" />
         <h3>Runtime:</h3>
-        <ul style={{listStyleType:"circle", paddingLeft:"30px"}}>
+        <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
           <li>Wpscan: {report.wpscan ? report.wpscan.runtime : "unknown"}</li>
           <li>Droopescan: {report.droopescan ? report.droopescan.runtime : "unknown"}</li>
           <li>Joomscan: {report.joomscan ? report.joomscan.runtime : "unknown"}</li>
         </ul>
+        <hr />
         <CMSScanSegment wpscan={report.wpscan} droopescan={report.droopescan} joomscan={report.joomscan} />
       </Segment>
 
       <Segment>
         <Header as="h2" content="Vulnerabilities" />
+        <hr />
         <VulnerabiltiesSegment vulns={report.vulns} />
       </Segment>
     </Container>
@@ -165,7 +171,7 @@ function TechnologiesSegments(props) {
   function CreateTableContent(props) {
     let list = Array.isArray(props.list) ? props.list : [];
     list = list.map((element) => {
-      if(Array.isArray(element)){
+      if (Array.isArray(element)) {
         return element.sort(compareFunc);
       }
       return []
@@ -208,170 +214,194 @@ function TechnologiesSegments(props) {
   );
 }
 
-function DomainSublist3rSegment(props){
+function DomainSublist3rSegment(props) {
   const sublist3r = props.sublist3r ? props.sublist3r : {}
   const domains = Array.isArray(sublist3r.domains) ? sublist3r.domains : []
-  return(<>
-    <h3>Sublist3r</h3>
-    <div style={{height:"30vh",overflow:"auto"}}>{
-      domains.map((element,index)=>{
-        return <p key={index}>{element}</p>
-      })
-    }
-    </div>
-    
-  </>)
+  const [active, setActive] = useState(false)
+
+  function handleClick() {
+    setActive(!active)
+  }
+  return (
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}><Icon name='dropdown' />Sublist3r</Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        <div style={{ height: "30vh", overflow: "auto" }}>{
+          domains.map((element, index) => {
+            return <p key={index}>{element}</p>
+          })
+        }
+        </div>
+      </Accordion.Content>
+    </Accordion>)
 }
 
 function DomainWhoisSegment(props) {
   const whois = props.whois ? props.whois : {};
   const domains = whois.domains ? whois.domains : {};
+  const [active, setActive] = useState(false)
+
+  function handleClick() {
+    setActive(!active)
+  }
+
   return (
-    <div>
-      <h3>Whois</h3>
-      <b>Domain name</b>:
-      {domains.domain_name ? (
-        domains.domain_name.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Creation date</b>:
-      {domains.creation_date ? (
-        domains.creation_date.map((ele, index) => {
-          return <p key={index}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Dnssec</b>:
-      {domains.dnssec ? (
-        domains.dnssec.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Email</b>:{" "}
-      {domains.email ? (
-        domains.email.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Expiration date</b>:
-      {domains.expiration_date ? (
-        domains.expiration_date.map((ele, index) => {
-          return <p key={index}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Name server</b>:
-      {domains.name_server ? (
-        domains.name_server.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Org</b>:
-      {domains.org ? (
-        domains.org.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Referral url</b>:
-      {domains.referral_url ? (
-        domains.referral_url.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Registrar</b>:
-      {domains.registrar ? (
-        domains.registrar.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>State</b>:
-      {domains.state ? (
-        domains.state.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Status</b>:{" "}
-      {domains.status ? (
-        domains.status.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Updated date</b>:{" "}
-      {domains.updated_date ? (
-        domains.updated_date.map((ele, index) => {
-          return <p key={index}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Whois server</b>:
-      {domains.whois_server ? (
-        domains.whois_server.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Address</b>:
-      {domains.address ? (
-        domains.address.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>City</b>:
-      {domains.city ? (
-        domains.city.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Country</b>:
-      {domains.country ? (
-        domains.country.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-      <b>Zipcode</b>:
-      {domains.zipcode ? (
-        domains.zipcode.map((ele) => {
-          return <p key={ele}>{ele}</p>;
-        })
-      ) : (
-        <p>unknown</p>
-      )}
-    </div>
+      <Accordion fluid styled>
+        <Accordion.Title active={active} onClick={handleClick}>
+          <Icon name='dropdown' />
+          Whois
+        </Accordion.Title>
+        <Accordion.Content active={active} style={{ backgroundColor: 'white' }} id="whois">
+          <b>Domain name:</b>
+          {domains.domain_name ? (
+            domains.domain_name.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Creation date:</b>
+          {domains.creation_date ? (
+            domains.creation_date.map((ele, index) => {
+              return <p key={index}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Dnssec:</b>
+          {domains.dnssec ? (
+            domains.dnssec.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Email:</b>{" "}
+          {domains.email ? (
+            domains.email.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Expiration date:</b>
+          {domains.expiration_date ? (
+            domains.expiration_date.map((ele, index) => {
+              return <p key={index}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Name server:</b>
+          {domains.name_server ? (
+            domains.name_server.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Org:</b>
+          {domains.org ? (
+            domains.org.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Referral url:</b>
+          {domains.referral_url ? (
+            domains.referral_url.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Registrar:</b>
+          {domains.registrar ? (
+            domains.registrar.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>State:</b>
+          {domains.state ? (
+            domains.state.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Status:</b>{" "}
+          {domains.status ? (
+            domains.status.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Updated date:</b>{" "}
+          {domains.updated_date ? (
+            domains.updated_date.map((ele, index) => {
+              return <p key={index}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Whois server:</b>
+          {domains.whois_server ? (
+            domains.whois_server.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Address:</b>
+          {domains.address ? (
+            domains.address.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>City:</b>
+          {domains.city ? (
+            domains.city.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Country:</b>
+          {domains.country ? (
+            domains.country.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+          <b>Zipcode:</b>
+          {domains.zipcode ? (
+            domains.zipcode.map((ele) => {
+              return <p key={ele}>{ele}</p>;
+            })
+          ) : (
+            <p>unknown</p>
+          )}
+        </Accordion.Content>
+      </Accordion>
   );
 }
 
 function DirectoriesDicSegment(props) {
   const dic = props.dic ? props.dic : {};
   const tree = dic.trees ? dic.trees : JSON.stringify({});
+  const [active, setActive] = useState(false)
+
+  function handleClick() {
+    setActive(!active)
+  }
+
   function createTree(dic) {
     let keys = Object.keys(dic);
 
@@ -405,167 +435,235 @@ function DirectoriesDicSegment(props) {
     });
   }
 
-  return <div>{createTree(JSON.parse(tree))}</div>;
+  return (
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Wappalyzer tree
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        {createTree(JSON.parse(tree))}
+      </Accordion.Content>
+    </Accordion>
+  );
 }
 
 function DirectoriesGobusterSegment(props) {
   const _gobuster = props.gobuster ? props.gobuster : {};
   const gobuster = _gobuster.gobuster ? _gobuster.gobuster : {};
+  const [active, setActive] = useState(false)
+
+  function handleClick() {
+    setActive(!active)
+  }
+
   return (
-    <div>
-      <ul>
-        {!Array.isArray(gobuster.directories) ? (
-          <p></p>
-        ) : (
-          gobuster.directories.map((ele, index) => {
-            return (
-              <li key={index}>
-                <Image
-                  alt="folder"
-                  src="/icons/website/folder-solid.svg"
-                  wrapped
-                  className="img"
-                />
-                {" " + ele}
-              </li>
-            );
-          })
-        )}
-      </ul>
-      <ul>
-        {!Array.isArray(gobuster.files) ? (
-          <p></p>
-        ) : (
-          gobuster.files.map((ele, index) => {
-            return (
-              <li key={index}>
-                <Image
-                  alt="file"
-                  src="/icons/website/sticky-note-regular.svg"
-                  wrapped
-                  className="img"
-                />
-                {" " + ele}
-              </li>
-            );
-          })
-        )}
-      </ul>
-    </div>
+      <Accordion fluid styled>
+        <Accordion.Title active={active} onClick={handleClick}>
+          <Icon name='dropdown' />
+          Gobuster
+        </Accordion.Title>
+        <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+          <ul>
+            {!Array.isArray(gobuster.directories) ? (
+              <p></p>
+            ) : (
+              gobuster.directories.map((ele, index) => {
+                return (
+                  <li key={index}>
+                    <Image
+                      alt="folder"
+                      src="/icons/website/folder-solid.svg"
+                      wrapped
+                      className="img"
+                    />
+                    {" " + ele}
+                  </li>
+                );
+              })
+            )}
+          </ul>
+          <ul>
+            {!Array.isArray(gobuster.files) ? (
+              <p></p>
+            ) : (
+              gobuster.files.map((ele, index) => {
+                return (
+                  <li key={index}>
+                    <Image
+                      alt="file"
+                      src="/icons/website/sticky-note-regular.svg"
+                      wrapped
+                      className="img"
+                    />
+                    {" " + ele}
+                  </li>
+                );
+              })
+            )}
+          </ul>
+        </Accordion.Content>
+      </Accordion>
   );
 }
 
 function DnsDigSegment(props) {
   const dig = props.dig ? props.dig : {};
   const dns = dig.dns ? JSON.parse(dig.dns) : {};
-  return (
-    <div>
-      <Table basic="very" celled collapsing>
-        <TableBody>
-          {(() => {
-            let keys = Object.keys(dns);
+  const [active, setActive] = useState(false)
 
-            return keys.map((key, index) => {
-              return (
-                <Table.Row key={index}>
-                  <Table.Cell>Type {key}</Table.Cell>
-                  <Table.Cell>
-                    {dns[key]
-                      .split("\n")
-                      .filter((element) => element !== "")
-                      .map((element, index) => (
-                        <code key={index}>
-                          {element === "\n" || !element ? null : element}
-                          <br />
-                        </code>
-                      ))}
-                  </Table.Cell>
-                </Table.Row>
-              );
-            });
-          })()}
-        </TableBody>
-      </Table>
-    </div>
+  function handleClick() {
+    setActive(!active)
+  }
+
+  return (
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Dig
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        <Table basic="very" celled collapsing>
+          <TableBody>
+            {(() => {
+              let keys = Object.keys(dns);
+
+              return keys.map((key, index) => {
+                return (
+                  <Table.Row key={index}>
+                    <Table.Cell>Type {key}</Table.Cell>
+                    <Table.Cell>
+                      {dns[key]
+                        .split("\n")
+                        .filter((element) => element !== "")
+                        .map((element, index) => (
+                          <code key={index}>
+                            {element === "\n" || !element ? null : element}
+                            <br />
+                          </code>
+                        ))}
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              });
+            })()}
+          </TableBody>
+        </Table>
+      </Accordion.Content>
+    </Accordion>
   );
 }
 
-function DnsFierceSegment(props){
+function DnsFierceSegment(props) {
   const temp = props.fierce ? props.fierce : {}
   let fierce = temp.dns ? temp.dns : ""
   let output = fierce.replaceAll('"', "").replace(/\\n|\\t/g, "|");
   output = output.split("|");
   output = output.filter((element) => element.length);
+  const [active, setActive] = useState(false)
 
-  return(<div>
-    <h3 style={{fontSize: "1.28571429rem"}}>Fierce</h3>
-    {output.map((element, index) => (
-      <code key={index}>
-        {element === "\n" || !element ? null : element}
-        <br />
-      </code>
-    ))}
-  </div>)
+  function handleClick() {
+    setActive(!active)
+  }
+
+  return (
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Fierce
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        {output.map((element, index) => (
+          <code key={index}>
+            {element === "\n" || !element ? null : element}
+            <br />
+          </code>
+        ))}
+      </Accordion.Content>
+    </Accordion>)
 }
 
 function DetectWafSegment(props) {
   const wafw00f = props.wafs ? props.wafs : {};
   const wafs = wafw00f.waf ? wafw00f.waf : [];
+  const [active, setActive] = useState(false)
+
+  function handleClick() {
+    setActive(!active)
+  }
 
   return (
-    <div>
-      <h3>Wafw00f</h3>
-      {wafs.map((ele, index) => {
-        return (
-          <div key={index}>
-            <b>Firewall:</b>
-            <p>{ele.firewall}</p>
-            <b>Manufacturer:</b>
-            <p>{ele.manufacturer}</p>
-            <hr />
-          </div>
-        );
-      })}
-    </div>
-  );
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Wafw00f
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        {wafs.map((ele, index) => {
+          return (
+            <div key={index}>
+              <b>Firewall:</b>
+              <p>{ele.firewall}</p>
+              <b>Manufacturer:</b>
+              <p>{ele.manufacturer}</p>
+              <hr />
+            </div>
+          );
+        })}
+      </Accordion.Content>
+    </Accordion>)
 }
 
 function VulnerabiltiesSegment(props) {
   const vulns = props.vulns ? props.vulns : [];
-  return (
-    <Table fixed>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Author</Table.HeaderCell>
-          <Table.HeaderCell>Date</Table.HeaderCell>
-          <Table.HeaderCell>EDB-ID</Table.HeaderCell>
-          <Table.HeaderCell>Path</Table.HeaderCell>
-          <Table.HeaderCell>Platform</Table.HeaderCell>
-          <Table.HeaderCell>Title</Table.HeaderCell>
-          <Table.HeaderCell>Type</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
+  const [active, setActive] = useState(false)
 
-      <Table.Body>
-        {vulns.map((vuln, index) => {
-          return (
-            <Table.Row key={index}>
-              <Table.Cell>{vuln["Author"]}</Table.Cell>
-              <Table.Cell>{vuln["Date"]}</Table.Cell>
-              <Table.Cell>{vuln["EDB-ID"]}</Table.Cell>
-              <Table.Cell>
-                <a href={vuln["Path"]} target="_blank" rel="noreferrer">
-                  {vuln["Path"]}
-                </a>
-              </Table.Cell>
-              <Table.Cell>{vuln["Platform"]}</Table.Cell>
-              <Table.Cell>{vuln["Title"]}</Table.Cell>
-              <Table.Cell>{vuln["Type"]}</Table.Cell>
+  function handleClick() {
+    setActive(!active)
+  }
+
+  return (
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Vulnerabilties
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        <Table fixed>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Author</Table.HeaderCell>
+              <Table.HeaderCell>Date</Table.HeaderCell>
+              <Table.HeaderCell>EDB-ID</Table.HeaderCell>
+              <Table.HeaderCell>Path</Table.HeaderCell>
+              <Table.HeaderCell>Platform</Table.HeaderCell>
+              <Table.HeaderCell>Title</Table.HeaderCell>
+              <Table.HeaderCell>Type</Table.HeaderCell>
             </Table.Row>
-          );
-        })}
-      </Table.Body>
-    </Table>
+          </Table.Header>
+
+          <Table.Body>
+            {vulns.map((vuln, index) => {
+              return (
+                <Table.Row key={index}>
+                  <Table.Cell>{vuln["Author"]}</Table.Cell>
+                  <Table.Cell>{vuln["Date"]}</Table.Cell>
+                  <Table.Cell>{vuln["EDB-ID"]}</Table.Cell>
+                  <Table.Cell>
+                    <a href={vuln["Path"]} target="_blank" rel="noreferrer">
+                      {vuln["Path"]}
+                    </a>
+                  </Table.Cell>
+                  <Table.Cell>{vuln["Platform"]}</Table.Cell>
+                  <Table.Cell>{vuln["Title"]}</Table.Cell>
+                  <Table.Cell>{vuln["Type"]}</Table.Cell>
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table>
+      </Accordion.Content>
+    </Accordion>
   );
 }
 
@@ -574,65 +672,117 @@ function ServerInformationSegment(props) {
   const nmap = temp1.nmap ? temp1.nmap : "";
   const temp2 = props.nikto ? props.nikto : {};
   const nikto = temp2.nikto ? JSON.parse(temp2.nikto) : {};
+  const [active, setActive] = useState({
+    nmap: false,
+    nikto: false
+  })
 
-  return (
-    <>
-      <div>
-        <h3 style={{fontSize: "1.28571429rem"}}>Nmap</h3>
+  function handleClick(e) {
+    let key = e.target.childNodes[1].textContent
+    key = key.toLowerCase()
+
+    setActive(prev => {
+      return {
+        ...prev,
+        [key]: !prev[key]
+      }
+    })
+  }
+
+  return (<>
+    <Accordion fluid styled>
+      <Accordion.Title active={active.nmap} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Nmap
+      </Accordion.Title>
+      <Accordion.Content active={active.nmap} style={{ backgroundColor: 'white' }}>
         {nmap.split("\n").map((element, index) => (
           <code key={index}>
             {element === "\n" || !element ? null : element}
             <br />
           </code>
         ))}
-      </div>
-      <hr />
-      <div>
-        <h3 style={{fontSize: "1.28571429rem"}}>Nikto</h3>
+      </Accordion.Content>
+    </Accordion>
+    <hr />
+    <Accordion fluid styled>
+      <Accordion.Title active={active.nikto} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Nikto
+      </Accordion.Title>
+      <Accordion.Content active={active.nikto} style={{ backgroundColor: 'white' }}>
         {json2htmlver2(nikto)}
-      </div>
-    </>
-  );
+      </Accordion.Content>
+    </Accordion>
+  </>);
 }
 
-function CMSScanSegment(props){
+function CMSScanSegment(props) {
   const result = {
-    wpscan:props.wpscan ? props.wpscan : {},
-    droopescan:props.droopescan ? props.droopescan : {},
-    joomscan:props.joomscan ? props.joomscan : {},
+    wpscan: props.wpscan ? props.wpscan : {},
+    droopescan: props.droopescan ? props.droopescan : {},
+    joomscan: props.joomscan ? props.joomscan : {},
   }
-  
+
 
   const wpscan = result.wpscan.wp ? result.wpscan.wp : {}
   const droopescan = result.droopescan.droope ? result.droopescan.droope : {}
   const joomscan = result.joomscan.joomscan ? result.joomscan.joomscan : {}
+  const [active, setActive] = useState({
+    wpscan: false,
+    droopescan: false,
+    joomscan: false
+  })
+
+  function handleClick(e) {
+    let key = e.target.childNodes[1].textContent
+    key = key.toLowerCase()
+
+    setActive(prev => {
+      return {
+        ...prev,
+        [key]: !prev[key]
+      }
+    })
+  }
 
   return (<>
-    <div>
-      <h3>Wpscan</h3>
-      {
-        json2htmlver2(wpscan)
-      }
-    </div>
-    <hr /> 
-    <div>
-      <h3>Droopescan</h3>
-      {
-        json2htmlver2(droopescan)
-      }
-    </div>
-    <hr /> 
-    <div>
-      <h3>Joomscan</h3>
-      {
-        joomscan.joomscan ? joomscan.joomscan.split('\n').map((element,index)=>{
+    <Accordion fluid styled>
+      <Accordion.Title active={active.wpscan} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Wpscan
+      </Accordion.Title>
+      <Accordion.Content active={active.wpscan} style={{ backgroundColor: 'white' }}>
+        {
+          json2htmlver2(wpscan)
+        }
+      </Accordion.Content>
+    </Accordion>
+    <hr />
+    <Accordion fluid styled>
+      <Accordion.Title active={active.droopescan} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Droopescan
+      </Accordion.Title>
+      <Accordion.Content active={active.droopescan} style={{ backgroundColor: 'white' }}>
+        {json2htmlver2(droopescan)}
+      </Accordion.Content>
+    </Accordion>
+    <hr />
+    <Accordion fluid styled>
+      <Accordion.Title active={active.joomscan} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Joomscan
+      </Accordion.Title>
+      <Accordion.Content active={active.joomscan} style={{ backgroundColor: 'white' }}>
+        {joomscan.joomscan ? joomscan.joomscan.split('\n').map((element, index) => {
           return (<>
-          <code key={index}>
-            {element}
-          </code><br />
+            <code key={index}>
+              {element}
+            </code><br />
           </>)
-        }) : "" 
-      }
-    </div>
+        }) : ""}
+      </Accordion.Content>
+    </Accordion>
   </>)
 }

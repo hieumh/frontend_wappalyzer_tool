@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Card, Icon, Form, Button, Image, Loader } from "semantic-ui-react";
+import { Card, Icon, Form, Button, Image, Loader, Table } from "semantic-ui-react";
 import { host } from "../lib_front";
 import { json2htmlver2, createHTTPHeader, handleKey } from "../lib_front";
 
@@ -1282,9 +1282,30 @@ function TabServerNmap(props) {
 
 function TabServerNikto(props) {
   const nikto = props.nikto ? props.nikto : { empty: true };
+  console.log(nikto)
+  if (nikto.empty) {
+    return <div></div>
+  }
   return (
+    // <div>
+    //   <div>{!nikto.empty ? json2htmlver2(nikto) : null}</div>
+    // </div>
     <div>
-      <div>{!nikto.empty ? json2htmlver2(nikto) : null}</div>
+      <Table striped>
+        <Table.Header>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell collapsing>
+                <Icon name='folder' />
+                node_modules
+              </Table.Cell>
+              <Table.Cell>Initial commit</Table.Cell>
+              <Table.Cell>10 hours ago</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table.Header>
+
+      </Table>
     </div>
   );
 }
@@ -1596,15 +1617,13 @@ function TabScan(props) {
   );
 }
 
-// function TabVuln(props){
-//     return <div>Hello world</div>
-// }
+
 
 function TabVuln(props) {
   const [feature, setFeature] = useState("list");
   const [vulns, setVuln] = useState([]);
   const [isDone, setIsDone] = useState(false);
-  
+
 
   const _Component = {
     list: (handleData, options, data) => (
@@ -1647,16 +1666,16 @@ function TabVuln(props) {
           console.error(err)
         });
     }
-    if (!props.options.isAnalyze && !isDone){
+    if (!props.options.isAnalyze && !isDone) {
       setIsDone(true)
       getData();
     }
-    if (props.options.isAnalyze){
+    if (props.options.isAnalyze) {
       getData();
     }
   }, [props.data]);
 
-  
+
 
   return (
     <div id="tab-vuln" className="card-body__">
