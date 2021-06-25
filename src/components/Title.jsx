@@ -4,7 +4,7 @@ function Title(){
     return(
         <div id='title'>
             <nav className="navbar navbar-expand-lg">
-            <a className="brand" href="/"><b>DashBoard</b></a>
+            <a className="brand" href="/"><b>Web Enumeration</b></a>
             </nav>
         </div>
     )

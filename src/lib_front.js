@@ -1,4 +1,5 @@
 const host = "http://localhost:3000";
+const pageHistorySize = 10
 
 function getHostFromUrl(url){
   if(url.split('//').length === 2){
@@ -124,4 +125,4 @@ function createHTTPHeader({ url, token, isAnalyze }) {
   return {header:header, query:options.query}
 }
 
-export { host, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey };
+export { host, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey, pageHistorySize };
