@@ -9,10 +9,8 @@ import {
   Table,
   TableBody,
   Accordion,
-  Icon,
-  AccordionContent
+  Icon
 } from "semantic-ui-react";
-import { json2htmlver2 } from "../lib_front";
 
 function Report(props) {
   const report = JSON.parse(localStorage.report);
@@ -123,7 +121,9 @@ function Report(props) {
           <li>Nikto: {report.nikto ? report.nikto.runtime : "unknown"}</li>
         </ul>
         <hr />
-        <ServerInformationSegment nmap={report.nmap} nikto={report.nikto} />
+        <TabServerNmap nmap={report.nmap} />
+        <hr />
+        <TabServerNikto nikto={report.nikto} />
       </Segment>
 
       <Segment>
@@ -135,7 +135,11 @@ function Report(props) {
           <li>Joomscan: {report.joomscan ? report.joomscan.runtime : "unknown"}</li>
         </ul>
         <hr />
-        <CMSScanSegment wpscan={report.wpscan} droopescan={report.droopescan} joomscan={report.joomscan} />
+        <TabScanWp wpscan={report.wpscan} />
+        <hr />
+        <TabScanDroope droopescan={report.droopescan} />
+        <hr />
+        <TabScanJoom joomscan={report.joomscan} />
       </Segment>
 
       <Segment>
@@ -705,35 +709,23 @@ function VulnerabiltiesSegment(props) {
   );
 }
 
-function ServerInformationSegment(props) {
+function TabServerNmap(props) {
   const temp1 = props.nmap ? props.nmap : {};
   const nmap = temp1.nmap ? temp1.nmap : "";
-  const temp2 = props.nikto ? props.nikto : {};
-  const nikto = temp2.nikto ? JSON.parse(temp2.nikto) : {};
-  const [active, setActive] = useState({
-    nmap: false,
-    nikto: false
-  })
+
+  const [active, setActive] = useState(false)
 
   function handleClick(e) {
-    let key = e.target.childNodes[1].textContent
-    key = key.toLowerCase()
-
-    setActive(prev => {
-      return {
-        ...prev,
-        [key]: !prev[key]
-      }
-    })
+    setActive(!active)
   }
 
   return (<>
     <Accordion fluid styled>
-      <Accordion.Title active={active.nmap} onClick={handleClick}>
+      <Accordion.Title active={active} onClick={handleClick} >
         <Icon name='dropdown' />
         Nmap
       </Accordion.Title>
-      <Accordion.Content active={active.nmap} style={{ backgroundColor: 'white' }}>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
         {nmap.split("\n").map((element, index) => (
           <code key={index}>
             {element === "\n" || !element ? null : element}
@@ -742,135 +734,97 @@ function ServerInformationSegment(props) {
         ))}
       </Accordion.Content>
     </Accordion>
-    <hr />
-    <Accordion fluid styled>
-      <Accordion.Title active={active.nikto} onClick={handleClick}>
-        <Icon name='dropdown' />
-        Nikto
-      </Accordion.Title>
-      <Accordion.Content active={active.nikto} style={{ backgroundColor: 'white' }}>
-        <TabServerNikto nikto={nikto}/>
-      </Accordion.Content>
-    </Accordion>
   </>);
 }
 
 function TabServerNikto(props) {
-  const nikto = props.nikto ? props.nikto : { empty: true };
+  const temp2 = props.nikto ? props.nikto : {};
+  const nikto = temp2.nikto ? JSON.parse(temp2.nikto) : {};
+  const [active, setActive] = useState(false)
 
+  function handleClick(e) {
+    setActive(!active)
+  }
   if (nikto.empty) {
     return <div></div>
   }
   return (
-    <div>
-      <h3>Server basic information:</h3>
-      <Table striped celled>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>Host</Table.Cell>
-            <Table.Cell>{nikto.host}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>IP</Table.Cell>
-            <Table.Cell>{nikto.ip}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Port</Table.Cell>
-            <Table.Cell>{nikto.port}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Banner</Table.Cell>
-            <Table.Cell>{nikto.banner}</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
-      <h3>Vulnerabilities:</h3>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Id</Table.HeaderCell>
-            <Table.HeaderCell>OSVDB</Table.HeaderCell>
-            <Table.HeaderCell>Method</Table.HeaderCell>
-            <Table.HeaderCell>Message</Table.HeaderCell>
-            <Table.HeaderCell>Url</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {
-            Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
-              return (<Table.Row key={index}>
-                <Table.Cell>{vuln.id}</Table.Cell>
-                <Table.Cell>{vuln.OSVDB}</Table.Cell>
-                <Table.Cell>{vuln.method}</Table.Cell>
-                <Table.Cell>{vuln.msg}</Table.Cell>
-                <Table.Cell>{vuln.url}</Table.Cell>
-              </Table.Row>)
-            }) : null
-          }
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Nikto
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        <h3>Server basic information:</h3>
+        <Table striped celled>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>Host</Table.Cell>
+              <Table.Cell>{nikto.host}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>IP</Table.Cell>
+              <Table.Cell>{nikto.ip}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Port</Table.Cell>
+              <Table.Cell>{nikto.port}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Banner</Table.Cell>
+              <Table.Cell>{nikto.banner}</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
+        <h3>Vulnerabilities:</h3>
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell>OSVDB</Table.HeaderCell>
+              <Table.HeaderCell>Method</Table.HeaderCell>
+              <Table.HeaderCell>Message</Table.HeaderCell>
+              <Table.HeaderCell>Url</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {
+              Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
+                return (<Table.Row key={index}>
+                  <Table.Cell>{vuln.id}</Table.Cell>
+                  <Table.Cell>{vuln.OSVDB}</Table.Cell>
+                  <Table.Cell>{vuln.method}</Table.Cell>
+                  <Table.Cell>{vuln.msg}</Table.Cell>
+                  <Table.Cell>{vuln.url}</Table.Cell>
+                </Table.Row>)
+              }) : null
+            }
 
-        </Table.Body>
-      </Table>
-    </div>
+          </Table.Body>
+        </Table>
+      </Accordion.Content>
+    </Accordion>
   );
 }
 
-function CMSScanSegment(props) {
-  const result = {
-    wpscan: props.wpscan ? props.wpscan : {},
-    droopescan: props.droopescan ? props.droopescan : {},
-    joomscan: props.joomscan ? props.joomscan : {},
-  }
+function TabScanJoom(props) {
+  const result = props.joomscan ? props.joomscan : {}
+  const joomscan = result.joomscan ? result.joomscan.joomscan : {}
 
-
-  const wpscan = result.wpscan.wp ? result.wpscan.wp : {}
-  const droopescan = result.droopescan.droope ? result.droopescan.droope : {}
-  const joomscan = result.joomscan.joomscan ? result.joomscan.joomscan : {}
-  const [active, setActive] = useState({
-    wpscan: false,
-    droopescan: false,
-    joomscan: false
-  })
+  const [active, setActive] = useState(false)
 
   function handleClick(e) {
-    let key = e.target.childNodes[1].textContent
-    key = key.toLowerCase()
-
-    setActive(prev => {
-      return {
-        ...prev,
-        [key]: !prev[key]
-      }
-    })
+    setActive(!active)
   }
 
   return (<>
     <Accordion fluid styled>
-      <Accordion.Title active={active.wpscan} onClick={handleClick}>
-        <Icon name='dropdown' />
-        Wpscan
-      </Accordion.Title>
-      <Accordion.Content active={active.wpscan} style={{ backgroundColor: 'white' }}>
-        <TabScanWp scan={wpscan}/> 
-      </Accordion.Content>
-    </Accordion>
-    <hr />
-    <Accordion fluid styled>
-      <Accordion.Title active={active.droopescan} onClick={handleClick}>
-        <Icon name='dropdown' />
-        Droopescan
-      </Accordion.Title>
-      <Accordion.Content active={active.droopescan} style={{ backgroundColor: 'white' }}>
-        <TabScanDroope scan={droopescan} />
-      </Accordion.Content>
-    </Accordion>
-    <hr />
-    <Accordion fluid styled>
-      <Accordion.Title active={active.joomscan} onClick={handleClick}>
+      <Accordion.Title active={active} onClick={handleClick}>
         <Icon name='dropdown' />
         Joomscan
       </Accordion.Title>
-      <Accordion.Content active={active.joomscan} style={{ backgroundColor: 'white' }}>
-        {joomscan.joomscan ? joomscan.joomscan.split('\n').map((element, index) => {
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        {joomscan ? joomscan.split('\n').map((element, index) => {
           return (<>
             <code key={index}>
               {element}
@@ -883,125 +837,146 @@ function CMSScanSegment(props) {
 }
 
 function TabScanWp(props) {
-  const wpscan = !props.scan.empty ? props.scan : {}
+  const result = props.wpscan ? props.wpscan : {}
+  const wpscan = result.wp ? result.wp : {}
+  const [active, setActive] = useState(false)
 
-  if (!Object.keys(wpscan).length) {
-    return null
+  function handleClick(e) {
+    setActive(!active)
   }
+
   const keyPlug = Object.keys(wpscan.plugins ? wpscan.plugins : {})
 
-
   return (<>
-    <h3>CMS information:</h3>
-    <Table striped celled>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>IP</Table.Cell>
-          <Table.Cell>{wpscan.target_ip}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Url</Table.Cell>
-          <Table.Cell>{wpscan.target_url}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Cached requests</Table.Cell>
-          <Table.Cell>{wpscan.cached_requests}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Effective url</Table.Cell>
-          <Table.Cell>{wpscan.effective_url}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Data received</Table.Cell>
-          <Table.Cell>{wpscan.data_received_humanised}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Data sent</Table.Cell>
-          <Table.Cell>{wpscan.data_sent_humanised}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Used memory</Table.Cell>
-          <Table.Cell>{wpscan.used_memory_humanised}</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table>
-    <h3>Plugins information:</h3>
-    {!wpscan.plugins ? null : (<Table striped celled>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Confidence</Table.HeaderCell>
-          <Table.HeaderCell>Version</Table.HeaderCell>
-          <Table.HeaderCell>Last updated</Table.HeaderCell>
-          <Table.HeaderCell>Latest version</Table.HeaderCell>
-          <Table.HeaderCell>Location</Table.HeaderCell>
-          <Table.HeaderCell>Found by</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {
-          Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Wpscan
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        <h3>CMS information:</h3>
+        <Table striped celled>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>IP</Table.Cell>
+              <Table.Cell>{wpscan.target_ip}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Url</Table.Cell>
+              <Table.Cell>{wpscan.target_url}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Cached requests</Table.Cell>
+              <Table.Cell>{wpscan.cached_requests}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Effective url</Table.Cell>
+              <Table.Cell>{wpscan.effective_url}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Data received</Table.Cell>
+              <Table.Cell>{wpscan.data_received_humanised}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Data sent</Table.Cell>
+              <Table.Cell>{wpscan.data_sent_humanised}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Used memory</Table.Cell>
+              <Table.Cell>{wpscan.used_memory_humanised}</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
+        <h3>Plugins information:</h3>
+        {!wpscan.plugins ? null : (<Table striped celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>Confidence</Table.HeaderCell>
+              <Table.HeaderCell>Version</Table.HeaderCell>
+              <Table.HeaderCell>Last updated</Table.HeaderCell>
+              <Table.HeaderCell>Latest version</Table.HeaderCell>
+              <Table.HeaderCell>Location</Table.HeaderCell>
+              <Table.HeaderCell>Found by</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {
+              Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
 
-            let plugInfor = wpscan.plugins[key]
-            return (<Table.Row key={index}>
-              <Table.Cell>{key}</Table.Cell>
-              <Table.Cell>{plugInfor.confidence}</Table.Cell>
-              <Table.Cell>{plugInfor.version}</Table.Cell>
-              <Table.Cell>{plugInfor.last_updated}</Table.Cell>
-              <Table.Cell>{plugInfor.latest_version}</Table.Cell>
-              <Table.Cell>{plugInfor.location}</Table.Cell>
-              <Table.Cell>{plugInfor.found_by}</Table.Cell>
-            </Table.Row>)
-          }) : null
-        }
-      </Table.Body>
-    </Table>)}
-
+                let plugInfor = wpscan.plugins[key]
+                return (<Table.Row key={index}>
+                  <Table.Cell>{key}</Table.Cell>
+                  <Table.Cell>{plugInfor.confidence}</Table.Cell>
+                  <Table.Cell>{plugInfor.version}</Table.Cell>
+                  <Table.Cell>{plugInfor.last_updated}</Table.Cell>
+                  <Table.Cell>{plugInfor.latest_version}</Table.Cell>
+                  <Table.Cell>{plugInfor.location}</Table.Cell>
+                  <Table.Cell>{plugInfor.found_by}</Table.Cell>
+                </Table.Row>)
+              }) : null
+            }
+          </Table.Body>
+        </Table>)}
+      </Accordion.Content>
+    </Accordion>
   </>)
 }
 
 function TabScanDroope(props) {
-  const scan = !props.scan.empty ? props.scan : {}
-  const droope = scan.droopescan ? scan.droopescan : { empty: true }
-  console.log(droope)
+  const result = props.droopescan ? props.droopescan : {}
+  const droope = result.droope ? result.droope.droopescan : {}
+  const [active, setActive] = useState(false)
+
+  function handleClick(e) {
+    setActive(!active)
+  }
 
   if (droope.empty) {
     return null
   }
   return (<>
-    <h3>CMS information:</h3>
-    <Table striped celled>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>Name</Table.Cell>
-          <Table.Cell>{droope.cms_name}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Host</Table.Cell>
-          <Table.Cell>{droope.host}</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table>
-    <h3>Plugins information:</h3>
-    {!droope.plugins ? null : (<Table striped celled>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Url</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {
-          Array.isArray(droope.plugins.finds) ? droope.plugins.finds.map((plugin, index) => {
-            return (
-              <Table.Row key={index}>
-                <Table.Cell>{plugin.name}</Table.Cell>
-                <Table.Cell>{plugin.url}</Table.Cell>
-              </Table.Row>
-            )
-          }) : null
-        }
-      </Table.Body>
-    </Table>)}
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Droopescan
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        <h3>CMS information:</h3>
+        <Table striped celled>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>Name</Table.Cell>
+              <Table.Cell>{droope.cms_name}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Host</Table.Cell>
+              <Table.Cell>{droope.host}</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
+        <h3>Plugins information:</h3>
+        {!droope.plugins ? null : (<Table striped celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>Url</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {
+              Array.isArray(droope.plugins.finds) ? droope.plugins.finds.map((plugin, index) => {
+                return (
+                  <Table.Row key={index}>
+                    <Table.Cell>{plugin.name}</Table.Cell>
+                    <Table.Cell>{plugin.url}</Table.Cell>
+                  </Table.Row>
+                )
+              }) : null
+            }
+          </Table.Body>
+        </Table>)}
+      </Accordion.Content>
+    </Accordion>
   </>)
 }

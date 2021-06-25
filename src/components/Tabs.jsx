@@ -720,6 +720,7 @@ function TabDic(props) {
   });
   const pageWappEmpty = useRef(null);
   const pageGoEmpty = useRef(null);
+  console.log(dic)
 
   useEffect(() => {
     function setStyle(type, typeRef) {
@@ -874,7 +875,7 @@ function TabDic(props) {
           alt="empty page"
         />
         <ul>
-          {!Array.isArray(dic.gobuster.directories) ? (
+          {!Array.isArray(dic.gobuster.directories)  ? (
             <p></p>
           ) : (
             dic.gobuster.directories.map((ele, index) => {
