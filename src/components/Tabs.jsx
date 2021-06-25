@@ -1378,7 +1378,7 @@ function TabDetectWaf(props) {
     if (!isDone) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone]);
+  }, [isDone,wafs]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -1673,23 +1673,14 @@ function TabScan(props) {
   );
 }
 
-// cached_requests: 31
-// config_backups: {}
-// data_received: 45979971
-// data_received_humanised: "43.85 MB"
-// data_sent: 37527773
-// data_sent_humanised: "35.789 MB"
-// effective_url: "http://192.168.64.132/wordpress/"
-// elapsed: 347
-
 function TabScanWp(props) {
-  const wpscan = !props.scan.empty ? props.scan : null
+  const wpscan = !props.scan.empty ? props.scan : {}
+  console.log(wpscan)
 
-  if (!wpscan) {
+  if (!Object.keys(wpscan).length) {
     return null
   }
-  const keyPlug = Object.keys(wpscan.plugins)
-
+  const keyPlug = Object.keys(wpscan.plugins ? wpscan.plugins : {})
 
   return (<>
     <h3>CMS information:</h3>
@@ -1726,7 +1717,7 @@ function TabScanWp(props) {
       </Table.Body>
     </Table>
     <h3>Plugins information:</h3>
-    <Table striped celled>
+    {!wpscan.plugins ? null : (<Table striped celled>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Name</Table.HeaderCell>
@@ -1755,13 +1746,15 @@ function TabScanWp(props) {
           }) : null
         }
       </Table.Body>
-    </Table>
+    </Table>)}
+
   </>)
 }
 
 function TabScanDroope(props) {
   const scan = !props.scan.empty ? props.scan : {}
   const droope = scan.droopescan ? scan.droopescan : { empty: true }
+  console.log(droope)
 
   if (droope.empty) {
     return null
@@ -1781,7 +1774,7 @@ function TabScanDroope(props) {
       </Table.Body>
     </Table>
     <h3>Plugins information:</h3>
-    <Table striped celled>
+    {!droope.plugins ? null : (<Table striped celled>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Name</Table.HeaderCell>
@@ -1800,7 +1793,7 @@ function TabScanDroope(props) {
           }) : null
         }
       </Table.Body>
-    </Table>
+    </Table>)}
   </>)
 }
 

@@ -883,12 +883,12 @@ function CMSScanSegment(props) {
 }
 
 function TabScanWp(props) {
-  const wpscan = !props.scan.empty ? props.scan : null
+  const wpscan = !props.scan.empty ? props.scan : {}
 
-  if (!wpscan) {
+  if (!Object.keys(wpscan).length) {
     return null
   }
-  const keyPlug = Object.keys(wpscan.plugins)
+  const keyPlug = Object.keys(wpscan.plugins ? wpscan.plugins : {})
 
 
   return (<>
@@ -926,7 +926,7 @@ function TabScanWp(props) {
       </Table.Body>
     </Table>
     <h3>Plugins information:</h3>
-    <Table striped celled>
+    {!wpscan.plugins ? null : (<Table striped celled>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Name</Table.HeaderCell>
@@ -955,13 +955,15 @@ function TabScanWp(props) {
           }) : null
         }
       </Table.Body>
-    </Table>
+    </Table>)}
+
   </>)
 }
 
 function TabScanDroope(props) {
   const scan = !props.scan.empty ? props.scan : {}
   const droope = scan.droopescan ? scan.droopescan : { empty: true }
+  console.log(droope)
 
   if (droope.empty) {
     return null
@@ -981,7 +983,7 @@ function TabScanDroope(props) {
       </Table.Body>
     </Table>
     <h3>Plugins information:</h3>
-    <Table striped celled>
+    {!droope.plugins ? null : (<Table striped celled>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Name</Table.HeaderCell>
@@ -1000,6 +1002,6 @@ function TabScanDroope(props) {
           }) : null
         }
       </Table.Body>
-    </Table>
+    </Table>)}
   </>)
 }
