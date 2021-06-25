@@ -238,7 +238,7 @@ function DomainSublist3rSegment(props) {
 
 function DomainWhoisSegment(props) {
   const whois = props.whois ? props.whois : {};
-  const domains = whois.domains ? whois.domains : {};
+  const domain = whois.domains ? whois.domains : {};
   const [active, setActive] = useState(false)
 
   function handleClick() {
@@ -246,150 +246,188 @@ function DomainWhoisSegment(props) {
   }
 
   return (
-      <Accordion fluid styled>
-        <Accordion.Title active={active} onClick={handleClick}>
-          <Icon name='dropdown' />
-          Whois
-        </Accordion.Title>
-        <Accordion.Content active={active} style={{ backgroundColor: 'white' }} id="whois">
-          <b>Domain name:</b>
-          {domains.domain_name ? (
-            domains.domain_name.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Creation date:</b>
-          {domains.creation_date ? (
-            domains.creation_date.map((ele, index) => {
-              return <p key={index}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Dnssec:</b>
-          {domains.dnssec ? (
-            domains.dnssec.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Email:</b>{" "}
-          {domains.email ? (
-            domains.email.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Expiration date:</b>
-          {domains.expiration_date ? (
-            domains.expiration_date.map((ele, index) => {
-              return <p key={index}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Name server:</b>
-          {domains.name_server ? (
-            domains.name_server.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Org:</b>
-          {domains.org ? (
-            domains.org.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Referral url:</b>
-          {domains.referral_url ? (
-            domains.referral_url.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Registrar:</b>
-          {domains.registrar ? (
-            domains.registrar.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>State:</b>
-          {domains.state ? (
-            domains.state.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Status:</b>{" "}
-          {domains.status ? (
-            domains.status.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Updated date:</b>{" "}
-          {domains.updated_date ? (
-            domains.updated_date.map((ele, index) => {
-              return <p key={index}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Whois server:</b>
-          {domains.whois_server ? (
-            domains.whois_server.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Address:</b>
-          {domains.address ? (
-            domains.address.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>City:</b>
-          {domains.city ? (
-            domains.city.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Country:</b>
-          {domains.country ? (
-            domains.country.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <b>Zipcode:</b>
-          {domains.zipcode ? (
-            domains.zipcode.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-        </Accordion.Content>
-      </Accordion>
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Whois
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }} id="whois">
+        <Table basic="very" celled collapsing>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>Domain name</Table.Cell>
+              <Table.Cell>{domain.domain_name != null ? (
+                domain.domain_name.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Creation date</Table.Cell>
+              <Table.Cell>{domain.creation_date != null ? (
+                domain.creation_date.map((ele, index) => {
+                  return <p key={index}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Dnssec</Table.Cell>
+              <Table.Cell>{domain.dnssec != null ? (
+                domain.dnssec.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Email</Table.Cell>
+              <Table.Cell> {domain.email != null ? (
+                domain.email.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Expiration date</Table.Cell>
+              <Table.Cell>{domain.expiration_date != null ? (
+                domain.expiration_date.map((ele, index) => {
+                  return <p key={index}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Name server</Table.Cell>
+              <Table.Cell>{domain.name_server != null ? (
+                domain.name_server.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Org</Table.Cell>
+              <Table.Cell>{domain.org != null ? (
+                domain.org.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Referral url</Table.Cell>
+              <Table.Cell>{domain.referral_url != null ? (
+                domain.referral_url.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Registrar</Table.Cell>
+              <Table.Cell>{domain.registrar != null ? (
+                domain.registrar.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>State</Table.Cell>
+              <Table.Cell>{domain.state != null ? (
+                domain.state.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Status</Table.Cell>
+              <Table.Cell>{domain.status != null ? (
+                domain.status.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Updated date</Table.Cell>
+              <Table.Cell> {domain.updated_date != null ? (
+                domain.updated_date.map((ele, index) => {
+                  return <p key={index}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Whois server</Table.Cell>
+              <Table.Cell>{domain.whois_server != null ? (
+                domain.whois_server.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Address</Table.Cell>
+              <Table.Cell>{domain.address != null ? (
+                domain.address.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>City</Table.Cell>
+              <Table.Cell>{domain.city != null ? (
+                domain.city.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Country</Table.Cell>
+              <Table.Cell>{domain.country != null ? (
+                domain.country.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Zipcode</Table.Cell>
+              <Table.Cell>{domain.zipcode != null ? (
+                domain.zipcode.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
+      </Accordion.Content>
+    </Accordion>
   );
 }
 
@@ -458,52 +496,52 @@ function DirectoriesGobusterSegment(props) {
   }
 
   return (
-      <Accordion fluid styled>
-        <Accordion.Title active={active} onClick={handleClick}>
-          <Icon name='dropdown' />
-          Gobuster
-        </Accordion.Title>
-        <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
-          <ul>
-            {!Array.isArray(gobuster.directories) ? (
-              <p></p>
-            ) : (
-              gobuster.directories.map((ele, index) => {
-                return (
-                  <li key={index}>
-                    <Image
-                      alt="folder"
-                      src="/icons/website/folder-solid.svg"
-                      wrapped
-                      className="img"
-                    />
-                    {" " + ele}
-                  </li>
-                );
-              })
-            )}
-          </ul>
-          <ul>
-            {!Array.isArray(gobuster.files) ? (
-              <p></p>
-            ) : (
-              gobuster.files.map((ele, index) => {
-                return (
-                  <li key={index}>
-                    <Image
-                      alt="file"
-                      src="/icons/website/sticky-note-regular.svg"
-                      wrapped
-                      className="img"
-                    />
-                    {" " + ele}
-                  </li>
-                );
-              })
-            )}
-          </ul>
-        </Accordion.Content>
-      </Accordion>
+    <Accordion fluid styled>
+      <Accordion.Title active={active} onClick={handleClick}>
+        <Icon name='dropdown' />
+        Gobuster
+      </Accordion.Title>
+      <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+        <ul>
+          {!Array.isArray(gobuster.directories) ? (
+            <p></p>
+          ) : (
+            gobuster.directories.map((ele, index) => {
+              return (
+                <li key={index}>
+                  <Image
+                    alt="folder"
+                    src="/icons/website/folder-solid.svg"
+                    wrapped
+                    className="img"
+                  />
+                  {" " + ele}
+                </li>
+              );
+            })
+          )}
+        </ul>
+        <ul>
+          {!Array.isArray(gobuster.files) ? (
+            <p></p>
+          ) : (
+            gobuster.files.map((ele, index) => {
+              return (
+                <li key={index}>
+                  <Image
+                    alt="file"
+                    src="/icons/website/sticky-note-regular.svg"
+                    wrapped
+                    className="img"
+                  />
+                  {" " + ele}
+                </li>
+              );
+            })
+          )}
+        </ul>
+      </Accordion.Content>
+    </Accordion>
   );
 }
 
@@ -711,10 +749,69 @@ function ServerInformationSegment(props) {
         Nikto
       </Accordion.Title>
       <Accordion.Content active={active.nikto} style={{ backgroundColor: 'white' }}>
-        {json2htmlver2(nikto)}
+        <TabServerNikto nikto={nikto}/>
       </Accordion.Content>
     </Accordion>
   </>);
+}
+
+function TabServerNikto(props) {
+  const nikto = props.nikto ? props.nikto : { empty: true };
+
+  if (nikto.empty) {
+    return <div></div>
+  }
+  return (
+    <div>
+      <h3>Server basic information:</h3>
+      <Table striped celled>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Host</Table.Cell>
+            <Table.Cell>{nikto.host}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>IP</Table.Cell>
+            <Table.Cell>{nikto.ip}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Port</Table.Cell>
+            <Table.Cell>{nikto.port}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Banner</Table.Cell>
+            <Table.Cell>{nikto.banner}</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+      <h3>Vulnerabilities:</h3>
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Id</Table.HeaderCell>
+            <Table.HeaderCell>OSVDB</Table.HeaderCell>
+            <Table.HeaderCell>Method</Table.HeaderCell>
+            <Table.HeaderCell>Message</Table.HeaderCell>
+            <Table.HeaderCell>Url</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {
+            Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
+              return (<Table.Row key={index}>
+                <Table.Cell>{vuln.id}</Table.Cell>
+                <Table.Cell>{vuln.OSVDB}</Table.Cell>
+                <Table.Cell>{vuln.method}</Table.Cell>
+                <Table.Cell>{vuln.msg}</Table.Cell>
+                <Table.Cell>{vuln.url}</Table.Cell>
+              </Table.Row>)
+            }) : null
+          }
+
+        </Table.Body>
+      </Table>
+    </div>
+  );
 }
 
 function CMSScanSegment(props) {
@@ -753,9 +850,7 @@ function CMSScanSegment(props) {
         Wpscan
       </Accordion.Title>
       <Accordion.Content active={active.wpscan} style={{ backgroundColor: 'white' }}>
-        {
-          json2htmlver2(wpscan)
-        }
+        <TabScanWp scan={wpscan}/> 
       </Accordion.Content>
     </Accordion>
     <hr />
@@ -765,7 +860,7 @@ function CMSScanSegment(props) {
         Droopescan
       </Accordion.Title>
       <Accordion.Content active={active.droopescan} style={{ backgroundColor: 'white' }}>
-        {json2htmlver2(droopescan)}
+        <TabScanDroope scan={droopescan} />
       </Accordion.Content>
     </Accordion>
     <hr />
@@ -784,5 +879,127 @@ function CMSScanSegment(props) {
         }) : ""}
       </Accordion.Content>
     </Accordion>
+  </>)
+}
+
+function TabScanWp(props) {
+  const wpscan = !props.scan.empty ? props.scan : null
+
+  if (!wpscan) {
+    return null
+  }
+  const keyPlug = Object.keys(wpscan.plugins)
+
+
+  return (<>
+    <h3>CMS information:</h3>
+    <Table striped celled>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>IP</Table.Cell>
+          <Table.Cell>{wpscan.target_ip}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Url</Table.Cell>
+          <Table.Cell>{wpscan.target_url}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Cached requests</Table.Cell>
+          <Table.Cell>{wpscan.cached_requests}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Effective url</Table.Cell>
+          <Table.Cell>{wpscan.effective_url}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Data received</Table.Cell>
+          <Table.Cell>{wpscan.data_received_humanised}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Data sent</Table.Cell>
+          <Table.Cell>{wpscan.data_sent_humanised}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Used memory</Table.Cell>
+          <Table.Cell>{wpscan.used_memory_humanised}</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table>
+    <h3>Plugins information:</h3>
+    <Table striped celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Confidence</Table.HeaderCell>
+          <Table.HeaderCell>Version</Table.HeaderCell>
+          <Table.HeaderCell>Last updated</Table.HeaderCell>
+          <Table.HeaderCell>Latest version</Table.HeaderCell>
+          <Table.HeaderCell>Location</Table.HeaderCell>
+          <Table.HeaderCell>Found by</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {
+          Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
+
+            let plugInfor = wpscan.plugins[key]
+            return (<Table.Row key={index}>
+              <Table.Cell>{key}</Table.Cell>
+              <Table.Cell>{plugInfor.confidence}</Table.Cell>
+              <Table.Cell>{plugInfor.version}</Table.Cell>
+              <Table.Cell>{plugInfor.last_updated}</Table.Cell>
+              <Table.Cell>{plugInfor.latest_version}</Table.Cell>
+              <Table.Cell>{plugInfor.location}</Table.Cell>
+              <Table.Cell>{plugInfor.found_by}</Table.Cell>
+            </Table.Row>)
+          }) : null
+        }
+      </Table.Body>
+    </Table>
+  </>)
+}
+
+function TabScanDroope(props) {
+  const scan = !props.scan.empty ? props.scan : {}
+  const droope = scan.droopescan ? scan.droopescan : { empty: true }
+
+  if (droope.empty) {
+    return null
+  }
+  return (<>
+    <h3>CMS information:</h3>
+    <Table striped celled>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>Name</Table.Cell>
+          <Table.Cell>{droope.cms_name}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Host</Table.Cell>
+          <Table.Cell>{droope.host}</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table>
+    <h3>Plugins information:</h3>
+    <Table striped celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Url</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {
+          Array.isArray(droope.plugins.finds) ? droope.plugins.finds.map((plugin, index) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>{plugin.name}</Table.Cell>
+                <Table.Cell>{plugin.url}</Table.Cell>
+              </Table.Row>
+            )
+          }) : null
+        }
+      </Table.Body>
+    </Table>
   </>)
 }

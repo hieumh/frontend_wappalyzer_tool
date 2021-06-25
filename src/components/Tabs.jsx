@@ -514,161 +514,183 @@ function TabDomainWhois(props) {
   }
   return (
     <div id="domain-whois">
-      {Object.keys(domain).length ? (
-        <>
-          <b>Domain name</b>:
-          {domain.domain_name != null ? (
-            domain.domain_name.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Creation date</b>:
-          {domain.creation_date != null ? (
-            domain.creation_date.map((ele, index) => {
-              return <p key={index}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Dnssec</b>:
-          {domain.dnssec != null ? (
-            domain.dnssec.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Email</b>:{" "}
-          {domain.email != null ? (
-            domain.email.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Expiration date</b>:
-          {domain.expiration_date != null ? (
-            domain.expiration_date.map((ele, index) => {
-              return <p key={index}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Name server</b>:{" "}
-          {domain.name_server != null ? (
-            domain.name_server.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Org</b>:
-          {domain.org != null ? (
-            domain.org.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Referral url</b>:
-          {domain.referral_url != null ? (
-            domain.referral_url.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Registrar</b>:
-          {domain.registrar != null ? (
-            domain.registrar.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>State</b>:
-          {domain.state != null ? (
-            domain.state.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Status</b>:{" "}
-          {domain.status != null ? (
-            domain.status.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Updated date</b>:{" "}
-          {domain.updated_date != null ? (
-            domain.updated_date.map((ele, index) => {
-              return <p key={index}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Whois server</b>:
-          {domain.whois_server != null ? (
-            domain.whois_server.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Address</b>:
-          {domain.address != null ? (
-            domain.address.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>City</b>:
-          {domain.city != null ? (
-            domain.city.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Country</b>:
-          {domain.country != null ? (
-            domain.country.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}
-          <br />
-          <b>Zipcode</b>:
-          {domain.zipcode != null ? (
-            domain.zipcode.map((ele) => {
-              return <p key={ele}>{ele}</p>;
-            })
-          ) : (
-            <p>unknown</p>
-          )}{" "}
-        </>
+      {Object.keys(domain).length ? (<>
+        <h3>Information about domain by whois:</h3>
+        <Table basic="very" celled collapsing>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>Domain name</Table.Cell>
+              <Table.Cell>{domain.domain_name != null ? (
+                domain.domain_name.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Creation date</Table.Cell>
+              <Table.Cell>{domain.creation_date != null ? (
+                domain.creation_date.map((ele, index) => {
+                  return <p key={index}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Dnssec</Table.Cell>
+              <Table.Cell>{domain.dnssec != null ? (
+                domain.dnssec.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Email</Table.Cell>
+              <Table.Cell> {domain.email != null ? (
+                domain.email.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Expiration date</Table.Cell>
+              <Table.Cell>{domain.expiration_date != null ? (
+                domain.expiration_date.map((ele, index) => {
+                  return <p key={index}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Name server</Table.Cell>
+              <Table.Cell>{domain.name_server != null ? (
+                domain.name_server.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Org</Table.Cell>
+              <Table.Cell>{domain.org != null ? (
+                domain.org.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Referral url</Table.Cell>
+              <Table.Cell>{domain.referral_url != null ? (
+                domain.referral_url.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Registrar</Table.Cell>
+              <Table.Cell>{domain.registrar != null ? (
+                domain.registrar.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>State</Table.Cell>
+              <Table.Cell>{domain.state != null ? (
+                domain.state.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Status</Table.Cell>
+              <Table.Cell>{domain.status != null ? (
+                domain.status.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Updated date</Table.Cell>
+              <Table.Cell> {domain.updated_date != null ? (
+                domain.updated_date.map((ele, index) => {
+                  return <p key={index}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Whois server</Table.Cell>
+              <Table.Cell>{domain.whois_server != null ? (
+                domain.whois_server.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Address</Table.Cell>
+              <Table.Cell>{domain.address != null ? (
+                domain.address.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>City</Table.Cell>
+              <Table.Cell>{domain.city != null ? (
+                domain.city.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Country</Table.Cell>
+              <Table.Cell>{domain.country != null ? (
+                domain.country.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Zipcode</Table.Cell>
+              <Table.Cell>{domain.zipcode != null ? (
+                domain.zipcode.map((ele) => {
+                  return <p key={ele}>{ele}</p>;
+                })
+              ) : (
+                <p>unknown</p>
+              )}</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
+      </>
       ) : null}
     </div>
   );
@@ -1282,29 +1304,58 @@ function TabServerNmap(props) {
 
 function TabServerNikto(props) {
   const nikto = props.nikto ? props.nikto : { empty: true };
-  console.log(nikto)
+
   if (nikto.empty) {
     return <div></div>
   }
   return (
-    // <div>
-    //   <div>{!nikto.empty ? json2htmlver2(nikto) : null}</div>
-    // </div>
     <div>
-      <Table striped>
+      <h3>Server basic information:</h3>
+      <Table striped celled>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Host</Table.Cell>
+            <Table.Cell>{nikto.host}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>IP</Table.Cell>
+            <Table.Cell>{nikto.ip}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Port</Table.Cell>
+            <Table.Cell>{nikto.port}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Banner</Table.Cell>
+            <Table.Cell>{nikto.banner}</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+      <h3>Vulnerabilities:</h3>
+      <Table celled>
         <Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell collapsing>
-                <Icon name='folder' />
-                node_modules
-              </Table.Cell>
-              <Table.Cell>Initial commit</Table.Cell>
-              <Table.Cell>10 hours ago</Table.Cell>
-            </Table.Row>
-          </Table.Body>
+          <Table.Row>
+            <Table.HeaderCell>Id</Table.HeaderCell>
+            <Table.HeaderCell>OSVDB</Table.HeaderCell>
+            <Table.HeaderCell>Method</Table.HeaderCell>
+            <Table.HeaderCell>Message</Table.HeaderCell>
+            <Table.HeaderCell>Url</Table.HeaderCell>
+          </Table.Row>
         </Table.Header>
+        <Table.Body>
+          {
+            Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
+              return (<Table.Row key={index}>
+                <Table.Cell>{vuln.id}</Table.Cell>
+                <Table.Cell>{vuln.OSVDB}</Table.Cell>
+                <Table.Cell>{vuln.method}</Table.Cell>
+                <Table.Cell>{vuln.msg}</Table.Cell>
+                <Table.Cell>{vuln.url}</Table.Cell>
+              </Table.Row>)
+            }) : null
+          }
 
+        </Table.Body>
       </Table>
     </div>
   );
@@ -1381,17 +1432,20 @@ function TabScan(props) {
   const [scan, setScan] = useState({
     wpscan: { empty: true },
     droopescan: { empty: true },
-    joomscan: { empty: true },
-    nikto: { empty: true },
+    joomscan: { empty: true }
   });
   const [isDone, setIsDone] = useState({
     wpscan: false,
     droopescan: false,
-    joomscan: false,
-    nikto: false,
+    joomscan: false
   });
   const pageEmpty = useRef(null);
   const [type, setType] = useState("wpscan");
+  const _Component = {
+    wpscan: (data) => <TabScanWp scan={data} />,
+    droopescan: (data) => <TabScanDroope scan={data} />,
+    joomscan: (data) => <TabScanJoom scan={data} />
+  }
 
   useEffect(() => {
     // set type scan-content when loading
@@ -1605,7 +1659,9 @@ function TabScan(props) {
           inline="centered"
           style={{ backgroundColor: "white" }}
         />
-        <div>{!scan[type].empty ? json2htmlver2(scan[type]) : null}</div>
+        {_Component[type] && {}.toString.call(_Component[type])
+          ? _Component[type](scan[type])
+          : null}
         <img
           className="empty-page"
           ref={pageEmpty}
@@ -1617,7 +1673,152 @@ function TabScan(props) {
   );
 }
 
+// cached_requests: 31
+// config_backups: {}
+// data_received: 45979971
+// data_received_humanised: "43.85 MB"
+// data_sent: 37527773
+// data_sent_humanised: "35.789 MB"
+// effective_url: "http://192.168.64.132/wordpress/"
+// elapsed: 347
 
+function TabScanWp(props) {
+  const wpscan = !props.scan.empty ? props.scan : null
+
+  if (!wpscan) {
+    return null
+  }
+  const keyPlug = Object.keys(wpscan.plugins)
+
+
+  return (<>
+    <h3>CMS information:</h3>
+    <Table striped celled>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>IP</Table.Cell>
+          <Table.Cell>{wpscan.target_ip}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Url</Table.Cell>
+          <Table.Cell>{wpscan.target_url}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Cached requests</Table.Cell>
+          <Table.Cell>{wpscan.cached_requests}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Effective url</Table.Cell>
+          <Table.Cell>{wpscan.effective_url}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Data received</Table.Cell>
+          <Table.Cell>{wpscan.data_received_humanised}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Data sent</Table.Cell>
+          <Table.Cell>{wpscan.data_sent_humanised}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Used memory</Table.Cell>
+          <Table.Cell>{wpscan.used_memory_humanised}</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table>
+    <h3>Plugins information:</h3>
+    <Table striped celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Confidence</Table.HeaderCell>
+          <Table.HeaderCell>Version</Table.HeaderCell>
+          <Table.HeaderCell>Last updated</Table.HeaderCell>
+          <Table.HeaderCell>Latest version</Table.HeaderCell>
+          <Table.HeaderCell>Location</Table.HeaderCell>
+          <Table.HeaderCell>Found by</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {
+          Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
+
+            let plugInfor = wpscan.plugins[key]
+            return (<Table.Row key={index}>
+              <Table.Cell>{key}</Table.Cell>
+              <Table.Cell>{plugInfor.confidence}</Table.Cell>
+              <Table.Cell>{plugInfor.version}</Table.Cell>
+              <Table.Cell>{plugInfor.last_updated}</Table.Cell>
+              <Table.Cell>{plugInfor.latest_version}</Table.Cell>
+              <Table.Cell>{plugInfor.location}</Table.Cell>
+              <Table.Cell>{plugInfor.found_by}</Table.Cell>
+            </Table.Row>)
+          }) : null
+        }
+      </Table.Body>
+    </Table>
+  </>)
+}
+
+function TabScanDroope(props) {
+  const scan = !props.scan.empty ? props.scan : {}
+  const droope = scan.droopescan ? scan.droopescan : { empty: true }
+
+  if (droope.empty) {
+    return null
+  }
+  return (<>
+    <h3>CMS information:</h3>
+    <Table striped celled>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>Name</Table.Cell>
+          <Table.Cell>{droope.cms_name}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Host</Table.Cell>
+          <Table.Cell>{droope.host}</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table>
+    <h3>Plugins information:</h3>
+    <Table striped celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Url</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {
+          Array.isArray(droope.plugins.finds) ? droope.plugins.finds.map((plugin, index) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>{plugin.name}</Table.Cell>
+                <Table.Cell>{plugin.url}</Table.Cell>
+              </Table.Row>
+            )
+          }) : null
+        }
+      </Table.Body>
+    </Table>
+  </>)
+}
+
+function TabScanJoom(props) {
+  const joomscan = !props.scan.empty ? props.scan.joomscan : ""
+  if (!joomscan) {
+    return null
+  }
+  return (<div className="code">
+    {joomscan.split('\n').map((element, index) => {
+      return (
+        <p key={index}>
+          {element}
+        </p>)
+    })
+    }
+  </div>)
+}
 
 function TabVuln(props) {
   const [feature, setFeature] = useState("list");
