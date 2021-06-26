@@ -3,10 +3,11 @@ import { Redirect } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify";
 import { Input } from "semantic-ui-react";
 import "../css/Search.css";
+const io = require('socket.io-client');
 
 function Content() {
   const [location, setLocation] = useState({});
-  const [link, setLink] = useState("");
+  const [link, setLink] = useState("http://example.com");
   const [error, setError] = useState(false);
   const linkRef = useRef(null);
 
@@ -34,14 +35,20 @@ function Content() {
     let response = await fetch(`http://localhost:3000/initialize?url=${link}`);
     let token = await response.text();
 
-    setLocation({
-      pathname: "/analyze_result",
-      state: {
-        url: check.href,
-        token: token,
-        isAnalyze: true,
-      },
-    });
+    const socket = io('http://localhost:3000');
+
+    socket.on('connect', () => {
+      socket.emit('token', token)
+
+      setLocation({
+        pathname: "/analyze_result",
+        state: {
+          url: check.href,
+          token: token,
+          isAnalyze: true,
+        },
+      });
+    })
   }
 
   function checkValidUrl(url) {
