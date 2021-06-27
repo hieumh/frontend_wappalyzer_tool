@@ -1755,7 +1755,7 @@ function TabScanWp(props) {
         </Table.Row>
       </Table.Body>
     </Table>
-    <h3>Theme information:</h3>
+    <h3>Themes information:</h3>
     {!themeClassic && !themeDef ? null : (
       <Table celled>
         <Table.Header>

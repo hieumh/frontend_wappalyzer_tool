@@ -910,7 +910,7 @@ function TabScanWp(props) {
             </Table.Body>
           </Table>
         </div>
-        <h3>Theme information:</h3>
+        <h3>Themes information:</h3>
         <div style={{ overflow: "auto" }}>
           {!themeClassic && !themeDef ? null : (
             <Table celled >
