@@ -1875,7 +1875,7 @@ function TabScanDroope(props) {
       </Table.Body>
     </Table>
     <h3>Theme information:</h3>
-    {!droope.theme ? null : (<Table striped celled>
+    {droope.theme.is_empty ? null : (<Table striped celled>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Name</Table.HeaderCell>
