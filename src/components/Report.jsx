@@ -858,45 +858,45 @@ function TabScanWp(props) {
       <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
         <h3>Target information:</h3>
         <div style={{ overflow: "auto" }}>
-        <Table striped celled>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>IP</Table.Cell>
-              <Table.Cell>{wpscan.target_ip ? wpscan.target_ip : "unknown"}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Url</Table.Cell>
-              <Table.Cell>{wpscan.target_url ? wpscan.target_url : "unknown"}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Effective url</Table.Cell>
-              <Table.Cell>{wpscan.effective_url ? wpscan.effective_url : "unknown"}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Interesting finding</Table.Cell>
-              <Table.Cell>{Array.isArray(wpscan.interesting_findings) ? wpscan.interesting_findings.map((element, index) => {
-                return <div key={index}>
-                  <p>Confindence: {element.confidence}</p>
-                  <p>Found by: {element.found_by}</p>
-                  <p>Type: {element.type}</p>
-                  <pre>Interesting entry:{Array.isArray(element.interesting_entries) ? "\n" + element.interesting_entries.join("\n") : element.interesting_entries}</pre>
-                  <hr />
-                </div>
-              }) : "unknown"}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Main theme</Table.Cell>
-              <Table.Cell>{wpscan.main_theme ? (
-                <ul>
-                  <li>Author: {wpscan.main_theme.author}</li>
-                  <li>Description: {wpscan.main_theme.description}</li>
-                  <li>Latest version: {wpscan.main_theme.latest_version}</li>
-                  <li>location: {wpscan.main_theme.location}</li>
-                </ul>
-              ) : "unknown"}</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
+          <Table striped celled>
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>IP</Table.Cell>
+                <Table.Cell>{wpscan.target_ip ? wpscan.target_ip : "unknown"}</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Url</Table.Cell>
+                <Table.Cell>{wpscan.target_url ? wpscan.target_url : "unknown"}</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Effective url</Table.Cell>
+                <Table.Cell>{wpscan.effective_url ? wpscan.effective_url : "unknown"}</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Interesting finding</Table.Cell>
+                <Table.Cell>{Array.isArray(wpscan.interesting_findings) ? wpscan.interesting_findings.map((element, index) => {
+                  return <div key={index}>
+                    <p>Confindence: {element.confidence}</p>
+                    <p>Found by: {element.found_by}</p>
+                    <p>Type: {element.type}</p>
+                    <pre>Interesting entry:{Array.isArray(element.interesting_entries) ? "\n" + element.interesting_entries.join("\n") : element.interesting_entries}</pre>
+                    <hr />
+                  </div>
+                }) : "unknown"}</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Main theme</Table.Cell>
+                <Table.Cell>{wpscan.main_theme ? (
+                  <ul>
+                    <li>Author: {wpscan.main_theme.author}</li>
+                    <li>Description: {wpscan.main_theme.description}</li>
+                    <li>Latest version: {wpscan.main_theme.latest_version}</li>
+                    <li>location: {wpscan.main_theme.location}</li>
+                  </ul>
+                ) : "unknown"}</Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
         </div>
         <h3>Theme:</h3>
         <div style={{ overflow: "auto" }}>
@@ -926,7 +926,7 @@ function TabScanWp(props) {
                     <Table.Cell>{themeClassic.location}</Table.Cell>
                     <Table.Cell>{themeClassic.style_name}</Table.Cell>
                     <Table.Cell>{themeClassic.style_url}</Table.Cell>
-                    <Table.Cell>{themeClassic.version.number}</Table.Cell>
+                    <Table.Cell>{themeClassic.version ? themeClassic.version.number : ""}</Table.Cell>
                   </Table.Row>
                 )}
                 {
@@ -940,7 +940,7 @@ function TabScanWp(props) {
                       <Table.Cell>{themeDef.location}</Table.Cell>
                       <Table.Cell>{themeDef.style_name}</Table.Cell>
                       <Table.Cell>{themeDef.style_url}</Table.Cell>
-                      <Table.Cell>{themeDef.version.number}</Table.Cell>
+                      <Table.Cell>{themeDef.version ? themeDef.version.number : ""}</Table.Cell>
                     </Table.Row>
                   )
                 }

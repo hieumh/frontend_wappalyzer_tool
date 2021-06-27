@@ -1770,7 +1770,7 @@ function TabScanWp(props) {
           <Table.Cell>{themeClassic.location}</Table.Cell>
           <Table.Cell>{themeClassic.style_name}</Table.Cell>
           <Table.Cell>{themeClassic.style_url}</Table.Cell>
-          <Table.Cell>{themeClassic.version.number}</Table.Cell>
+          <Table.Cell>{themeClassic.version ? themeClassic.version.number : ""}</Table.Cell>
         </Table.Row>
       )}
       {
@@ -1784,7 +1784,7 @@ function TabScanWp(props) {
             <Table.Cell>{themeDef.location}</Table.Cell>
             <Table.Cell>{themeDef.style_name}</Table.Cell>
             <Table.Cell>{themeDef.style_url}</Table.Cell>
-            <Table.Cell>{themeDef.version.number}</Table.Cell>
+            <Table.Cell>{themeDef.version ? themeDef.version.number : ""}</Table.Cell>
           </Table.Row>
         )
       }
