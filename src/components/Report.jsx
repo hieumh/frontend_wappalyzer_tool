@@ -809,9 +809,9 @@ function TabServerNikto(props) {
 
 function TabScanJoom(props) {
   const result = props.joomscan ? props.joomscan : {}
-  const joomscan = result.joomscan ? result.joomscan.joomscan : {}
-
+  const joomscan = result.joomscan ? result.joomscan.joomscan : {empty:true}
   const [active, setActive] = useState(false)
+  console.log(joomscan)
 
   function handleClick(e) {
     setActive(!active)
@@ -824,7 +824,7 @@ function TabScanJoom(props) {
         Joomscan
       </Accordion.Title>
       <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
-        {joomscan ? joomscan.split('\n').map((element, index) => {
+        {!joomscan.empty ? joomscan.split('\n').map((element, index) => {
           return (<>
             <code key={index}>
               {element}

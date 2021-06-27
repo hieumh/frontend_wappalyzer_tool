@@ -720,15 +720,27 @@ function TabDic(props) {
   });
   const pageWappEmpty = useRef(null);
   const pageGoEmpty = useRef(null);
-  console.log(dic)
+  
+  function isObjEmpty(obj,key){
+    if (!Object.keys(dic[key]).length) {
+      return true
+    }
 
+    if (key === 'gobuster'){
+      if (!obj[key].files.length && !obj[key].directories.length){
+        return true
+      }
+    }
+    return false
+  }
+  
   useEffect(() => {
     function setStyle(type, typeRef) {
-      if (isDone[type] && !Object.keys(dic[type])) {
+      if (isDone[type] && isObjEmpty(dic,type)) {
         typeRef.current.style.display = "block";
       }
 
-      if (isDone[type] && Object.keys(dic[type])) {
+      if (isDone[type] && !isObjEmpty(dic,type)) {
         typeRef.current.style.display = "none";
       }
 

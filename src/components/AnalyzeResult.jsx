@@ -9,6 +9,7 @@ import {
   TabScan,
   TabVuln,
 } from "./Tabs";
+import { host } from '../lib_front'
 import { ToastContainer } from "react-toastify";
 import { Image } from "semantic-ui-react";
 import "react-toastify/dist/ReactToastify.css";

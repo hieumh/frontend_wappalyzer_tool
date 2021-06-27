@@ -7,7 +7,7 @@ const io = require('socket.io-client');
 
 function Content() {
   const [location, setLocation] = useState({});
-  const [link, setLink] = useState("http://example.com");
+  const [link, setLink] = useState("");
   const [error, setError] = useState(false);
   const linkRef = useRef(null);
 
