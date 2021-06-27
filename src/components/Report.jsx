@@ -809,7 +809,7 @@ function TabServerNikto(props) {
 
 function TabScanJoom(props) {
   const result = props.joomscan ? props.joomscan : {}
-  const joomscan = result.joomscan ? result.joomscan.joomscan : {empty:true}
+  const joomscan = result.joomscan ? result.joomscan.joomscan : { empty: true }
   const [active, setActive] = useState(false)
   console.log(joomscan)
 
@@ -854,36 +854,60 @@ function TabScanWp(props) {
         Wpscan
       </Accordion.Title>
       <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+
         <h3>CMS information:</h3>
         <Table striped celled>
           <Table.Body>
             <Table.Row>
               <Table.Cell>IP</Table.Cell>
-              <Table.Cell>{wpscan.target_ip}</Table.Cell>
+              <Table.Cell>{wpscan.target_ip ? wpscan.target_ip : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Url</Table.Cell>
-              <Table.Cell>{wpscan.target_url}</Table.Cell>
+              <Table.Cell>{wpscan.target_url ? wpscan.target_url : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Cached requests</Table.Cell>
-              <Table.Cell>{wpscan.cached_requests}</Table.Cell>
+              <Table.Cell>{wpscan.cached_requests ? wpscan.cached_requests : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Effective url</Table.Cell>
-              <Table.Cell>{wpscan.effective_url}</Table.Cell>
+              <Table.Cell>{wpscan.effective_url ? wpscan.effective_url : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Data received</Table.Cell>
-              <Table.Cell>{wpscan.data_received_humanised}</Table.Cell>
+              <Table.Cell>{wpscan.data_received_humanised ? wpscan.data_received_humanised : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Data sent</Table.Cell>
-              <Table.Cell>{wpscan.data_sent_humanised}</Table.Cell>
+              <Table.Cell>{wpscan.data_sent_humanised ? wpscan.data_sent_humanised : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Used memory</Table.Cell>
-              <Table.Cell>{wpscan.used_memory_humanised}</Table.Cell>
+              <Table.Cell>{wpscan.used_memory_humanised ? wpscan.used_memory_humanised : "unknown"}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Interesting finding</Table.Cell>
+              <Table.Cell>{Array.isArray(wpscan.interesting_findings) ? wpscan.interesting_findings.map((element, index) => {
+                return <div key={index}>
+                  <p>Confindence: {element.confidence}</p>
+                  <p>Found by: {element.found_by}</p>
+                  <p>Type: {element.type}</p>
+                  <p>Interesting entry: {element.interesting_entries}</p>
+                  <hr />
+                </div>
+              }) : "unknown"}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Main theme</Table.Cell>
+              <Table.Cell>{wpscan.main_theme ? (
+                <ul>
+                  <li>Author: {wpscan.main_theme.author}</li>
+                  <li>Description: {wpscan.main_theme.description}</li>
+                  <li>Latest version: {wpscan.main_theme.latest_version}</li>
+                  <li>location: {wpscan.main_theme.location}</li>
+                </ul>
+              ) : "unknown"}</Table.Cell>
             </Table.Row>
           </Table.Body>
         </Table>
@@ -925,7 +949,13 @@ function TabScanWp(props) {
 
 function TabScanDroope(props) {
   const result = props.droopescan ? props.droopescan : {}
-  const droope = result.droope ? result.droope.droopescan : {}
+  let droope = result.droope ? result.droope.droopescan : {}
+  droope = {
+    "interesting urls": { is_empty: true },
+    "version": { is_empty: true },
+    "theme": { is_empty: true },
+    ...droope
+  }
   const [active, setActive] = useState(false)
 
   function handleClick(e) {
@@ -942,16 +972,35 @@ function TabScanDroope(props) {
         Droopescan
       </Accordion.Title>
       <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
+
         <h3>CMS information:</h3>
         <Table striped celled>
           <Table.Body>
             <Table.Row>
               <Table.Cell>Name</Table.Cell>
-              <Table.Cell>{droope.cms_name}</Table.Cell>
+              <Table.Cell>{droope.cms_name ? droope.cms_name : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Host</Table.Cell>
-              <Table.Cell>{droope.host}</Table.Cell>
+              <Table.Cell>{droope.host ? droope.host : "unknown"}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Interesting url</Table.Cell>
+              <Table.Cell>{!droope["interesting urls"].is_empty ? droope["interesting urls"].finds.map((element, index) => {
+                return <div key={index}><p>{element.url}</p><p>{element.description}</p><hr /></div>
+              }) : "unknown"}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Version</Table.Cell>
+              <Table.Cell>{!droope["version"].is_empty ? droope["version"].finds.map((element, index) => {
+                return <div key={index}><p>{element}</p><hr /></div>
+              }) : "unknown"}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Theme</Table.Cell>
+              <Table.Cell>{!droope["theme"].is_empty ? droope["theme"].finds.map((element, index) => {
+                return <div key={index}><p>{element}</p><hr /></div>
+              }) : "unknown"}</Table.Cell>
             </Table.Row>
           </Table.Body>
         </Table>

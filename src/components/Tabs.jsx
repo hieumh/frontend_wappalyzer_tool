@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Card, Icon, Form, Button, Image, Loader, Table } from "semantic-ui-react";
 import { host } from "../lib_front";
-import { json2htmlver2, createHTTPHeader, handleKey } from "../lib_front";
+import { createHTTPHeader, handleKey } from "../lib_front";
 
 function TechDetail(props) {
   const data = props.data ? props.data : {};
@@ -720,27 +720,27 @@ function TabDic(props) {
   });
   const pageWappEmpty = useRef(null);
   const pageGoEmpty = useRef(null);
-  
-  function isObjEmpty(obj,key){
+
+  function isObjEmpty(obj, key) {
     if (!Object.keys(dic[key]).length) {
       return true
     }
 
-    if (key === 'gobuster'){
-      if (!obj[key].files.length && !obj[key].directories.length){
+    if (key === 'gobuster') {
+      if (!obj[key].files.length && !obj[key].directories.length) {
         return true
       }
     }
     return false
   }
-  
+
   useEffect(() => {
     function setStyle(type, typeRef) {
-      if (isDone[type] && isObjEmpty(dic,type)) {
+      if (isDone[type] && isObjEmpty(dic, type)) {
         typeRef.current.style.display = "block";
       }
 
-      if (isDone[type] && !isObjEmpty(dic,type)) {
+      if (isDone[type] && !isObjEmpty(dic, type)) {
         typeRef.current.style.display = "none";
       }
 
@@ -887,7 +887,7 @@ function TabDic(props) {
           alt="empty page"
         />
         <ul>
-          {!Array.isArray(dic.gobuster.directories)  ? (
+          {!Array.isArray(dic.gobuster.directories) ? (
             <p></p>
           ) : (
             dic.gobuster.directories.map((ele, index) => {
@@ -1391,7 +1391,7 @@ function TabDetectWaf(props) {
     if (!isDone) {
       pageEmpty.current.style.display = "none";
     }
-  }, [isDone,wafs]);
+  }, [isDone, wafs]);
 
   useEffect(() => {
     async function getData({ header, query }) {
@@ -1447,6 +1447,7 @@ function TabScan(props) {
     droopescan: { empty: true },
     joomscan: { empty: true }
   });
+  console.log(scan)
   const [isDone, setIsDone] = useState({
     wpscan: false,
     droopescan: false,
@@ -1555,12 +1556,19 @@ function TabScan(props) {
           .then((data) => {
             // console.log("this joomscan")
             setScan((prev) => {
+              if (data.joomscan) {
+                if (!data.joomscan.joomscan) {
+                  return {
+                    ...prev,
+                    joomscan: { empty: true },
+                  };
+                }
+              }
               return {
                 ...prev,
                 joomscan: data ? data.joomscan : { empty: true },
               };
             });
-
             props.handleData((prev) => {
               return {
                 ...prev,
@@ -1568,7 +1576,6 @@ function TabScan(props) {
               };
             });
             props.Count("joomscan");
-
             setIsDone((prev) => {
               return {
                 ...prev,
@@ -1687,9 +1694,7 @@ function TabScan(props) {
 }
 
 function TabScanWp(props) {
-  const wpscan = !props.scan.empty ? props.scan : {}
-  console.log(wpscan)
-
+  let wpscan = !props.scan.empty ? props.scan : {}
   if (!Object.keys(wpscan).length) {
     return null
   }
@@ -1701,31 +1706,54 @@ function TabScanWp(props) {
       <Table.Body>
         <Table.Row>
           <Table.Cell>IP</Table.Cell>
-          <Table.Cell>{wpscan.target_ip}</Table.Cell>
+          <Table.Cell>{wpscan.target_ip ? wpscan.target_ip : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Url</Table.Cell>
-          <Table.Cell>{wpscan.target_url}</Table.Cell>
+          <Table.Cell>{wpscan.target_url ? wpscan.target_url : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Cached requests</Table.Cell>
-          <Table.Cell>{wpscan.cached_requests}</Table.Cell>
+          <Table.Cell>{wpscan.cached_requests ? wpscan.cached_requests : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Effective url</Table.Cell>
-          <Table.Cell>{wpscan.effective_url}</Table.Cell>
+          <Table.Cell>{wpscan.effective_url ? wpscan.effective_url : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Data received</Table.Cell>
-          <Table.Cell>{wpscan.data_received_humanised}</Table.Cell>
+          <Table.Cell>{wpscan.data_received_humanised ? wpscan.data_received_humanised : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Data sent</Table.Cell>
-          <Table.Cell>{wpscan.data_sent_humanised}</Table.Cell>
+          <Table.Cell>{wpscan.data_sent_humanised ? wpscan.data_sent_humanised : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Used memory</Table.Cell>
-          <Table.Cell>{wpscan.used_memory_humanised}</Table.Cell>
+          <Table.Cell>{wpscan.used_memory_humanised ? wpscan.used_memory_humanised : "unknown"}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Interesting finding</Table.Cell>
+          <Table.Cell>{Array.isArray(wpscan.interesting_findings) ? wpscan.interesting_findings.map((element, index) => {
+            return <div key={index}>
+              <p>Confindence: {element.confidence}</p>
+              <p>Found by: {element.found_by}</p>
+              <p>Type: {element.type}</p>
+              <p>Interesting entry: {element.interesting_entries}</p>
+              <hr />
+            </div>
+          }) : "unknown"}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Main theme</Table.Cell>
+          <Table.Cell>{wpscan.main_theme ? (
+            <ul>
+              <li>Author: {wpscan.main_theme.author}</li>
+              <li>Description: {wpscan.main_theme.description}</li>
+              <li>Latest version: {wpscan.main_theme.latest_version}</li>
+              <li>location: {wpscan.main_theme.location}</li>
+            </ul>
+          ) : "unknown"}</Table.Cell>
         </Table.Row>
       </Table.Body>
     </Table>
@@ -1766,8 +1794,13 @@ function TabScanWp(props) {
 
 function TabScanDroope(props) {
   const scan = !props.scan.empty ? props.scan : {}
-  const droope = scan.droopescan ? scan.droopescan : { empty: true }
-  console.log(droope)
+  let droope = scan.droopescan ? scan.droopescan : { empty: true }
+  droope = {
+    "interesting urls": { is_empty: true },
+    "version": { is_empty: true },
+    "theme": { is_empty: true },
+    ...droope
+  }
 
   if (droope.empty) {
     return null
@@ -1778,11 +1811,29 @@ function TabScanDroope(props) {
       <Table.Body>
         <Table.Row>
           <Table.Cell>Name</Table.Cell>
-          <Table.Cell>{droope.cms_name}</Table.Cell>
+          <Table.Cell>{droope.cms_name ? droope.cms_name : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Host</Table.Cell>
-          <Table.Cell>{droope.host}</Table.Cell>
+          <Table.Cell>{droope.host ? droope.host : "unknown"}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Interesting url</Table.Cell>
+          <Table.Cell>{!droope["interesting urls"].is_empty ? droope["interesting urls"].finds.map((element, index) => {
+            return <div key={index}><p>{element.url}</p><p>{element.description}</p><hr /></div>
+          }) : "unknown"}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Version</Table.Cell>
+          <Table.Cell>{!droope["version"].is_empty ? droope["version"].finds.map((element, index) => {
+            return <div key={index}><p>{element}</p><hr /></div>
+          }) : "unknown"}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Theme</Table.Cell>
+          <Table.Cell>{!droope["theme"].is_empty ? droope["theme"].finds.map((element, index) => {
+            return <div key={index}><p>{element}</p><hr /></div>
+          }) : "unknown"}</Table.Cell>
         </Table.Row>
       </Table.Body>
     </Table>
