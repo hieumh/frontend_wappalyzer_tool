@@ -764,6 +764,7 @@ function TabDic(props) {
               wapp: JSON.parse(data.trees),
             };
           });
+          props.Count("wapp")
           setIsDone((prev) => {
             return {
               ...prev,
@@ -800,6 +801,7 @@ function TabDic(props) {
               gobuster: data ? data.gobuster : {},
             };
           });
+          props.Count("gobuster")
           setIsDone((prev) => {
             return {
               ...prev,
