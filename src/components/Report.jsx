@@ -879,6 +879,7 @@ function TabScanWp(props) {
                     <p>Confindence: {element.confidence}</p>
                     <p>Found by: {element.found_by}</p>
                     <p>Type: {element.type}</p>
+                    <p>Url: {element.url}</p>
                     <pre>Interesting entry:{Array.isArray(element.interesting_entries) ? "\n" + element.interesting_entries.join("\n") : element.interesting_entries}</pre>
                     <hr />
                   </div>
@@ -898,7 +899,7 @@ function TabScanWp(props) {
             </Table.Body>
           </Table>
         </div>
-        <h3>Theme:</h3>
+        <h3>Theme information:</h3>
         <div style={{ overflow: "auto" }}>
           {!themeClassic && !themeDef ? null : (
             <Table celled >
@@ -1045,6 +1046,27 @@ function TabScanDroope(props) {
             </Table.Row>
           </Table.Body>
         </Table>
+        <h3>Theme information:</h3>
+        {!droope.theme ? null : (<Table striped celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>Url</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {
+              Array.isArray(droope.theme.finds) ? droope.theme.finds.map((theme, index) => {
+                return (
+                  <Table.Row key={index}>
+                    <Table.Cell>{theme.name}</Table.Cell>
+                    <Table.Cell>{theme.url}</Table.Cell>
+                  </Table.Row>
+                )
+              }) : null
+            }
+          </Table.Body>
+        </Table>)}
         <h3>Plugins information:</h3>
         {!droope.plugins ? null : (<Table striped celled>
           <Table.Header>

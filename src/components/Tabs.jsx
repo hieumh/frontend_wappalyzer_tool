@@ -1725,6 +1725,7 @@ function TabScanWp(props) {
               <p>Confindence: {element.confidence}</p>
               <p>Found by: {element.found_by}</p>
               <p>Type: {element.type}</p>
+              <p>Url: {element.url}</p>
               <pre>Interesting entry:{Array.isArray(element.interesting_entries) ? "\n" + element.interesting_entries.join("\n") : element.interesting_entries}</pre>
               <hr />
             </div>
@@ -1743,88 +1744,88 @@ function TabScanWp(props) {
         </Table.Row>
       </Table.Body>
     </Table>
-    <h3>Theme:</h3>
+    <h3>Theme information:</h3>
     {!themeClassic && !themeDef ? null : (
-    <Table celled>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Author</Table.HeaderCell>
-        <Table.HeaderCell>Link</Table.HeaderCell>
-        <Table.HeaderCell>Description</Table.HeaderCell>
-        <Table.HeaderCell>Latest version</Table.HeaderCell>
-        <Table.HeaderCell>Found by</Table.HeaderCell>
-        <Table.HeaderCell>Location</Table.HeaderCell>
-        <Table.HeaderCell>Style name</Table.HeaderCell>
-        <Table.HeaderCell>Style url</Table.HeaderCell>
-        <Table.HeaderCell>Version</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {!themeClassic ? null : (
-        <Table.Row>
-          <Table.Cell>{themeClassic.author}</Table.Cell>
-          <Table.Cell>{themeClassic.author_uri}</Table.Cell>
-          <Table.Cell>{themeClassic.description}</Table.Cell>
-          <Table.Cell>{themeClassic.latest_version}</Table.Cell>
-          <Table.Cell>{themeClassic.found_by}</Table.Cell>
-          <Table.Cell>{themeClassic.location}</Table.Cell>
-          <Table.Cell>{themeClassic.style_name}</Table.Cell>
-          <Table.Cell>{themeClassic.style_url}</Table.Cell>
-          <Table.Cell>{themeClassic.version ? themeClassic.version.number : ""}</Table.Cell>
-        </Table.Row>
-      )}
-      {
-        !themeDef ? null : (
+      <Table celled>
+        <Table.Header>
           <Table.Row>
-            <Table.Cell>{themeDef.author}</Table.Cell>
-            <Table.Cell>{themeDef.author_uri}</Table.Cell>
-            <Table.Cell>{themeDef.description}</Table.Cell>
-            <Table.Cell>{themeDef.latest_version}</Table.Cell>
-            <Table.Cell>{themeDef.found_by}</Table.Cell>
-            <Table.Cell>{themeDef.location}</Table.Cell>
-            <Table.Cell>{themeDef.style_name}</Table.Cell>
-            <Table.Cell>{themeDef.style_url}</Table.Cell>
-            <Table.Cell>{themeDef.version ? themeDef.version.number : ""}</Table.Cell>
+            <Table.HeaderCell>Author</Table.HeaderCell>
+            <Table.HeaderCell>Link</Table.HeaderCell>
+            <Table.HeaderCell>Description</Table.HeaderCell>
+            <Table.HeaderCell>Latest version</Table.HeaderCell>
+            <Table.HeaderCell>Found by</Table.HeaderCell>
+            <Table.HeaderCell>Location</Table.HeaderCell>
+            <Table.HeaderCell>Style name</Table.HeaderCell>
+            <Table.HeaderCell>Style url</Table.HeaderCell>
+            <Table.HeaderCell>Version</Table.HeaderCell>
           </Table.Row>
-        )
-      }
-    </Table.Body>
-  </Table>
-  )
-}
-  <h3>Plugins information:</h3>
-{
-  !wpscan.plugins ? null : (<Table striped celled>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Name</Table.HeaderCell>
-        <Table.HeaderCell>Confidence</Table.HeaderCell>
-        <Table.HeaderCell>Version</Table.HeaderCell>
-        <Table.HeaderCell>Last updated</Table.HeaderCell>
-        <Table.HeaderCell>Latest version</Table.HeaderCell>
-        <Table.HeaderCell>Location</Table.HeaderCell>
-        <Table.HeaderCell>Found by</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {
-        Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
+        </Table.Header>
+        <Table.Body>
+          {!themeClassic ? null : (
+            <Table.Row>
+              <Table.Cell>{themeClassic.author}</Table.Cell>
+              <Table.Cell>{themeClassic.author_uri}</Table.Cell>
+              <Table.Cell>{themeClassic.description}</Table.Cell>
+              <Table.Cell>{themeClassic.latest_version}</Table.Cell>
+              <Table.Cell>{themeClassic.found_by}</Table.Cell>
+              <Table.Cell>{themeClassic.location}</Table.Cell>
+              <Table.Cell>{themeClassic.style_name}</Table.Cell>
+              <Table.Cell>{themeClassic.style_url}</Table.Cell>
+              <Table.Cell>{themeClassic.version ? themeClassic.version.number : ""}</Table.Cell>
+            </Table.Row>
+          )}
+          {
+            !themeDef ? null : (
+              <Table.Row>
+                <Table.Cell>{themeDef.author}</Table.Cell>
+                <Table.Cell>{themeDef.author_uri}</Table.Cell>
+                <Table.Cell>{themeDef.description}</Table.Cell>
+                <Table.Cell>{themeDef.latest_version}</Table.Cell>
+                <Table.Cell>{themeDef.found_by}</Table.Cell>
+                <Table.Cell>{themeDef.location}</Table.Cell>
+                <Table.Cell>{themeDef.style_name}</Table.Cell>
+                <Table.Cell>{themeDef.style_url}</Table.Cell>
+                <Table.Cell>{themeDef.version ? themeDef.version.number : ""}</Table.Cell>
+              </Table.Row>
+            )
+          }
+        </Table.Body>
+      </Table>
+    )
+    }
+    <h3>Plugins information:</h3>
+    {
+      !wpscan.plugins ? null : (<Table striped celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Name</Table.HeaderCell>
+            <Table.HeaderCell>Confidence</Table.HeaderCell>
+            <Table.HeaderCell>Version</Table.HeaderCell>
+            <Table.HeaderCell>Last updated</Table.HeaderCell>
+            <Table.HeaderCell>Latest version</Table.HeaderCell>
+            <Table.HeaderCell>Location</Table.HeaderCell>
+            <Table.HeaderCell>Found by</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {
+            Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
 
-          let plugInfor = wpscan.plugins[key]
-          return (<Table.Row key={index}>
-            <Table.Cell>{key}</Table.Cell>
-            <Table.Cell>{plugInfor.confidence}</Table.Cell>
-            <Table.Cell>{plugInfor.version}</Table.Cell>
-            <Table.Cell>{plugInfor.last_updated}</Table.Cell>
-            <Table.Cell>{plugInfor.latest_version}</Table.Cell>
-            <Table.Cell>{plugInfor.location}</Table.Cell>
-            <Table.Cell>{plugInfor.found_by}</Table.Cell>
-          </Table.Row>)
-        }) : null
-      }
-    </Table.Body>
-  </Table>)
-}
+              let plugInfor = wpscan.plugins[key]
+              return (<Table.Row key={index}>
+                <Table.Cell>{key}</Table.Cell>
+                <Table.Cell>{plugInfor.confidence}</Table.Cell>
+                <Table.Cell>{plugInfor.version}</Table.Cell>
+                <Table.Cell>{plugInfor.last_updated}</Table.Cell>
+                <Table.Cell>{plugInfor.latest_version}</Table.Cell>
+                <Table.Cell>{plugInfor.location}</Table.Cell>
+                <Table.Cell>{plugInfor.found_by}</Table.Cell>
+              </Table.Row>)
+            }) : null
+          }
+        </Table.Body>
+      </Table>)
+    }
   </>)
 }
 
@@ -1873,6 +1874,27 @@ function TabScanDroope(props) {
         </Table.Row>
       </Table.Body>
     </Table>
+    <h3>Theme information:</h3>
+    {!droope.theme ? null : (<Table striped celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Url</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {
+          Array.isArray(droope.theme.finds) ? droope.theme.finds.map((theme, index) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>{theme.name}</Table.Cell>
+                <Table.Cell>{theme.url}</Table.Cell>
+              </Table.Row>
+            )
+          }) : null
+        }
+      </Table.Body>
+    </Table>)}
     <h3>Plugins information:</h3>
     {!droope.plugins ? null : (<Table striped celled>
       <Table.Header>
