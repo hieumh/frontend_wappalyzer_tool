@@ -72,8 +72,8 @@ function Report(props) {
         <Header as="h2" content="Domain" />
         <h3>Runtime:</h3>
         <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
-          <li>whois: {report.whois ? report.whois.runtime : "unknown"}</li>
-          <li>sublist3r: {report.sublist3r ? report.sublist3r.runtime : "unknown"}</li>
+          <li>Whois: {report.whois ? report.whois.runtime : "unknown"}</li>
+          <li>Sublist3r: {report.sublist3r ? report.sublist3r.runtime : "unknown"}</li>
         </ul>
         <hr />
         <DomainWhoisSegment whois={report.whois} />
@@ -84,7 +84,7 @@ function Report(props) {
         <Header as="h2" content="Directories" />
         <h3>Runtime:</h3>
         <ul style={{ listStyleType: "circle", paddingLeft: "30px" }}>
-          <li>gobuster: {report.gobuster ? report.gobuster.runtime : "unknown"}</li>
+          <li>Gobuster: {report.gobuster ? report.gobuster.runtime : "unknown"}</li>
         </ul>
         <hr />
         <DirectoriesDicSegment dic={report.dic} />
@@ -668,7 +668,7 @@ function VulnerabiltiesSegment(props) {
     <Accordion fluid styled>
       <Accordion.Title active={active} onClick={handleClick}>
         <Icon name='dropdown' />
-        Vulnerabilties
+        Vulnerabilities
       </Accordion.Title>
       <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
         <Table fixed>
@@ -1057,7 +1057,7 @@ function TabScanDroope(props) {
             </Table.Row>
           </Table.Body>
         </Table>
-        <h3>Theme information:</h3>
+        <h3>Themes information:</h3>
         {!droope.theme ? null : (<Table striped celled>
           <Table.Header>
             <Table.Row>
