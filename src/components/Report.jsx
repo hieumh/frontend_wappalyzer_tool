@@ -896,6 +896,17 @@ function TabScanWp(props) {
                   </ul>
                 ) : "unknown"}</Table.Cell>
               </Table.Row>
+              <Table.Row>
+                <Table.Cell>Version</Table.Cell>
+                <Table.Cell>{wpscan.version ? (
+                  <ul>
+                    <li>Number: {wpscan.version.number}</li>
+                    <li>Release date: {wpscan.version.release_date}</li>
+                    <li>Status: {wpscan.version.status}</li>
+                    <li>Found by: {wpscan.version.found_by}</li>
+                  </ul>
+                ) : "unknown"}</Table.Cell>
+              </Table.Row>
             </Table.Body>
           </Table>
         </div>
