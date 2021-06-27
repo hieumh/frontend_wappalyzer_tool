@@ -1695,13 +1695,15 @@ function TabScan(props) {
 
 function TabScanWp(props) {
   let wpscan = !props.scan.empty ? props.scan : {}
+  const themeClassic = wpscan.themes ? wpscan.themes.classic : null
+  const themeDef = wpscan.themes ? wpscan.themes.default : null
   if (!Object.keys(wpscan).length) {
     return null
   }
   const keyPlug = Object.keys(wpscan.plugins ? wpscan.plugins : {})
 
   return (<>
-    <h3>CMS information:</h3>
+    <h3>Target information:</h3>
     <Table striped celled>
       <Table.Body>
         <Table.Row>
@@ -1713,24 +1715,8 @@ function TabScanWp(props) {
           <Table.Cell>{wpscan.target_url ? wpscan.target_url : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
-          <Table.Cell>Cached requests</Table.Cell>
-          <Table.Cell>{wpscan.cached_requests ? wpscan.cached_requests : "unknown"}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
           <Table.Cell>Effective url</Table.Cell>
           <Table.Cell>{wpscan.effective_url ? wpscan.effective_url : "unknown"}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Data received</Table.Cell>
-          <Table.Cell>{wpscan.data_received_humanised ? wpscan.data_received_humanised : "unknown"}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Data sent</Table.Cell>
-          <Table.Cell>{wpscan.data_sent_humanised ? wpscan.data_sent_humanised : "unknown"}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Used memory</Table.Cell>
-          <Table.Cell>{wpscan.used_memory_humanised ? wpscan.used_memory_humanised : "unknown"}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Interesting finding</Table.Cell>
@@ -1739,7 +1725,7 @@ function TabScanWp(props) {
               <p>Confindence: {element.confidence}</p>
               <p>Found by: {element.found_by}</p>
               <p>Type: {element.type}</p>
-              <p>Interesting entry: {element.interesting_entries}</p>
+              <pre>Interesting entry:{Array.isArray(element.interesting_entries) ? "\n" + element.interesting_entries.join("\n") : element.interesting_entries}</pre>
               <hr />
             </div>
           }) : "unknown"}</Table.Cell>
@@ -1757,38 +1743,88 @@ function TabScanWp(props) {
         </Table.Row>
       </Table.Body>
     </Table>
-    <h3>Plugins information:</h3>
-    {!wpscan.plugins ? null : (<Table striped celled>
-      <Table.Header>
+    <h3>Theme:</h3>
+    {!themeClassic && !themeDef ? null : (
+    <Table celled>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Author</Table.HeaderCell>
+        <Table.HeaderCell>Link</Table.HeaderCell>
+        <Table.HeaderCell>Description</Table.HeaderCell>
+        <Table.HeaderCell>Latest version</Table.HeaderCell>
+        <Table.HeaderCell>Found by</Table.HeaderCell>
+        <Table.HeaderCell>Location</Table.HeaderCell>
+        <Table.HeaderCell>Style name</Table.HeaderCell>
+        <Table.HeaderCell>Style url</Table.HeaderCell>
+        <Table.HeaderCell>Version</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
+    <Table.Body>
+      {!themeClassic ? null : (
         <Table.Row>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Confidence</Table.HeaderCell>
-          <Table.HeaderCell>Version</Table.HeaderCell>
-          <Table.HeaderCell>Last updated</Table.HeaderCell>
-          <Table.HeaderCell>Latest version</Table.HeaderCell>
-          <Table.HeaderCell>Location</Table.HeaderCell>
-          <Table.HeaderCell>Found by</Table.HeaderCell>
+          <Table.Cell>{themeClassic.author}</Table.Cell>
+          <Table.Cell>{themeClassic.author_uri}</Table.Cell>
+          <Table.Cell>{themeClassic.description}</Table.Cell>
+          <Table.Cell>{themeClassic.latest_version}</Table.Cell>
+          <Table.Cell>{themeClassic.found_by}</Table.Cell>
+          <Table.Cell>{themeClassic.location}</Table.Cell>
+          <Table.Cell>{themeClassic.style_name}</Table.Cell>
+          <Table.Cell>{themeClassic.style_url}</Table.Cell>
+          <Table.Cell>{themeClassic.version.number}</Table.Cell>
         </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {
-          Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
+      )}
+      {
+        !themeDef ? null : (
+          <Table.Row>
+            <Table.Cell>{themeDef.author}</Table.Cell>
+            <Table.Cell>{themeDef.author_uri}</Table.Cell>
+            <Table.Cell>{themeDef.description}</Table.Cell>
+            <Table.Cell>{themeDef.latest_version}</Table.Cell>
+            <Table.Cell>{themeDef.found_by}</Table.Cell>
+            <Table.Cell>{themeDef.location}</Table.Cell>
+            <Table.Cell>{themeDef.style_name}</Table.Cell>
+            <Table.Cell>{themeDef.style_url}</Table.Cell>
+            <Table.Cell>{themeDef.version.number}</Table.Cell>
+          </Table.Row>
+        )
+      }
+    </Table.Body>
+  </Table>
+  )
+}
+  <h3>Plugins information:</h3>
+{
+  !wpscan.plugins ? null : (<Table striped celled>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Name</Table.HeaderCell>
+        <Table.HeaderCell>Confidence</Table.HeaderCell>
+        <Table.HeaderCell>Version</Table.HeaderCell>
+        <Table.HeaderCell>Last updated</Table.HeaderCell>
+        <Table.HeaderCell>Latest version</Table.HeaderCell>
+        <Table.HeaderCell>Location</Table.HeaderCell>
+        <Table.HeaderCell>Found by</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
+    <Table.Body>
+      {
+        Array.isArray(keyPlug) ? keyPlug.map((key, index) => {
 
-            let plugInfor = wpscan.plugins[key]
-            return (<Table.Row key={index}>
-              <Table.Cell>{key}</Table.Cell>
-              <Table.Cell>{plugInfor.confidence}</Table.Cell>
-              <Table.Cell>{plugInfor.version}</Table.Cell>
-              <Table.Cell>{plugInfor.last_updated}</Table.Cell>
-              <Table.Cell>{plugInfor.latest_version}</Table.Cell>
-              <Table.Cell>{plugInfor.location}</Table.Cell>
-              <Table.Cell>{plugInfor.found_by}</Table.Cell>
-            </Table.Row>)
-          }) : null
-        }
-      </Table.Body>
-    </Table>)}
-
+          let plugInfor = wpscan.plugins[key]
+          return (<Table.Row key={index}>
+            <Table.Cell>{key}</Table.Cell>
+            <Table.Cell>{plugInfor.confidence}</Table.Cell>
+            <Table.Cell>{plugInfor.version}</Table.Cell>
+            <Table.Cell>{plugInfor.last_updated}</Table.Cell>
+            <Table.Cell>{plugInfor.latest_version}</Table.Cell>
+            <Table.Cell>{plugInfor.location}</Table.Cell>
+            <Table.Cell>{plugInfor.found_by}</Table.Cell>
+          </Table.Row>)
+        }) : null
+      }
+    </Table.Body>
+  </Table>)
+}
   </>)
 }
 
@@ -1806,7 +1842,7 @@ function TabScanDroope(props) {
     return null
   }
   return (<>
-    <h3>CMS information:</h3>
+    <h3>Target information:</h3>
     <Table striped celled>
       <Table.Body>
         <Table.Row>
