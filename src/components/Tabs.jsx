@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Card, Icon, Form, Button, Image, Loader, Table } from "semantic-ui-react";
+import { Card, Icon, Form, Button, Image, Loader, Table, List } from "semantic-ui-react";
 import { host } from "../lib_front";
 import { createHTTPHeader, handleKey } from "../lib_front";
 
@@ -720,6 +720,7 @@ function TabDic(props) {
   });
   const pageWappEmpty = useRef(null);
   const pageGoEmpty = useRef(null);
+  console.log(dic,JSON.stringify(dic.wapp) !== "{}")
 
   function isObjEmpty(obj, key) {
     if (!Object.keys(dic[key]).length) {
@@ -826,32 +827,27 @@ function TabDic(props) {
 
   function createTree(dic) {
     let keys = Object.keys(dic);
-
+    if(!keys.length){
+      return null
+    }
+    console.log(dic)
     return keys.map((key) => {
-      if (dic[key] === "{}") {
+      if (JSON.stringify(dic[key]) === "{}") {
         return (
-          <li key={key}>
-            <Image
-              alt="file"
-              src="/icons/website/sticky-note-regular.svg"
-              wrapped
-              className="img"
-            />
-            {" " + key}
-          </li>
+          <List.Item key={key} >
+            <Icon name='file outline' />
+            <List.Content>{key}</List.Content>
+          </List.Item>
         );
       } else {
         return (
-          <li id={key} key={key}>
-            <Image
-              alt="file"
-              src="/icons/website/folder-solid.svg"
-              wrapped
-              className="img"
-            />
-            {" " + key}
-            <ul>{createTree(dic[key])}</ul>
-          </li>
+          <List.Item id={key} key={key}>
+            <Icon name='folder' />
+            <List.Content>
+              <List.Header>{key}</List.Header>
+            <List.List>{createTree(dic[key])}</List.List>
+            </List.Content>
+          </List.Item>
         );
       }
     });
@@ -866,7 +862,10 @@ function TabDic(props) {
           inline="centered"
           style={{ backgroundColor: "white" }}
         />
-        <ul>{dic.wapp ? createTree(dic.wapp) : null}</ul>
+        <List size="large">
+          {dic.wapp || JSON.stringify(dic.wapp) !== "{}" ? createTree(dic.wapp) : null}
+        </List>
+
         <img
           className="empty-page"
           ref={pageWappEmpty}
@@ -1449,7 +1448,6 @@ function TabScan(props) {
     droopescan: { empty: true },
     joomscan: { empty: true }
   });
-  console.log(scan)
   const [isDone, setIsDone] = useState({
     wpscan: false,
     droopescan: false,
@@ -1876,12 +1874,6 @@ function TabScanDroope(props) {
         <Table.Row>
           <Table.Cell>Version</Table.Cell>
           <Table.Cell>{!droope["version"].is_empty ? droope["version"].finds.map((element, index) => {
-            return <div key={index}><p>{element}</p><hr /></div>
-          }) : "unknown"}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Theme</Table.Cell>
-          <Table.Cell>{!droope["theme"].is_empty ? droope["theme"].finds.map((element, index) => {
             return <div key={index}><p>{element}</p><hr /></div>
           }) : "unknown"}</Table.Cell>
         </Table.Row>
