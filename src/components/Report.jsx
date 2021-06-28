@@ -45,6 +45,7 @@ function Report(props) {
           size="big"
           centered
           bordered
+          onError={handleError}
         />
       </Segment>
       <Segment>
@@ -152,6 +153,10 @@ function Report(props) {
 }
 
 export default Report;
+
+function handleError(e){
+  e.target.style.display='none'
+}
 
 function TechnologiesSegments(props) {
   const list = props.list ? props.list : [];

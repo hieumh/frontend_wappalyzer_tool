@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   TabDic,
   TabServer,
@@ -9,7 +9,6 @@ import {
   TabScan,
   TabVuln,
 } from "./Tabs";
-import { host } from '../lib_front'
 import { ToastContainer } from "react-toastify";
 import { Image } from "semantic-ui-react";
 import "react-toastify/dist/ReactToastify.css";
@@ -133,9 +132,16 @@ function ScreenShot(props) {
     url: props.options.url,
     pic: props.options.token + ".png",
   };
+  const foundNothing = useRef(null)
 
-  function handleOnLoad() {
+  function handleOnLoad(e) {
+    //console.log(e.target)
     props.Count("img");
+  }
+
+  function handleError(e) {
+    foundNothing.current.style.display='block'
+    e.target.style.display = "none"
   }
 
   useEffect(() => {
@@ -144,17 +150,26 @@ function ScreenShot(props) {
       return;
     }
     setOption("pic");
+    foundNothing.current.style.display='none'
   }, []);
 
   return (
     <div id="screenshot">
-        {option ? <Image
-          src={`http://localhost:3000/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
-          as="a"
-          fluid
-          onLoad={handleOnLoad}
-          bordered
-        /> : null}
+      {option ? <Image
+        src={`http://localhost:3000/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
+        as="a"
+        fluid
+        onLoad={handleOnLoad}
+        bordered
+        onError={handleError}
+        alt={props.options.token + '.png'}
+      /> : null}
+      <img
+        className="empty-page"
+        ref={foundNothing}
+        src="images/nothing_found.png"
+        alt="empty page"
+      />
     </div>
   );
 }
