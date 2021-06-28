@@ -58,7 +58,7 @@ function AnalyzeResult(props) {
           id="tab_3"
           title="Directory tree"
           data={vulns.wapp}
-          description="Information about the dictionary of target website"
+          description="Information about the directory of target website"
           locations={props.location.state}
         >
           <TabDic />

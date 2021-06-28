@@ -439,7 +439,7 @@ function DirectoriesDicSegment(props) {
   const dic = props.dic ? props.dic : {};
   const tree = dic.trees ? JSON.parse(dic.trees) : {};
   const [active, setActive] = useState(false)
-  console.log("this is dic:",dic)
+  console.log("this is dic:", dic)
 
   function handleClick() {
     setActive(!active)
@@ -447,7 +447,7 @@ function DirectoriesDicSegment(props) {
 
   function createTree(dic) {
     let keys = Object.keys(dic);
-    if(!keys.length){
+    if (!keys.length) {
       return null
     }
     return keys.map((key) => {
@@ -464,7 +464,7 @@ function DirectoriesDicSegment(props) {
             <Icon name='folder' />
             <List.Content>
               <List.Header>{key}</List.Header>
-            <List.List>{createTree(dic[key])}</List.List>
+              <List.List>{createTree(dic[key])}</List.List>
             </List.Content>
           </List.Item>
         );
@@ -479,7 +479,7 @@ function DirectoriesDicSegment(props) {
         Wappalyzer tree
       </Accordion.Title>
       <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
-      <List size="large">
+        <List size="large">
           {tree || JSON.stringify(tree) !== "{}" ? createTree(tree) : null}
         </List>
       </Accordion.Content>
@@ -757,48 +757,48 @@ function TabServerNikto(props) {
           <Table.Body>
             <Table.Row>
               <Table.Cell>Host</Table.Cell>
-              <Table.Cell>{nikto.host}</Table.Cell>
+              <Table.Cell>{nikto.host ? nikto.host : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>IP</Table.Cell>
-              <Table.Cell>{nikto.ip}</Table.Cell>
+              <Table.Cell>{nikto.ip ? nikto.ip : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Port</Table.Cell>
-              <Table.Cell>{nikto.port}</Table.Cell>
+              <Table.Cell>{nikto.port ? nikto.port : "unknown"}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Banner</Table.Cell>
-              <Table.Cell>{nikto.banner}</Table.Cell>
+              <Table.Cell>{nikto.banner ? nikto.banner : "unknown"}</Table.Cell>
             </Table.Row>
           </Table.Body>
         </Table>
-        <h3>Vulnerabilities:</h3>
-        <Table celled>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Id</Table.HeaderCell>
-              <Table.HeaderCell>OSVDB</Table.HeaderCell>
-              <Table.HeaderCell>Method</Table.HeaderCell>
-              <Table.HeaderCell>Message</Table.HeaderCell>
-              <Table.HeaderCell>Url</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {
-              Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
-                return (<Table.Row key={index}>
-                  <Table.Cell>{vuln.id}</Table.Cell>
-                  <Table.Cell>{vuln.OSVDB}</Table.Cell>
-                  <Table.Cell>{vuln.method}</Table.Cell>
-                  <Table.Cell>{vuln.msg}</Table.Cell>
-                  <Table.Cell>{vuln.url}</Table.Cell>
-                </Table.Row>)
-              }) : null
-            }
-
-          </Table.Body>
-        </Table>
+        {!nikto.vulnerabilities ? null : (<>
+          <h3>Vulnerabilities:</h3>
+          <Table celled>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Id</Table.HeaderCell>
+                <Table.HeaderCell>OSVDB</Table.HeaderCell>
+                <Table.HeaderCell>Method</Table.HeaderCell>
+                <Table.HeaderCell>Message</Table.HeaderCell>
+                <Table.HeaderCell>Url</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {
+                Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
+                  return (<Table.Row key={index}>
+                    <Table.Cell>{vuln.id}</Table.Cell>
+                    <Table.Cell>{vuln.OSVDB}</Table.Cell>
+                    <Table.Cell>{vuln.method}</Table.Cell>
+                    <Table.Cell>{vuln.msg}</Table.Cell>
+                    <Table.Cell>{vuln.url}</Table.Cell>
+                  </Table.Row>)
+                }) : null
+              }
+            </Table.Body>
+          </Table></>)}
       </Accordion.Content>
     </Accordion>
   );

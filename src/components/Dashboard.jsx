@@ -43,7 +43,7 @@ function Dashboard(props) {
           <Grid.Column width={4}>
             <Card>
               <Card.Content>
-                <Card.Header>Programing language ratio</Card.Header>
+                <Card.Header>Programming language ratio</Card.Header>
                 <LanguageChart lang_ratio={dashboard.lang_ratio}/>
               </Card.Content>
             </Card>
@@ -70,7 +70,7 @@ function Dashboard(props) {
           <Grid.Column width={7}>
             <Card fluid>
               <Card.Content>
-                <Card.Header>Top waf detect</Card.Header>
+                <Card.Header>Top web application firewall detect</Card.Header>
                 <ListWaf top_waf={dashboard.top_waf}/>
               </Card.Content>
             </Card>

@@ -10,7 +10,6 @@ function HistoryReport() {
     const [history, setHistory] = useState([])
     const [location, setLocation] = useState({})
     const [activePage, setActivePage] = useState(1)
-    console.log(history.slice(activePage * pageHistorySize - pageHistorySize < 0 ? 0 : activePage * pageHistorySize - pageHistorySize, activePage * pageHistorySize))
 
     useEffect(() => {
         fetch(host + '/history', {

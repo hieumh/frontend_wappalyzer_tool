@@ -720,7 +720,6 @@ function TabDic(props) {
   });
   const pageWappEmpty = useRef(null);
   const pageGoEmpty = useRef(null);
-  console.log(dic,JSON.stringify(dic.wapp) !== "{}")
 
   function isObjEmpty(obj, key) {
     if (!Object.keys(dic[key]).length) {
@@ -830,7 +829,6 @@ function TabDic(props) {
     if(!keys.length){
       return null
     }
-    console.log(dic)
     return keys.map((key) => {
       if (JSON.stringify(dic[key]) === "{}") {
         return (
@@ -1329,22 +1327,23 @@ function TabServerNikto(props) {
         <Table.Body>
           <Table.Row>
             <Table.Cell>Host</Table.Cell>
-            <Table.Cell>{nikto.host}</Table.Cell>
+            <Table.Cell>{nikto.host ? nikto.host : "unknown"}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>IP</Table.Cell>
-            <Table.Cell>{nikto.ip}</Table.Cell>
+            <Table.Cell>{nikto.ip ? nikto.ip : "unknown"}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>Port</Table.Cell>
-            <Table.Cell>{nikto.port}</Table.Cell>
+            <Table.Cell>{nikto.port ? nikto.port : "unknown"}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>Banner</Table.Cell>
-            <Table.Cell>{nikto.banner}</Table.Cell>
+            <Table.Cell>{nikto.banner ? nikto.banner: "unknown"}</Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>
+      { !nikto.vulnerabilities ? null : (<>
       <h3>Vulnerabilities:</h3>
       <Table celled>
         <Table.Header>
@@ -1368,9 +1367,8 @@ function TabServerNikto(props) {
               </Table.Row>)
             }) : null
           }
-
         </Table.Body>
-      </Table>
+      </Table></>)}
     </div>
   );
 }
