@@ -2006,14 +2006,14 @@ function TabVuln(props) {
           onClick={handleVuln}
           id="list"
         >
-          List Vuln
+          Vulnerabilities
         </div>
         <div
           className="btn btn-light button-tech"
           onClick={handleVuln}
           id="add"
         >
-          Add vuln
+          Add vulnerability
         </div>
       </div>
       <div id="vulns-list">

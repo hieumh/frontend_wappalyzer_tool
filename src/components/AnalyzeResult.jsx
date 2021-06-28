@@ -96,7 +96,7 @@ function AnalyzeResult(props) {
           id="tab_7"
           title="Scan CMS"
           handleData={setVulns}
-          description="Information about the server of target website"
+          description="Information about the CMS of target website"
           locations={props.location.state}
         >
           <TabScan />
@@ -104,9 +104,9 @@ function AnalyzeResult(props) {
 
         <ChildrenTab
           id="tab_8"
-          title="Vulnerability"
+          title="Vulnerabilities"
           data={vulns}
-          description="Information about the vulnerability of the target website"
+          description="Information about the vulnerabilities of the target website"
           locations={props.location.state}
         >
           <TabVuln />
