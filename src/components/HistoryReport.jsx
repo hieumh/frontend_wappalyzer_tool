@@ -56,7 +56,7 @@ function HistoryReport() {
             <div className='history-card'>
                 <div className='card-header__'>
                     <h3 className='card-title__'>History</h3>
-                    <p className='card-category__'>All report in database</p>
+                    <p className='card-category__'>All reports in database</p>
                 </div>
                 <div className='card-body__'>
                     <Table singleLine>

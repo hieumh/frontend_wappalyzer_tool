@@ -78,7 +78,7 @@ function Dashboard(props) {
           <Grid.Column width={9}>
             <Card fluid>
               <Card.Content>
-                <Card.Header>Top Vulnerability</Card.Header>
+                <Card.Header>Top vulnerabilities</Card.Header>
                 <ListVuln top_vuln={dashboard.top_vuln}/>
               </Card.Content>
             </Card>
@@ -93,7 +93,7 @@ function NumFrame(props) {
   const number_of_frame = props.number_of_frame ? props.number_of_frame : 0
   return (
     <Statistic>
-      <Statistic.Label>Number of Framework</Statistic.Label>
+      <Statistic.Label>Number of frameworks</Statistic.Label>
       <Statistic.Value>{number_of_frame}</Statistic.Value>
     </Statistic>
   );
@@ -104,7 +104,7 @@ function NumTech(props) {
 
   return (
     <Statistic>
-      <Statistic.Label>Number of language</Statistic.Label>
+      <Statistic.Label>Number of languages</Statistic.Label>
       <Statistic.Value>{number_of_lang}</Statistic.Value>
     </Statistic>
   );
@@ -114,7 +114,7 @@ function NumVuln(props) {
   const number_of_vuln = props.number_of_vuln ? props.number_of_vuln : 0
   return (
     <Statistic>
-      <Statistic.Label>Number of Vuln</Statistic.Label>
+      <Statistic.Label>Number of Vulnerabilities</Statistic.Label>
       <Statistic.Value>{number_of_vuln}</Statistic.Value>
     </Statistic>
   );
@@ -124,7 +124,7 @@ function NumReport(props) {
   const number_of_report = props.number_of_report ? props.number_of_report : 0
   return (
     <Statistic>
-      <Statistic.Label>Number of report</Statistic.Label>
+      <Statistic.Label>Number of reports</Statistic.Label>
       <Statistic.Value>{number_of_report}</Statistic.Value>
     </Statistic>
   );
