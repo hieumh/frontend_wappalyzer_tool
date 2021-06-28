@@ -1026,7 +1026,7 @@ function TabScanDroope(props) {
       </Accordion.Title>
       <Accordion.Content active={active} style={{ backgroundColor: 'white' }}>
 
-        <h3>CMS information:</h3>
+        <h3>Target information:</h3>
         <Table striped celled>
           <Table.Body>
             <Table.Row>
@@ -1058,7 +1058,7 @@ function TabScanDroope(props) {
           </Table.Body>
         </Table>
         <h3>Themes information:</h3>
-        {!droope.theme ? null : (<Table striped celled>
+        {droope.theme.is_empty ? null : (<Table striped celled>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
