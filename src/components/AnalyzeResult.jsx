@@ -150,7 +150,6 @@ function ScreenShot(props) {
       return;
     }
     setOption("pic");
-    foundNothing.current.style.display='none'
   }, []);
 
   return (
@@ -169,6 +168,7 @@ function ScreenShot(props) {
         ref={foundNothing}
         src="images/nothing_found.png"
         alt="empty page"
+        style={{display:'none'}}
       />
     </div>
   );
