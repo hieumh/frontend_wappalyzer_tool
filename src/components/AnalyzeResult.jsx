@@ -129,7 +129,7 @@ export default AnalyzeResult;
 function ScreenShot(props) {
   const [option, setOption] = useState("");
   const feature = {
-    url: encodeURIComponent(props.options.url),
+    url: props.options.url,
     pic: props.options.token + ".png",
   };
   const foundNothing = useRef(null)
