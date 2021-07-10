@@ -148,6 +148,7 @@ function LanguageChart(props) {
               "#00A6B4",
               "#6800B4",
               "#B21F00",
+              "#DDDDDD",
             ],
             hoverBackgroundColor: [
               "#4B5000",
@@ -155,6 +156,7 @@ function LanguageChart(props) {
               "#003350",
               "#35014F",
               "#501800",
+              
             ],
             data: lang_ratio.data,
           },
