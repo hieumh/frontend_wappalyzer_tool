@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { host } from '../lib_front'
 import { Redirect } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify";
 import { Input } from "semantic-ui-react";
@@ -32,10 +33,10 @@ function Content() {
     e.preventDefault();
 
     // Get token
-    let response = await fetch(`http://localhost:3000/initialize?url=${link}`);
+    let response = await fetch(`${host}/initialize?url=${link}`);
     let token = await response.text();
 
-    const socket = io('http://localhost:3000');
+    const socket = io(host);
 
     socket.on('connect', () => {
       socket.emit('token', token)

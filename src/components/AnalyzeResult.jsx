@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import {host} from '../lib_front'
 import {
   TabDic,
   TabServer,
@@ -155,7 +156,7 @@ function ScreenShot(props) {
   return (
     <div id="screenshot">
       {option ? <Image
-        src={`http://localhost:3000/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
+        src={`${host}/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
         as="a"
         fluid
         onLoad={handleOnLoad}

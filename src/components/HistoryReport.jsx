@@ -40,7 +40,7 @@ function HistoryReport() {
     // create html file
     function handleSubmit(e) {
         localStorage.setItem("report", JSON.stringify(history[e.target.id]))
-        window.open("http://localhost:3001/report", "_blank") //to open new page
+        window.open(`${host}/report`, "_blank") //to open new page
     }
 
     function handlePaginationChange(e, { activePage }) {

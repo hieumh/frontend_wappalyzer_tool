@@ -1,4 +1,4 @@
-const host = "http://localhost:3000";
+const host = "http://52.231.163.119:3000";
 const pageHistorySize = 10
 
 function getHostFromUrl(url){

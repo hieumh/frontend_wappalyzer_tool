@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { host } from '../lib_front'
 import {
   Container,
   Header,
@@ -14,7 +15,7 @@ import {
 
 function Report(props) {
   const report = JSON.parse(localStorage.report);
-  const linkImg = `http://localhost:3000/analyze_result/screenshot?pic=${report.pic}`;
+  const linkImg = `${host}/analyze_result/screenshot?pic=${report.pic}`;
   return (
     <Container style={{ margin: 20 }}>
       <Header as="h1" dividing>
