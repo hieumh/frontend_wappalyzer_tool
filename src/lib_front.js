@@ -1,4 +1,5 @@
 const host = "http://52.231.163.119:3000";
+const local = "http://52.231.163.119:3001";
 const pageHistorySize = 10
 
 function getHostFromUrl(url){
@@ -125,4 +126,4 @@ function createHTTPHeader({ url, token, isAnalyze }) {
   return {header:header, query:options.query}
 }
 
-export { host, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey, pageHistorySize };
+export { host, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey, pageHistorySize, local };

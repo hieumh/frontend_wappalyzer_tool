@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import { host, pageHistorySize } from '../lib_front'
+import { host, pageHistorySize, local } from '../lib_front'
 import { Button, Table, Pagination } from 'semantic-ui-react'
 import '../css/History.css'
 import '../css/Card.css'
@@ -40,7 +40,7 @@ function HistoryReport() {
     // create html file
     function handleSubmit(e) {
         localStorage.setItem("report", JSON.stringify(history[e.target.id]))
-        window.open(`${host}/report`, "_blank") //to open new page
+        window.open(`${local}/report`, "_blank") //to open new page
     }
 
     function handlePaginationChange(e, { activePage }) {
