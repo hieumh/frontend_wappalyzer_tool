@@ -1,5 +1,5 @@
-const host = "http://52.231.163.119:3000";
-const local = "http://52.231.163.119:3001";
+const host = process.env.REACT_APP_HOST;
+const local = process.env.REACT_APP_LOCAL;
 const pageHistorySize = 10
 
 function getHostFromUrl(url){
