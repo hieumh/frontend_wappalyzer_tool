@@ -155,8 +155,8 @@ function Report(props) {
 
 export default Report;
 
-function handleError(e){
-  e.target.style.display='none'
+function handleError(e) {
+  e.target.style.display = 'none'
 }
 
 function TechnologiesSegments(props) {
@@ -987,7 +987,7 @@ function TabScanWp(props) {
                   return (<Table.Row key={index}>
                     <Table.Cell>{key}</Table.Cell>
                     <Table.Cell>{plugInfor.confidence}</Table.Cell>
-                    <Table.Cell>{plugInfor.version}</Table.Cell>
+                    <Table.Cell>{plugInfor.version && typeof plugInfor.version !== 'string' ? plugInfor.version.number : plugInfor.version}</Table.Cell>
                     <Table.Cell>{plugInfor.last_updated}</Table.Cell>
                     <Table.Cell>{plugInfor.latest_version}</Table.Cell>
                     <Table.Cell>{plugInfor.location}</Table.Cell>

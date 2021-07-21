@@ -1730,6 +1730,7 @@ function TabScanWp(props) {
         <Table.Row>
           <Table.Cell>Interesting finding</Table.Cell>
           <Table.Cell>{Array.isArray(wpscan.interesting_findings) ? wpscan.interesting_findings.map((element, index) => {
+            console.log(element, index)
             return <div key={index}>
               <p>Confindence: {element.confidence}</p>
               <p>Found by: {element.found_by}</p>
@@ -1835,7 +1836,7 @@ function TabScanWp(props) {
               return (<Table.Row key={index}>
                 <Table.Cell>{key}</Table.Cell>
                 <Table.Cell>{plugInfor.confidence}</Table.Cell>
-                <Table.Cell>{plugInfor.version}</Table.Cell>
+                <Table.Cell>{plugInfor.version && typeof plugInfor.version !== 'string' ? plugInfor.version.number : plugInfor.version}</Table.Cell>
                 <Table.Cell>{plugInfor.last_updated}</Table.Cell>
                 <Table.Cell>{plugInfor.latest_version}</Table.Cell>
                 <Table.Cell>{plugInfor.location}</Table.Cell>
