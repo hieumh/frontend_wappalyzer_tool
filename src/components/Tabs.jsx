@@ -12,7 +12,18 @@ function TechDetail(props) {
         {(() => {
           let keys = Object.keys(data);
           return keys.map((key, index) => {
-            return Array.isArray(data[key]) ? null : (
+            return Array.isArray(data[key]) ? (
+              typeof data[key][0] !== 'object' ? (<div
+                key={index}
+                style={{
+                  padding: "10px 0px",
+                  borderBottom: "1px solid #c8c8c8",
+                }}
+              >
+                <b>{handleKey(key)}:</b>
+                <pre style={{ paddingLeft: "10px" }}>{data[key].join("\n")}</pre>
+              </div>) : null
+            ) : (
               <div
                 key={index}
                 style={{
@@ -826,7 +837,7 @@ function TabDic(props) {
 
   function createTree(dic) {
     let keys = Object.keys(dic);
-    if(!keys.length){
+    if (!keys.length) {
       return null
     }
     return keys.map((key) => {
@@ -843,7 +854,7 @@ function TabDic(props) {
             <Icon name='folder' />
             <List.Content>
               <List.Header>{key}</List.Header>
-            <List.List>{createTree(dic[key])}</List.List>
+              <List.List>{createTree(dic[key])}</List.List>
             </List.Content>
           </List.Item>
         );
@@ -1339,36 +1350,36 @@ function TabServerNikto(props) {
           </Table.Row>
           <Table.Row>
             <Table.Cell>Banner</Table.Cell>
-            <Table.Cell>{nikto.banner ? nikto.banner: "unknown"}</Table.Cell>
+            <Table.Cell>{nikto.banner ? nikto.banner : "unknown"}</Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>
-      { !nikto.vulnerabilities ? null : (<>
-      <h3>Vulnerabilities:</h3>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Id</Table.HeaderCell>
-            <Table.HeaderCell>OSVDB</Table.HeaderCell>
-            <Table.HeaderCell>Method</Table.HeaderCell>
-            <Table.HeaderCell>Message</Table.HeaderCell>
-            <Table.HeaderCell>Url</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {
-            Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
-              return (<Table.Row key={index}>
-                <Table.Cell>{vuln.id}</Table.Cell>
-                <Table.Cell>{vuln.OSVDB}</Table.Cell>
-                <Table.Cell>{vuln.method}</Table.Cell>
-                <Table.Cell>{vuln.msg}</Table.Cell>
-                <Table.Cell>{vuln.url}</Table.Cell>
-              </Table.Row>)
-            }) : null
-          }
-        </Table.Body>
-      </Table></>)}
+      {!nikto.vulnerabilities ? null : (<>
+        <h3>Vulnerabilities:</h3>
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell>OSVDB</Table.HeaderCell>
+              <Table.HeaderCell>Method</Table.HeaderCell>
+              <Table.HeaderCell>Message</Table.HeaderCell>
+              <Table.HeaderCell>Url</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {
+              Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
+                return (<Table.Row key={index}>
+                  <Table.Cell>{vuln.id}</Table.Cell>
+                  <Table.Cell>{vuln.OSVDB}</Table.Cell>
+                  <Table.Cell>{vuln.method}</Table.Cell>
+                  <Table.Cell>{vuln.msg}</Table.Cell>
+                  <Table.Cell>{vuln.url}</Table.Cell>
+                </Table.Row>)
+              }) : null
+            }
+          </Table.Body>
+        </Table></>)}
     </div>
   );
 }
