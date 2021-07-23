@@ -271,8 +271,8 @@ function ListVuln(props) {
               <Table.Row key={index}>
                 <Table.Cell>{element.vuln.Platform}</Table.Cell>
                 <Table.Cell>
-                  {element.vuln.Title.length >= 50
-                    ? element.vuln.Title.slice(0, 50) + "..."
+                  {element.vuln.Title.length >= 35
+                    ? element.vuln.Title.slice(0, 35) + "..."
                     : element.vuln.Title}
                 </Table.Cell>
                 <Table.Cell>{element.count}</Table.Cell>

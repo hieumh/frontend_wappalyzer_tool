@@ -37,6 +37,8 @@ function Content() {
     let token = await response.text();
 
     const socket = io(host);
+    
+    console.log("this is host socket:", socket, host)
 
     socket.on('connect', () => {
       socket.emit('token', token)
