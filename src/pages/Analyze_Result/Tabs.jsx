@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Card, Icon, Form, Button, Image, Loader, Table, List } from "semantic-ui-react";
 import { host } from "../lib_front";
 import { createHTTPHeader, handleKey } from "../lib_front";
+import { Image } from "semantic-ui-react";
 
 function TechDetail(props) {
   const data = props.data ? props.data : {};
@@ -2219,6 +2220,55 @@ function TopVulnAdd(props) {
   );
 }
 
+function ScreenShot(props) {
+  const [option, setOption] = useState("");
+  const feature = {
+      url: props.options.url,
+      pic: props.options.token + ".png",
+  };
+  const foundNothing = useRef(null)
+
+  function handleOnLoad(e) {
+      //console.log(e.target)
+      props.Count("img");
+  }
+
+  function handleError(e) {
+      foundNothing.current.style.display = 'block'
+      e.target.style.display = "none"
+  }
+
+  useEffect(() => {
+      if (props.options.isAnalyze) {
+          setOption("url");
+          return;
+      }
+      setOption("pic");
+  }, []);
+
+  return (
+      <div id="screenshot">
+          {option ? <Image
+              src={`${host}/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
+              as="a"
+              fluid
+              onLoad={handleOnLoad}
+              bordered
+              onError={handleError}
+              alt={props.options.token + '.png'}
+          /> : null}
+          <img
+              className="empty-page"
+              ref={foundNothing}
+              src="images/nothing_found.png"
+              alt="empty page"
+              style={{ display: 'none' }}
+          />
+      </div>
+  );
+}
+
+
 export {
   TabTech,
   TabDomain,
@@ -2228,4 +2278,5 @@ export {
   TabDetectWaf,
   TabScan,
   TabVuln,
+  ScreenShot
 };

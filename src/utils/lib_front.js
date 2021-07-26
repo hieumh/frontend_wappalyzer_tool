@@ -1,7 +1,3 @@
-const host = process.env.REACT_APP_HOST;
-const local = process.env.REACT_APP_LOCAL;
-const pageHistorySize = 10
-
 function getHostFromUrl(url){
   if(url.split('//').length === 2){
       return url.split('//')[1].split('.')[0]
@@ -126,4 +122,4 @@ function createHTTPHeader({ url, token, isAnalyze }) {
   return {header:header, query:options.query}
 }
 
-export { host, json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey, pageHistorySize, local };
+export { json2htmlver2, createHTTPHeader,getHostFromUrl, handleKey};
