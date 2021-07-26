@@ -126,16 +126,6 @@ function SearchDatabase() {
                 onChange={handleChangeOption}
               />
             </Form.Field>
-            <Form.Field>
-              <Checkbox
-                radio
-                label="All table"
-                name="checkboxRadioGroup"
-                value="all"
-                checked={option === "all"}
-                onChange={handleChangeOption}
-              />
-            </Form.Field>
           </Form>
         </div>
 
