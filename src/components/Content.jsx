@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { host } from '../lib_front'
 import { Redirect } from "react-router-dom";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { Input } from "semantic-ui-react";
 import "../css/Search.css";
 const io = require('socket.io-client');
@@ -37,7 +37,7 @@ function Content() {
     let token = await response.text();
 
     const socket = io(host);
-    
+
     console.log("this is host socket:", socket, host)
 
     socket.on('connect', () => {
@@ -57,7 +57,10 @@ function Content() {
   function checkValidUrl(url) {
     try {
       const check = new URL(url);
-      return check;
+      if (check.protocol === 'http:' || check.protocol === 'https:') {
+        return check
+      }
+      return false;
     } catch (e) {
       console.error(e);
       toast.error("Invalid Url");
