@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../css/Home.css";
 import { Card, Grid } from "semantic-ui-react";
-import { host } from "../lib_front";
+import { host } from "../../config/config";
 import {
   NumFrame,
   NumTech,
@@ -16,6 +16,7 @@ import {
 
 function Dashboard(props) {
   const [dashboard, setDashboard] = useState({})
+  console.log('dashboard is call')
 
   useEffect(() => {
     fetch(host + "/dashboard", {

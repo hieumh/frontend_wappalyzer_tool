@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Redirect } from 'react-router-dom'
-import { host } from "../lib_front";
+import { host } from "../../config/config";
 import { Card, Input, Checkbox, Form } from "semantic-ui-react";
 import "../../css/Report.css";
 import "../../css/Search.css";

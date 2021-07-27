@@ -3,7 +3,9 @@ import {
     Table,
     TableBody,
     Accordion,
-    Icon
+    Icon,
+    List,
+    Image
 } from 'semantic-ui-react'
 
 function TechnologiesSegments(props) {

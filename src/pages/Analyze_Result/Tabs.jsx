@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Card, Icon, Form, Button, Image, Loader, Table, List } from "semantic-ui-react";
-import { host } from "../lib_front";
-import { createHTTPHeader, handleKey } from "../lib_front";
-import { Image } from "semantic-ui-react";
+import React, { useEffect, useState, useRef, Suspense } from "react";
+import { Card, Icon, Form, Button, Image, Loader, Table, List, Tab, Menu } from "semantic-ui-react";
+import { host } from "../../config/config";
+import { createHTTPHeader, handleKey } from "../../utils/lib_front";
 
 function TechDetail(props) {
   const data = props.data ? props.data : {};
@@ -827,7 +826,7 @@ function TabDic(props) {
 
   function createTree(dic) {
     let keys = Object.keys(dic);
-    if(!keys.length){
+    if (!keys.length) {
       return null
     }
     return keys.map((key) => {
@@ -844,7 +843,7 @@ function TabDic(props) {
             <Icon name='folder' />
             <List.Content>
               <List.Header>{key}</List.Header>
-            <List.List>{createTree(dic[key])}</List.List>
+              <List.List>{createTree(dic[key])}</List.List>
             </List.Content>
           </List.Item>
         );
@@ -1340,36 +1339,36 @@ function TabServerNikto(props) {
           </Table.Row>
           <Table.Row>
             <Table.Cell>Banner</Table.Cell>
-            <Table.Cell>{nikto.banner ? nikto.banner: "unknown"}</Table.Cell>
+            <Table.Cell>{nikto.banner ? nikto.banner : "unknown"}</Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>
-      { !nikto.vulnerabilities ? null : (<>
-      <h3>Vulnerabilities:</h3>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Id</Table.HeaderCell>
-            <Table.HeaderCell>OSVDB</Table.HeaderCell>
-            <Table.HeaderCell>Method</Table.HeaderCell>
-            <Table.HeaderCell>Message</Table.HeaderCell>
-            <Table.HeaderCell>Url</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {
-            Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
-              return (<Table.Row key={index}>
-                <Table.Cell>{vuln.id}</Table.Cell>
-                <Table.Cell>{vuln.OSVDB}</Table.Cell>
-                <Table.Cell>{vuln.method}</Table.Cell>
-                <Table.Cell>{vuln.msg}</Table.Cell>
-                <Table.Cell>{vuln.url}</Table.Cell>
-              </Table.Row>)
-            }) : null
-          }
-        </Table.Body>
-      </Table></>)}
+      {!nikto.vulnerabilities ? null : (<>
+        <h3>Vulnerabilities:</h3>
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell>OSVDB</Table.HeaderCell>
+              <Table.HeaderCell>Method</Table.HeaderCell>
+              <Table.HeaderCell>Message</Table.HeaderCell>
+              <Table.HeaderCell>Url</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {
+              Array.isArray(nikto.vulnerabilities) ? nikto.vulnerabilities.map((vuln, index) => {
+                return (<Table.Row key={index}>
+                  <Table.Cell>{vuln.id}</Table.Cell>
+                  <Table.Cell>{vuln.OSVDB}</Table.Cell>
+                  <Table.Cell>{vuln.method}</Table.Cell>
+                  <Table.Cell>{vuln.msg}</Table.Cell>
+                  <Table.Cell>{vuln.url}</Table.Cell>
+                </Table.Row>)
+              }) : null
+            }
+          </Table.Body>
+        </Table></>)}
     </div>
   );
 }
@@ -1442,27 +1441,11 @@ function TabDetectWaf(props) {
 }
 
 function TabScan(props) {
-  const [scan, setScan] = useState({
-    wpscan: { empty: true },
-    droopescan: { empty: true },
-    joomscan: { empty: true }
-  });
-  const [isDone, setIsDone] = useState({
-    wpscan: false,
-    droopescan: false,
-    joomscan: false
-  });
-  const pageEmpty = useRef(null);
-  const [type, setType] = useState("wpscan");
-  const _Component = {
-    wpscan: (data) => <TabScanWp scan={data} />,
-    droopescan: (data) => <TabScanDroope scan={data} />,
-    joomscan: (data) => <TabScanJoom scan={data} />
-  }
+  const [typeCms, setTypeCms] = useState({ cms_name: "default" })
+  console.log(typeCms)
 
   useEffect(() => {
-    // set type scan-content when loading
-    async function getData({ header, query }) {
+    async function getData({ header }) {
       let checkCms = { cms_name: "default" }
       if (header.method.toLowerCase() === 'post') {
         checkCms = await fetch(host + "/url_analyze/cmseek", {
@@ -1478,222 +1461,67 @@ function TabScan(props) {
         });
 
         checkCms = await checkCms.json();
+        setTypeCms(checkCms)
       }
-
-      if (checkCms.cms_name) {
-        // fetch for scanning website
-        console.log("have cms");
-        fetch(host + "/url_analyze/wpscan" + query, header)
-          .then((res) => res.json())
-          .then((data) => {
-            setScan((prev) => {
-              return {
-                ...prev,
-                wpscan: data ? data.wp : { empty: true },
-              };
-            });
-            props.handleData((prev) => {
-              return {
-                ...prev,
-                wpscan: true,
-              };
-            });
-            props.Count("wpscan");
-            setIsDone((prev) => {
-              return {
-                ...prev,
-                wpscan: true,
-              };
-            });
-          })
-          .catch((err) => {
-            props.Count("wpscan");
-            setIsDone((prev) => {
-              return {
-                ...prev,
-                wpscan: true,
-              };
-            });
-            console.error(err)
-          });
-        fetch(host + "/url_analyze/droopescan" + query, header)
-          .then((res) => res.json())
-          .then((data) => {
-            // console.log("this droope")
-            setScan((prev) => {
-              return {
-                ...prev,
-                droopescan: data ? data.droope : { empty: true },
-              };
-            });
-            props.handleData((prev) => {
-              return {
-                ...prev,
-                droopescan: true,
-              };
-            });
-            props.Count("droope");
-            setIsDone((prev) => {
-              return {
-                ...prev,
-                droopescan: true,
-              };
-            });
-          })
-          .catch((err) => {
-            props.Count("droope");
-            setIsDone((prev) => {
-              return {
-                ...prev,
-                droopescan: true,
-              };
-            });
-            console.error(err)
-          });
-        fetch(host + "/url_analyze/joomscan" + query, header)
-          .then((res) => res.json())
-          .then((data) => {
-            // console.log("this joomscan")
-            setScan((prev) => {
-              if (data.joomscan) {
-                if (!data.joomscan.joomscan) {
-                  return {
-                    ...prev,
-                    joomscan: { empty: true },
-                  };
-                }
-              }
-              return {
-                ...prev,
-                joomscan: data ? data.joomscan : { empty: true },
-              };
-            });
-            props.handleData((prev) => {
-              return {
-                ...prev,
-                joomscan: true,
-              };
-            });
-            props.Count("joomscan");
-            setIsDone((prev) => {
-              return {
-                ...prev,
-                joomscan: true,
-              };
-            });
-          })
-          .catch((err) => {
-            props.Count("joomscan");
-
-            setIsDone((prev) => {
-              return {
-                ...prev,
-                joomscan: true,
-              };
-            });
-            console.error(err)
-          });
-
-        return;
-      }
-      setIsDone((prev) => {
-        return {
-          ...prev,
-          droopescan: true,
-          joomscan: true,
-          wpscan: true,
-        };
-      });
-      console.log("no cms");
     }
     let options = createHTTPHeader(props.options);
     getData(options);
   }, []);
 
-  useEffect(() => {
-    let checkEmpty = scan[type].empty;
-
-    if (isDone[type] && checkEmpty) {
-      pageEmpty.current.style.display = "block";
-    }
-
-    if (isDone[type] && !checkEmpty) {
-      pageEmpty.current.style.display = "none";
-    }
-
-    if (!isDone[type]) {
-      pageEmpty.current.style.display = "none";
-    }
-  }, [isDone, type, scan]);
-
-  function handleScan(e) {
-    if (!e.target.id) {
-      return
-    }
-    setType(e.target.id);
-    props.Count(e.target.id, "del");
-
-    if (e.target.childNodes[1]) {
-      e.target.childNodes[1].setAttribute("style", "display:none");
+  async function getData(options, typeCms) {
+    if (typeCms.cms_name.toLowerCase() === 'wordpress' || typeCms.cms_name.toLowerCase() === 'default') {
+      let result
+      try {
+        result = await fetch(host + "/url_analyze/wpscan" + options.query, options.header)
+        result = await result.json()
+      }
+      catch {
+        result = {}
+      }
+      finally {
+        return result
+      }
     }
   }
 
   return (
     <div id="scans" className="card-body__">
-      <div className="list-tools">
-        <div
-          className="btn btn-light button-tech"
-          onClick={handleScan}
-          id="wpscan"
-        >
-          Wpscan
-          {!scan.wpscan.empty ? (
-            <span className="notification-button">!</span>
-          ) : null}
-        </div>
-        <div
-          className="btn btn-light button-tech"
-          onClick={handleScan}
-          id="droopescan"
-        >
-          Droopescan
-          {!scan.droopescan.empty ? (
-            <span className="notification-button">!</span>
-          ) : null}
-        </div>
-        <div
-          className="btn btn-light button-tech"
-          onClick={handleScan}
-          id="joomscan"
-        >
-          Joomscan
-          {!scan.joomscan.empty ? (
-            <span className="notification-button">!</span>
-          ) : null}
-        </div>
-      </div>
-      <div className="scan-content">
-        <Loader
-          active={!isDone[type]}
-          inline="centered"
-          style={{ backgroundColor: "white" }}
-        />
-        {_Component[type] && {}.toString.call(_Component[type])
-          ? _Component[type](scan[type])
-          : null}
-        <img
-          className="empty-page"
-          ref={pageEmpty}
-          src="images/nothing_found.png"
-          alt="empty page"
-        />
-      </div>
+      <Tab panes={[
+        {
+          menuItem: (<Menu.Item key='wpscan'>
+            Wpscan<label>1</label>
+          </Menu.Item>),
+          render: () => (<Tab.Pane><Suspense fallback={<Loader
+            inline="centered"
+            style={{ backgroundColor: "white" }}
+          />}><TabScanWp scan={getData(createHTTPHeader(props.options), typeCms)} /></Suspense></Tab.Pane>)
+        },
+        {
+          menuItem: (<Menu.Item key='droopescan'>
+            Droopescan<label>2</label>
+          </Menu.Item>),
+          render: () => (<Tab.Pane><Suspense fallback={<Loader
+            inline="centered"
+            style={{ backgroundColor: "white" }}
+          />}><TabScanDroope options={createHTTPHeader(props.options)} /></Suspense></Tab.Pane>)
+        },
+        {
+          menuItem: (<Menu.Item key='joonscan'>
+            Joomscan<label>3</label>
+          </Menu.Item>),
+          render: () => (<Tab.Pane><Suspense fallback={<Loader
+            inline="centered"
+            style={{ backgroundColor: "white" }}
+          />}><TabScanJoom options={createHTTPHeader(props.options)} typeCms={typeCms.cms_name} /></Suspense></Tab.Pane>)
+        }
+      ]} />
     </div>
   );
 }
 
 function TabScanWp(props) {
-  let wpscan = !props.scan.empty ? props.scan : {}
+  let wpscan = props.scan.read()
+  wpscan = !wpscan.empty ? wpscan : {}
   const themeClassic = wpscan.themes ? wpscan.themes.classic : null
   const themeDef = wpscan.themes ? wpscan.themes.default : null
   const keyPlug = Object.keys(wpscan.plugins ? wpscan.plugins : {})
@@ -1701,10 +1529,10 @@ function TabScanWp(props) {
 
   if (!Object.keys(wpscan).length) {
     return <img
-    className="empty-page"
-    src="images/nothing_found.png"
-    alt="empty page"
-  />
+      className="empty-page"
+      src="images/nothing_found.png"
+      alt="empty page"
+    />
   }
 
   return (<>
@@ -1845,9 +1673,10 @@ function TabScanWp(props) {
   </>)
 }
 
-function TabScanDroope(props) {
-  const scan = !props.scan.empty ? props.scan : {}
-  let droope = scan.droopescan ? scan.droopescan : { empty: true }
+function TabScanDroope({ options }) {
+  const [scan, setScan] = useState({})
+  const _scan = !scan.empty ? scan : {}
+  let droope = _scan.droopescan ? _scan.droopescan : { empty: true }
   droope = {
     "interesting urls": { is_empty: true },
     "version": { is_empty: true },
@@ -1855,8 +1684,29 @@ function TabScanDroope(props) {
     ...droope
   }
 
+  useEffect(() => {
+    fetch(host + "/url_analyze/droopescan" + options.query, options.header)
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log("this droope")
+        setScan((prev) => {
+          return {
+            ...prev,
+            droopescan: data ? data.droope : { empty: true },
+          };
+        });
+      })
+      .catch((err) => {
+        console.error(err)
+      });
+  }, [])
+
   if (droope.empty) {
-    return null
+    return <img
+      className="empty-page"
+      src="images/nothing_found.png"
+      alt="empty page"
+    />
   }
   return (<>
     <h3>Target information:</h3>
@@ -1929,10 +1779,43 @@ function TabScanDroope(props) {
   </>)
 }
 
-function TabScanJoom(props) {
-  const joomscan = !props.scan.empty ? props.scan.joomscan : ""
+function TabScanJoom({ options, typeCms }) {
+  const [scan, setScan] = useState({ empty: true })
+  const joomscan = !scan.empty ? scan.joomscan : ""
+
+  useEffect(() => {
+    if (typeCms.toLowerCase() === 'joomla' || typeCms.toLowerCase() === 'default') {
+      fetch(host + "/url_analyze/joomscan" + options.query, options.header)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("this joomscan")
+          setScan((prev) => {
+            if (data.joomscan) {
+              if (!data.joomscan.joomscan) {
+                return {
+                  ...prev,
+                  joomscan: { empty: true },
+                };
+              }
+            }
+            return {
+              ...prev,
+              joomscan: data ? data.joomscan : { empty: true },
+            };
+          });
+        })
+        .catch((err) => {
+          console.error(err)
+        });
+    }
+  }, [])
+
   if (!joomscan) {
-    return null
+    return <img
+      className="empty-page"
+      src="images/nothing_found.png"
+      alt="empty page"
+    />
   }
   return (<div className="code">
     {joomscan.split('\n').map((element, index) => {
@@ -2223,48 +2106,48 @@ function TopVulnAdd(props) {
 function ScreenShot(props) {
   const [option, setOption] = useState("");
   const feature = {
-      url: props.options.url,
-      pic: props.options.token + ".png",
+    url: props.options.url,
+    pic: props.options.token + ".png",
   };
   const foundNothing = useRef(null)
 
   function handleOnLoad(e) {
-      //console.log(e.target)
-      props.Count("img");
+    //console.log(e.target)
+    props.Count("img");
   }
 
   function handleError(e) {
-      foundNothing.current.style.display = 'block'
-      e.target.style.display = "none"
+    foundNothing.current.style.display = 'block'
+    e.target.style.display = "none"
   }
 
   useEffect(() => {
-      if (props.options.isAnalyze) {
-          setOption("url");
-          return;
-      }
-      setOption("pic");
+    if (props.options.isAnalyze) {
+      setOption("url");
+      return;
+    }
+    setOption("pic");
   }, []);
 
   return (
-      <div id="screenshot">
-          {option ? <Image
-              src={`${host}/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
-              as="a"
-              fluid
-              onLoad={handleOnLoad}
-              bordered
-              onError={handleError}
-              alt={props.options.token + '.png'}
-          /> : null}
-          <img
-              className="empty-page"
-              ref={foundNothing}
-              src="images/nothing_found.png"
-              alt="empty page"
-              style={{ display: 'none' }}
-          />
-      </div>
+    <div id="screenshot">
+      {option ? <Image
+        src={`${host}/analyze_result/screenshot?token=${props.options.token}&${option}=${feature[option]}`}
+        as="a"
+        fluid
+        onLoad={handleOnLoad}
+        bordered
+        onError={handleError}
+        alt={props.options.token + '.png'}
+      /> : null}
+      <img
+        className="empty-page"
+        ref={foundNothing}
+        src="images/nothing_found.png"
+        alt="empty page"
+        style={{ display: 'none' }}
+      />
+    </div>
   );
 }
 

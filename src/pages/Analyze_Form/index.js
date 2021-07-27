@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { host } from '../lib_front'
+import { host } from "../../config/config"
 import { Redirect } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify";
 import { Input } from "semantic-ui-react";

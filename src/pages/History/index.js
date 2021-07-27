@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import { host, pageHistorySize, local } from '../lib_front'
+import { host, local, pageHistorySize } from '../../config/config'
 import { Button, Table, Pagination } from 'semantic-ui-react'
 import '../../css/History.css'
 import '../../css/Card.css'
@@ -71,10 +71,10 @@ function HistoryReport() {
                             {
                                 history.slice(activePage * pageHistorySize - pageHistorySize < 0 ? 0 : activePage * pageHistorySize - pageHistorySize, activePage * pageHistorySize).length !== 0 ? history.slice(activePage * pageHistorySize - pageHistorySize < 0 ? 0 : activePage * pageHistorySize - pageHistorySize, activePage * pageHistorySize).map((element, index) => {
                                     return (<Table.Row id={element.token} key={index} onClick={handleClick}>
-                                        <Table.Cell>{index+activePage*pageHistorySize-pageHistorySize+1}</Table.Cell>
+                                        <Table.Cell>{index + activePage * pageHistorySize - pageHistorySize + 1}</Table.Cell>
                                         <Table.Cell>{element.url.length > 35 ? element.url.slice(0, 35) + "..." : element.url}</Table.Cell>
                                         <Table.Cell>{element.time_create.slice(0, 25)}</Table.Cell>
-                                        <Table.Cell><Button id={index+activePage*pageHistorySize-pageHistorySize} onClick={handleSubmit}>Create HTML file</Button></Table.Cell>
+                                        <Table.Cell><Button id={index + activePage * pageHistorySize - pageHistorySize} onClick={handleSubmit}>Create HTML file</Button></Table.Cell>
                                     </Table.Row>)
                                 }) : null
                             }
@@ -86,7 +86,7 @@ function HistoryReport() {
                         lastItem={null}
                         pointing
                         secondary
-                        totalPages={Math.ceil(history.length/pageHistorySize)}
+                        totalPages={Math.ceil(history.length / pageHistorySize)}
                         activePage={activePage}
                         onPageChange={handlePaginationChange}
                     />

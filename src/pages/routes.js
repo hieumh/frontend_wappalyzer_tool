@@ -6,4 +6,6 @@ context.keys().forEach(path => {
     routes.push(require(`${path}`).default)
 });
 
+console.log(routes)
+
 export default routes

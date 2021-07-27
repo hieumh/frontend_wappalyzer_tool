@@ -1,5 +1,5 @@
 import React from "react";
-import { host } from '../lib_front'
+import { host } from '../../config/config'
 import {
   Container,
   Header,

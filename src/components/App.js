@@ -20,8 +20,8 @@ function App() {
           <div>
             <NavigationPane />
             <div id="dashboard">
-            <Title />
-            <Layout />
+              <Title />
+              <Layout />
             </div>
           </div>
         </Route>
