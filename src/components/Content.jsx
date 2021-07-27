@@ -60,6 +60,7 @@ function Content() {
       if (check.protocol === 'http:' || check.protocol === 'https:') {
         return check
       }
+      toast.error("Invalid Url");
       return false;
     } catch (e) {
       console.error(e);
