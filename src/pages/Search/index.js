@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Redirect } from 'react-router-dom'
+import { Redirect } from "react-router-dom";
 import { host } from "../../config/config";
 import { Card, Input, Checkbox, Form } from "semantic-ui-react";
 import "../../css/Report.css";
@@ -8,25 +8,43 @@ import "../../css/Animation.css";
 import "../../css/Card.css";
 
 function SearchDatabase() {
-  const [search, setSearch] = useState("");
-  const [option, setOption] = useState("search");
-  const [result, setResult] = useState([]);
-  const [hidden, setHidden] = useState({ visibility: "hidden" });
-  const [location, setLocation] = useState({});
-  const searchRef = useRef(null)
+  const [pageControl, dispatch] = useReducer(reducer, {
+    search: "",
+    option: "search",
+    result: [],
+    display: { visibility: "hidden" },
+    location: {},
+  });
+  const searchRef = useRef(null);
 
+  function reducer(state, action) {
+    switch (action.type) {
+      case "SEARCH":
+        return { ...state, search: action.value };
+      case "OPTION":
+        return { ...state, option: action.value };
+      case "RESULT":
+        return { ...state, result: action.value };
+      case "DISPLAY":
+        return { ...state, display: action.value };
+      case "LOCATION":
+        return { ...state, display: action.value };
+      default:
+        throw new Error();
+    }
+  }
 
   useEffect(() => {
-    searchRef.current.focus()
-  }, [])
+    searchRef.current.focus();
+  }, []);
 
   function handleChangeSearch(e) {
     const { value } = e.target;
-    setSearch(value);
+    dispatch({ type: "SEARCH", value: value });
   }
 
   function handleChangeOption(e, { value }) {
-    setOption(value);
+    dispatch({ type: "OPTION", value: value });
   }
 
   function handleSubmit(e) {
@@ -36,8 +54,8 @@ function SearchDatabase() {
 
     let link =
       host + "/search_database?pattern=" + search + "&option=" + option;
-    setHidden({});
-    setSearch("");
+    dispatch({ type: "DISPLAY", value: {} });
+    dispatch({ type: "SEARCH", value: "" });
 
     fetch(link, {
       method: "get",
@@ -52,7 +70,7 @@ function SearchDatabase() {
         for (const index in data) {
           result.push(data[index]);
         }
-        setResult(result);
+        dispatch({ type: "RESULT", result: result });
       });
   }
 
@@ -62,19 +80,22 @@ function SearchDatabase() {
       target = target.parentNode;
     }
     if (target.id) {
-      setLocation({
-        pathname: "/analyze_result",
-        state: {
-          token: result[target.id].token,
-          url: result[target.id].url,
-          isAnalyze: false,
+      dispatch({
+        type: "LOCATION",
+        location: {
+          pathname: "/analyze_result",
+          state: {
+            token: result[target.id].token,
+            url: result[target.id].url,
+            isAnalyze: false,
+          },
         },
       });
     }
   }
 
-  if (JSON.stringify(location) !== JSON.stringify({})) {
-    return <Redirect to={location} />;
+  if (JSON.stringify(pageControl.location) !== JSON.stringify({})) {
+    return <Redirect to={pageControl.location} />;
   }
 
   return (
@@ -101,18 +122,18 @@ function SearchDatabase() {
                 placeholder="Search..."
                 onChange={handleChangeSearch}
                 onKeyDown={handleSubmit}
-                value={search}
+                value={pageControl.search}
               />
             </Form.Field>
             <p>Choose where to search:</p>
             <Form.Field>
               <Checkbox
                 radio
-                float='left'
+                float="left"
                 label="Search table"
                 name="checkboxRadioGroup"
                 value="search"
-                checked={option === "search"}
+                checked={pageControl.option === "search"}
                 onChange={handleChangeOption}
               />
             </Form.Field>
@@ -122,7 +143,7 @@ function SearchDatabase() {
                 label="Report table"
                 name="checkboxRadioGroup"
                 value="report"
-                checked={option === "report"}
+                checked={pageControl.option === "report"}
                 onChange={handleChangeOption}
               />
             </Form.Field>
@@ -132,7 +153,7 @@ function SearchDatabase() {
                 label="All table"
                 name="checkboxRadioGroup"
                 value="all"
-                checked={option === "all"}
+                checked={pageControl.option === "all"}
                 onChange={handleChangeOption}
               />
             </Form.Field>
@@ -141,17 +162,17 @@ function SearchDatabase() {
 
         <div id="search-result" style={hidden}>
           <h4>Search result:</h4>
-          {result.length
-            ? result.map((element, index) => {
-              return (
-                <Card fluid key={index} id={index} onClick={handleAnalyze}>
-                  <Card.Content>
-                    <Card.Header>{element.url}</Card.Header>
-                    <Card.Meta>{element.time_create}</Card.Meta>
-                  </Card.Content>
-                </Card>
-              );
-            })
+          {pageControl.result.length
+            ? pageControl.result.map((element, index) => {
+                return (
+                  <Card fluid key={index} id={index} onClick={handleAnalyze}>
+                    <Card.Content>
+                      <Card.Header>{element.url}</Card.Header>
+                      <Card.Meta>{element.time_create}</Card.Meta>
+                    </Card.Content>
+                  </Card>
+                );
+              })
             : null}
         </div>
       </div>
